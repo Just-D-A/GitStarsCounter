@@ -6,4 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".activities.StarsActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGold"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/star_grafic_text"/>
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_marginTop="16dp"
+            android:id="@+id/graph"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            tools:ignore="MissingConstraints" />
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView
+            android:id="@+id/cpv_login"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cpv_animAutostart="true"
+            app:cpv_color="@color/colorPrimary"
+            app:cpv_indeterminate="true"
+            tools:ignore="MissingConstraints"
+            tools:visibility="visible" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

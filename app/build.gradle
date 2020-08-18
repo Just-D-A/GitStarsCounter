@@ -34,6 +34,9 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
+    //grafic lib
+    implementation 'com.jjoe64:graphview:4.2.2'
+
     //retrofit lib for requests
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 
