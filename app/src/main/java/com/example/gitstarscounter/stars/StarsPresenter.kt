@@ -1,8 +1,6 @@
-package com.example.gitstarscounter.presenters
+package com.example.gitstarscounter.stars
 
 import com.arellomobile.mvp.MvpPresenter
-import com.example.gitstarscounter.models.StarModel
-import com.example.gitstarscounter.views.StarsView
 
 class StarsPresenter: MvpPresenter<StarsView>() {
     fun loadStars() {

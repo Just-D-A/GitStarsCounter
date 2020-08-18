@@ -1,4 +1,4 @@
-package com.example.gitstarscounter.views
+package com.example.gitstarscounter.login
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy

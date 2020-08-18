@@ -4,31 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.StarsActivity">
+    tools:context=".stars.StarsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorGold"
-            android:textSize="30dp"
-            android:textStyle="bold"
             android:gravity="center"
-            android:text="@string/star_grafic_text"/>
+            android:text="@string/star_grafic_text"
+            android:textColor="@color/color_gold"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.jjoe64.graphview.GraphView
-            android:layout_marginTop="16dp"
             android:id="@+id/graph"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            tools:ignore="MissingConstraints" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.github.rahatarmanahmed.cpv.CircularProgressView
             android:id="@+id/cpv_login"
@@ -38,9 +46,15 @@
             android:layout_marginTop="16dp"
             android:visibility="gone"
             app:cpv_animAutostart="true"
-            app:cpv_color="@color/colorPrimary"
+            app:cpv_color="@color/color_primary"
             app:cpv_indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints"
             tools:visibility="visible" />
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

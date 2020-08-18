@@ -1,7 +1,6 @@
-package com.example.gitstarscounter.views
+package com.example.gitstarscounter.stars
 
 import com.arellomobile.mvp.MvpView
-import com.example.gitstarscounter.models.StarModel
 
 interface StarsView: MvpView {
     fun showError(textResource: Int)

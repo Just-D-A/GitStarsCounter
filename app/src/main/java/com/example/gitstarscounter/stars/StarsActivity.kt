@@ -1,33 +1,43 @@
-package com.example.gitstarscounter.activities
+package com.example.gitstarscounter.stars
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.models.StarModel
-import com.example.gitstarscounter.presenters.StarsPresenter
-import com.example.gitstarscounter.views.StarsView
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 
 
-class StarsActivity : MvpAppCompatActivity(), StarsView {
+class StarsActivity : MvpAppCompatActivity(),
+    StarsView {
 
-    private lateinit var mCpvWait: CircularProgressView
-    private lateinit var mGraph: GraphView
+    private lateinit var waitProgressView: CircularProgressView
+    private lateinit var graphView: GraphView
 
     @InjectPresenter
     lateinit var starsPresenter: StarsPresenter
+
+    companion object {
+
+        private const val KEY_VALUE = "value"
+
+        fun createIntent(context: Context, valus: String) = Intent(context, StarsActivity::class.java)
+            .putExtra(KEY_VALUE, valus)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
 
-        mGraph = findViewById(R.id.graph)
+        //intent.getStringExtra(KEY_VALUE)
+
+        graphView = findViewById(R.id.graph)
         val series: LineGraphSeries<DataPoint> = LineGraphSeries<DataPoint>(
             arrayOf<DataPoint>(
                 DataPoint(0.0, 1.0),
@@ -37,7 +47,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
                 DataPoint(4.0, 6.0)
             )
         )
-        mGraph.addSeries(series)
+        graphView.addSeries(series)
     }
 
     override fun showError(textResource: Int) {
@@ -49,13 +59,14 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     }
 
     override fun startLoading() {
-        mGraph.visibility = View.GONE
-        mCpvWait.visibility = View.VISIBLE
+        waitProgressView.isVisible = true
+        graphView.isVisible = false
+
     }
 
     override fun endLoading() {
-        mGraph.visibility = View.VISIBLE
-        mCpvWait.visibility = View.GONE
+        waitProgressView.isVisible = false
+        graphView.isVisible = true
     }
 
 }
