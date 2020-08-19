@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/star_grafic_text"
+            android:text="@string/message_star_grafic"
             android:textColor="@color/color_gold"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
+            android:id="@+id/graph_view_stars"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="16dp"
@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:id="@+id/cpv_login"
+            android:id="@+id/progress_view_stars"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"

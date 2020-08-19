@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">GitStarsCounter</string>
-    <string name="hello_text">Здравствуйте вас приветствует приложение подсчета звезд для github аккаунта.</string>
-    <string name="acc_hint">Имя репозитория</string>
-    <string name="find_acc_btn">Найти</string>
+    <string name="message_hello">Здравствуйте вас приветствует приложение подсчета звезд для github аккаунта.</string>
+    <string name="hint_rep_name">Имя репозитория</string>
+    <string name="button_find_rep">Найти</string>
     <string name="login_error">"Ошибка логинации"</string>
-    <string name="star_grafic_text">График звезд</string>
+    <string name="message_star_grafic">График звезд</string>
 </resources>

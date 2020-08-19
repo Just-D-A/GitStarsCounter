@@ -21,33 +21,34 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="@string/hello_text"
-            android:textStyle="bold"
+            android:text="@string/message_hello"
             android:textColor="@color/color_primary"
-            android:textSize="20dp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/txt_account_name"
+            android:id="@+id/text_rep_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:autofillHints=""
-            android:hint="@string/acc_hint"
+            android:hint="@string/hint_rep_name"
             android:textStyle="bold"
             tools:ignore="MissingConstraints" />
+
         <Button
-            android:id="@+id/btn_find_acc"
+            android:id="@+id/button_find_rep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:background="@color/color_primary"
-            android:textColor="@android:color/white"
-            android:text="@string/find_acc_btn"/>
+            android:text="@string/button_find_rep"
+            android:textColor="@android:color/white" />
 
 
         <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:id="@+id/cpv_login"
+            android:id="@+id/progress_view_login"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"

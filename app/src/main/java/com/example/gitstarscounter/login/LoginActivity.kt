@@ -25,11 +25,11 @@ class LoginActivity : MvpAppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        waitProgressView = findViewById(R.id.cpv_login)
-        findButton = findViewById(R.id.btn_find_acc)
+        waitProgressView = findViewById(R.id.progress_view_login) // need login in name??
+        findButton = findViewById(R.id.button_find_rep)
 
 
-        val accountNameEditText: EditText = findViewById(R.id.txt_account_name)
+        val accountNameEditText: EditText = findViewById(R.id.text_rep_name)
         findButton.setOnClickListener{
             val accountName: String = accountNameEditText.getText().toString().trim()
             loginPresenter.testLoadStars(accountName)

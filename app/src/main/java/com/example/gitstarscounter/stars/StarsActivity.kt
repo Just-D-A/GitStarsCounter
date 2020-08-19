@@ -18,7 +18,7 @@ class StarsActivity : MvpAppCompatActivity(),
     StarsView {
 
     private lateinit var waitProgressView: CircularProgressView
-    private lateinit var graphView: GraphView
+    private lateinit var grafGraphView: GraphView
 
     @InjectPresenter
     lateinit var starsPresenter: StarsPresenter
@@ -27,46 +27,42 @@ class StarsActivity : MvpAppCompatActivity(),
 
         private const val KEY_VALUE = "value"
 
-        fun createIntent(context: Context, valus: String) = Intent(context, StarsActivity::class.java)
-            .putExtra(KEY_VALUE, valus)
+        fun createIntent(context: Context, values: String) = Intent(context, StarsActivity::class.java)
+            .putExtra(KEY_VALUE, values)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
 
-        //intent.getStringExtra(KEY_VALUE)
+        intent.getStringExtra(KEY_VALUE)
 
-        graphView = findViewById(R.id.graph)
-        val series: LineGraphSeries<DataPoint> = LineGraphSeries<DataPoint>(
-            arrayOf<DataPoint>(
-                DataPoint(0.0, 1.0),
-                DataPoint(1.0, 5.0),
-                DataPoint(2.0, 3.0),
-                DataPoint(3.0, 2.0),
-                DataPoint(4.0, 6.0)
-            )
-        )
-        graphView.addSeries(series)
+        waitProgressView = findViewById(R.id.progress_view_stars)
+        grafGraphView = findViewById(R.id.graph_view_stars)
+        starsPresenter.startLoadStars()
+
     }
 
     override fun showError(textResource: Int) {
         Toast.makeText(applicationContext, textResource, Toast.LENGTH_SHORT).show()
     }
 
-    override fun setupStarsList(friendsList: ArrayList<StarModel>) {
-
+    override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>) {
+        grafGraphView = findViewById(R.id.graph_view_stars)
+        val points: Array<DataPoint> = pointsList.toTypedArray()
+        val series: LineGraphSeries<DataPoint> = LineGraphSeries(points)
+        grafGraphView.addSeries(series)
     }
 
     override fun startLoading() {
         waitProgressView.isVisible = true
-        graphView.isVisible = false
+        grafGraphView.isVisible = false
 
     }
 
     override fun endLoading() {
         waitProgressView.isVisible = false
-        graphView.isVisible = true
+        grafGraphView.isVisible = true
     }
 
 }
