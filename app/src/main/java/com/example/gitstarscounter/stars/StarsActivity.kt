@@ -14,6 +14,7 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : MvpAppCompatActivity(),
     StarsView {
 
@@ -25,21 +26,17 @@ class StarsActivity : MvpAppCompatActivity(),
 
     companion object {
 
-        private const val KEY_VALUE = "value"
-        var BaseUrl = "http://api.github.com"
-        var AppId = "2e65127e909e178d0af311a81f39948c"
-        var lat = "35"
-        var lon = "139"
+        private const val KEY_VALUE = "userName"
 
-        fun createIntent(context: Context, values: String) = Intent(context, StarsActivity::class.java)
-            .putExtra(KEY_VALUE, values)
+        fun createIntent(context: Context, userName: String) = Intent(context, StarsActivity::class.java)
+            .putExtra(KEY_VALUE, userName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
 
-        intent.getStringExtra(KEY_VALUE)
+        starsPresenter.startLoadStars(intent.getStringExtra(KEY_VALUE))
 
         waitProgressView = findViewById(R.id.progress_view_stars)
         grafGraphView = findViewById(R.id.graph_view_stars)

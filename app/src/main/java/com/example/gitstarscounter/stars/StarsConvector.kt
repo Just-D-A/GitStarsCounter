@@ -1,11 +1,10 @@
 package com.example.gitstarscounter.stars
 
+import com.example.gitstarscounter.retrofit2.Star
 import com.jjoe64.graphview.series.DataPoint
-import java.util.*
-import kotlin.collections.ArrayList
 
 @Suppress("DEPRECATION")
-class StarsConvector(val starsList: ArrayList<StarModel>) {
+class StarsConvector(val starsList: List<Star?>?) {
     private var starsInMonthMap: MutableMap<Int, Int> = mutableMapOf()
 
 
@@ -22,12 +21,12 @@ class StarsConvector(val starsList: ArrayList<StarModel>) {
 
     private fun countStars() {
         initMap()
-        starsList.forEach {
-            val date: Date = it.date
-            var starsCount: Int? = starsInMonthMap.get(date.month)
+        starsList?.forEach {
+            val date = it?.starred_at
+            var starsCount: Int? = starsInMonthMap.get(date?.month)
             if (starsCount != null) {
                 starsCount++
-                starsInMonthMap.put(date.month, starsCount)
+                starsInMonthMap.put(date?.month?.plus(1)!!, starsCount)
             }
         }
     }

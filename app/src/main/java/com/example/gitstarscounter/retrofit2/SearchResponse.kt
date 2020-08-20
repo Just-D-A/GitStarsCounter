@@ -1,5 +1,7 @@
 package com.example.gitstarscounter.retrofit2
 
+import java.util.*
+
 data class User(
     val login: String,
     val id: Long,
@@ -12,8 +14,7 @@ data class User(
     val type: String
 )
 
-data class Result(
-    val total_count: Int,
-    val incomplete_results: Boolean,
-    val items: List<User>
+data class Star(
+    val starred_at: Date,
+    val user: User
 )

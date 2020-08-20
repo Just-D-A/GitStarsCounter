@@ -5,22 +5,22 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface GithubApiService {
-
-    @GET("search/users")
-    fun search(
-        @Query("q") query: String,
-        @Query("page") page: Int,
-        @Query("per_page") perPage: Int
-    ): Observable<Result>
 
     @GET("users/{name}")
     fun getUser(@Path("name") userName: String): Observable<User?>?
 
-    /**
+    //https://api.github.com/repos/Just-D-A/GitStarsCounter/stargazers
+    @GET("repos/{name}/GitStarsCounter/stargazers")
+    fun getStars(@Path("name") userName: String, @Header("Accept") param: String): Observable<List<Star?>?>?
+
+    @GET("user")
+    fun getUserDetails()
+
+                 /**
      * Companion object to create the GithubApiService
      */
     companion object Factory {

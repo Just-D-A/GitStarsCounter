@@ -48,6 +48,7 @@ dependencies {
     //grafic lib
     implementation 'com.jjoe64:graphview:4.2.2'
 
+
     //retrofit lib for requests
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"

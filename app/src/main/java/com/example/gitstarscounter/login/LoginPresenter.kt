@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.login
 
-import android.os.Handler
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.gitstarscounter.R
@@ -8,7 +7,7 @@ import com.example.gitstarscounter.retrofit2.User
 
 @InjectViewState
 class LoginPresenter: MvpPresenter<LoginView>() {
-    fun testLoadStars(userName: String) {
+  /*  fun testLoadStars(userName: String) {
         viewState.startLoading()
         Handler().postDelayed({ // исправить на Background Thread
            viewState.endLoading()
@@ -19,7 +18,7 @@ class LoginPresenter: MvpPresenter<LoginView>() {
            }
         }, 500)
 
-    }
+    }*/
 
     fun loadUser(userName: String) {
         viewState.startLoading()
@@ -30,7 +29,7 @@ class LoginPresenter: MvpPresenter<LoginView>() {
         viewState.endLoading()
         //get reps of this user
         if(user != null) {
-            viewState.openStars()
+            viewState.openStars(user.login)
         } else {
             viewState.showError(R.string.login_error)
         }

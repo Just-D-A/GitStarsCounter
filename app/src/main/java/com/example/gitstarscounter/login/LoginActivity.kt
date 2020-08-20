@@ -46,8 +46,8 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         waitProgressView.isVisible = false
     }
 
-    override fun openStars() {
-        startActivity(StarsActivity.createIntent(this, ""))
+    override fun openStars(userName: String) {
+        startActivity(StarsActivity.createIntent(this, userName))
     }
 
     override fun showError(textResource: Int) {
