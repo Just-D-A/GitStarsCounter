@@ -7,6 +7,10 @@ import com.jjoe64.graphview.series.DataPoint
 @InjectViewState
 class StarsPresenter: MvpPresenter<StarsView>() {
 
+    init {
+        startLoadStars()
+    }
+
     fun startLoadStars() {
         viewState.startLoading()
         StarsProvider(this).testLoadStars()

@@ -1,7 +1,6 @@
 package com.example.gitstarscounter.login
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -12,8 +11,7 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 
-class LoginActivity : MvpAppCompatActivity(),
-    LoginView {
+class LoginActivity : MvpAppCompatActivity(), LoginView {
 
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var findButton: Button
@@ -31,19 +29,21 @@ class LoginActivity : MvpAppCompatActivity(),
 
         val accountNameEditText: EditText = findViewById(R.id.text_rep_name)
         findButton.setOnClickListener{
-            val accountName: String = accountNameEditText.getText().toString().trim()
-            loginPresenter.testLoadStars(accountName)
+            val userName = accountNameEditText.text.toString().trim()
+            loginPresenter.loadUser(userName)
         }
+
+
     }
 
     override fun startLoading() {
         findButton.isVisible = false
-        waitProgressView.visibility = View.VISIBLE
+        waitProgressView.isVisible = true
     }
 
     override fun endLoading() {
-        findButton.visibility = View.VISIBLE
-        waitProgressView.visibility = View.GONE
+        findButton.isVisible = true
+        waitProgressView.isVisible = false
     }
 
     override fun openStars() {

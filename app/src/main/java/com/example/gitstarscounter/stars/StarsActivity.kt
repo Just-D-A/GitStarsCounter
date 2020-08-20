@@ -26,6 +26,10 @@ class StarsActivity : MvpAppCompatActivity(),
     companion object {
 
         private const val KEY_VALUE = "value"
+        var BaseUrl = "http://api.github.com"
+        var AppId = "2e65127e909e178d0af311a81f39948c"
+        var lat = "35"
+        var lon = "139"
 
         fun createIntent(context: Context, values: String) = Intent(context, StarsActivity::class.java)
             .putExtra(KEY_VALUE, values)
@@ -39,8 +43,6 @@ class StarsActivity : MvpAppCompatActivity(),
 
         waitProgressView = findViewById(R.id.progress_view_stars)
         grafGraphView = findViewById(R.id.graph_view_stars)
-        starsPresenter.startLoadStars()
-
     }
 
     override fun showError(textResource: Int) {
@@ -49,8 +51,8 @@ class StarsActivity : MvpAppCompatActivity(),
 
     override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>) {
         grafGraphView = findViewById(R.id.graph_view_stars)
-        val points: Array<DataPoint> = pointsList.toTypedArray()
-        val series: LineGraphSeries<DataPoint> = LineGraphSeries(points)
+        val points = pointsList.toTypedArray()
+        val series  = LineGraphSeries(points)
         grafGraphView.addSeries(series)
     }
 

@@ -16,7 +16,7 @@ class StarsConvector(val starsList: ArrayList<StarModel>) {
         starsInMonthMap.forEach {
             pointsList.add(DataPoint(it.key.toDouble(), it.value.toDouble()))
         }
-        pointsList.add(DataPoint(12.0, 12.0))
+        pointsList.add(DataPoint(12.0, 0.0))
         return pointsList
     }
 
