@@ -15,12 +15,15 @@ interface GithubApiService {
 
     //https://api.github.com/repos/Just-D-A/GitStarsCounter/stargazers
     @GET("repos/{name}/GitStarsCounter/stargazers")
-    fun getStars(@Path("name") userName: String, @Header("Accept") param: String): Observable<List<Star?>?>?
+    fun getStars(
+        @Path("name") userName: String,
+        @Header("Accept") param: String
+    ): Observable<List<Star?>?>?
 
     @GET("user")
     fun getUserDetails()
 
-                 /**
+    /**
      * Companion object to create the GithubApiService
      */
     companion object Factory {

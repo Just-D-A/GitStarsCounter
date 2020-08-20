@@ -10,6 +10,4 @@ class SearchRepository(val apiService: GithubApiService) {
     fun getStars(userName: String): Observable<List<Star?>?>? {
         return apiService.getStars(userName, " application/vnd.github.v3.star+json")
     }
-
-
 }

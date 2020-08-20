@@ -8,7 +8,7 @@ import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
-class StarsPresenter: MvpPresenter<StarsView>() {
+class StarsPresenter : MvpPresenter<StarsView>() {
 
     fun startLoadStars(userName: String) {
         viewState.startLoading()
@@ -18,14 +18,12 @@ class StarsPresenter: MvpPresenter<StarsView>() {
     fun loadGrafic(starsList: List<Star?>?) {
         val starsConvector = StarsConvector(starsList)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
-        /*starsList?.forEach {
-            Log.d("StarsPresenter: ", it?.starred_at?.month.toString())
-        }*/
+
         viewState.endLoading()
         viewState.setupStarsGrafic(pointsList)
     }
 
-    fun showError(error: Exception){
+    fun showError(error: Exception) {
         viewState.endLoading()
         viewState.showError(R.string.login_error)
     }
