@@ -6,9 +6,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.jjoe64.graphview.series.DataPoint
 
 @StateStrategyType(value = AddToEndSingleStrategy::class)
-interface StarsView: MvpView {
-    fun showError(textResource: Int)
-    fun setupStarsGrafic(pointsList: ArrayList<DataPoint>)
+interface StarsView : MvpView {
     fun startLoading()
     fun endLoading()
+    fun setupStarsGrafic(pointsList: ArrayList<DataPoint>)
+    fun showError(textResource: Int) //другая стратегия
 }

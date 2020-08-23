@@ -1,6 +1,6 @@
 package com.example.gitstarscounter.stars
 
-import com.example.gitstarscounter.retrofit2.Star
+import com.example.gitstarscounter.git_api.Star
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("DEPRECATION")
@@ -10,12 +10,10 @@ class StarsConvector(val starsList: List<Star?>?) {
 
     fun toDataPoint(): ArrayList<DataPoint> {
         val pointsList: ArrayList<DataPoint> = ArrayList()
-
         countStars()
         starsInMonthMap.forEach {
             pointsList.add(DataPoint(it.key.toDouble(), it.value.toDouble()))
         }
-        pointsList.add(DataPoint(12.0, 20.0))
         return pointsList
     }
 
@@ -23,7 +21,7 @@ class StarsConvector(val starsList: List<Star?>?) {
         initMap()
         starsList?.forEach {
             val date = it?.starred_at
-            var starsCount: Int? = starsInMonthMap.get(date?.month)
+            var starsCount: Int? = starsInMonthMap.get(date?.month?.plus(1))
             if (starsCount != null) {
                 starsCount++
                 starsInMonthMap.put(date?.month?.plus(1)!!, starsCount)

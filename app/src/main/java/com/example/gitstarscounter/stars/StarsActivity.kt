@@ -27,20 +27,25 @@ class StarsActivity : MvpAppCompatActivity(),
 
     companion object {
 
-        private const val KEY_VALUE = "userName"
+        private const val KEY_USER_NAME = "userName"
+        private const val KEY_REPOSITORY_NAME = "repositoryName"
 
-        fun createIntent(context: Context, userName: String) = Intent(
+        fun createIntent(context: Context, userName: String, repositoryName: String) = Intent(
             context,
             StarsActivity::class.java
         )
-            .putExtra(KEY_VALUE, userName)
+            .putExtra(KEY_USER_NAME, userName)
+            .putExtra(KEY_REPOSITORY_NAME, repositoryName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
 
-        starsPresenter.startLoadStars(intent.getStringExtra(KEY_VALUE))
+        starsPresenter.startLoadStars(
+            intent.getStringExtra(KEY_USER_NAME),
+            intent.getStringExtra(KEY_REPOSITORY_NAME)
+        )
 
         waitProgressView = findViewById(R.id.progress_view_stars)
         graphGraphView = findViewById(R.id.graph_view_stars)
@@ -53,9 +58,9 @@ class StarsActivity : MvpAppCompatActivity(),
     override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>) {
 
         val points = pointsList.toTypedArray()
-        graphGraphView.viewport.setMinX(0.0);
-        graphGraphView.viewport.setMaxX(12.5);
-        graphGraphView.viewport.isXAxisBoundsManual = true;
+        graphGraphView.viewport.setMinX(0.0)
+        graphGraphView.viewport.setMaxX(12.5)
+        graphGraphView.viewport.isXAxisBoundsManual = true
         val series = BarGraphSeries(points)
         graphGraphView.addSeries(series)
 
@@ -70,10 +75,10 @@ class StarsActivity : MvpAppCompatActivity(),
         series.spacing = 50
         series.valuesOnTopColor = Color.RED
 
-        series.setOnDataPointTapListener(OnDataPointTapListener { _, dataPoint ->
+        series.setOnDataPointTapListener { _, dataPoint ->
             Toast.makeText(this, "Series1: On Data Point clicked: $dataPoint", Toast.LENGTH_SHORT)
                 .show()
-        })
+        }
         series.isDrawValuesOnTop = true
     }
 

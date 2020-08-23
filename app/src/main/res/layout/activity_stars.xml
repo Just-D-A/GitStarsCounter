@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/message_star_grafic"
-            android:textColor="@color/color_gold"
+            android:textColor="@color/color_primary"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

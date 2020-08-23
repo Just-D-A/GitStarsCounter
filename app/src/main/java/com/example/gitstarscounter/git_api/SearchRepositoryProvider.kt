@@ -1,4 +1,4 @@
-package com.example.gitstarscounter.retrofit2
+package com.example.gitstarscounter.git_api
 
 
 object SearchRepositoryProvider {

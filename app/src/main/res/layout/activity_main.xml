@@ -11,10 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
-
 
         <TextView
             android:layout_width="match_parent"
@@ -34,7 +31,7 @@
             android:autofillHints=""
             android:hint="@string/hint_rep_name"
             android:textStyle="bold"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"/>
 
         <Button
             android:id="@+id/button_find_rep"
@@ -58,6 +55,17 @@
             app:cpv_color="@color/color_primary"
             app:cpv_indeterminate="true"
             tools:visibility="visible" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_repositories"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

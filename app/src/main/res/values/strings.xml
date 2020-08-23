@@ -5,4 +5,7 @@
     <string name="button_find_rep">Найти</string>
     <string name="login_error">"Ошибка логинации"</string>
     <string name="message_star_grafic">График звезд</string>
+    <string name="button_use_rep">Использовать</string>
+    <string name="unknown_user_text">Неизвестный пользователь</string>
+    <string name="no_internet_text">Нет подключения</string>
 </resources>
