@@ -1,17 +1,15 @@
 package com.example.gitstarscounter.git_api
 
-import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
-import java.lang.reflect.Type
-import java.time.LocalDateTime
+import java.util.*
 
 interface GithubApiService {
 
@@ -32,9 +30,13 @@ interface GithubApiService {
      */
     companion object Factory {
         fun create(): GithubApiService {
+
             val moshi: Moshi = Moshi.Builder()
                 .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
-              //  .add(Star::class.java, StarJsonAdapter(Moshi.Builder().build()))
+                .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())//etc
+                /*.add(Date.class, new DateJsonAdapter())
+                .add(PrimitiveAdapterFactory.FACTORY)
+                .add(ArrayAdapterFactory.FACTORY);*/
                 .build()
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
@@ -43,5 +45,6 @@ interface GithubApiService {
 
             return retrofit.create(GithubApiService::class.java)
         }
+
     }
 }
