@@ -26,7 +26,7 @@ class LoginPresenter : MvpPresenter<LoginView>() {
 
     fun openStars(userName: String, repository: Repository?) {
         if (repository != null) {
-            viewState.openStars(userName, repository.name)
+            viewState.openStars(userName, repository)
         }
     }
 

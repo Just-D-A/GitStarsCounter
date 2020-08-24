@@ -12,4 +12,5 @@ object SearchProvider {
     fun provideSearchStars(): SearchStars {
         return SearchStars(GithubApiService.create())
     }
+
 }

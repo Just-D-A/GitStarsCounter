@@ -9,4 +9,6 @@
     <string name="unknown_user_text">Неизвестный пользователь</string>
     <string name="no_internet_text">Нет подключения</string>
     <string name="hint_user_name">Имя пользователя</string>
+    <string name="less"><![CDATA[<]]></string>
+    <string name="more"><![CDATA[>]]></string>
 </resources>

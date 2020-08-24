@@ -25,6 +25,12 @@ interface GithubApiService {
         @Header("Accept") param: String
     ): Call<List<Star?>?>
 
+    @GET("repos/{userName}/{repositoryName}")
+    fun getStarsCount(
+        @Path("userName") userName: String,
+        @Path("repositoryName")  repositoryName: String
+    ): Int
+
     /**
      * Companion object to create the GithubApiService
      */

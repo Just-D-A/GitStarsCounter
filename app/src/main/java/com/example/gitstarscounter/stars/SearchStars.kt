@@ -16,4 +16,8 @@ class SearchStars(val apiService: GithubApiService) {
         return apiService.getStars(userName, repositoryName, " application/vnd.github.v3.star+json")
     }
 
+    fun getStarsCount(userName: String, repositoryName: String): Int {
+        return  apiService.getStarsCount(userName, repositoryName)
+    }
+
 }

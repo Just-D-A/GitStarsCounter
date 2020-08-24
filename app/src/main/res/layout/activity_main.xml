@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:autofillHints=""
+            android:imeOptions="actionDone"
             android:hint="@string/hint_rep_name"
             android:textStyle="bold"
             tools:ignore="MissingConstraints"/>

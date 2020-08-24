@@ -1,27 +1,36 @@
 package com.example.gitstarscounter.stars
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
+import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.git_api.Star
+import com.example.gitstarscounter.login.LoginPresenter
 import com.example.gitstarscounter.user_starred.UserStarredActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
+import java.io.Serializable
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : MvpAppCompatActivity(), StarsView {
 
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var graphGraphView: GraphView
+    private lateinit var yearTextView: TextView
+    private lateinit var moreYearButton: Button
+    private lateinit var lessYearButton: Button
 
     @InjectPresenter
     lateinit var starsPresenter: StarsPresenter
@@ -29,27 +38,37 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     companion object {
 
         private const val KEY_USER_NAME = "userName"
-        private const val KEY_REPOSITORY_NAME = "repositoryName"
+        private const val KEY_REPOSITORY = "repository"
 
-        fun createIntent(context: Context, userName: String, repositoryName: String) = Intent(
+
+        fun createIntent(context: Context, userName: String, repository: Repository) = Intent(
             context,
             StarsActivity::class.java
         )
             .putExtra(KEY_USER_NAME, userName)
-            .putExtra(KEY_REPOSITORY_NAME, repositoryName)
+            .putExtra(KEY_REPOSITORY, repository as Serializable)
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
-
-        starsPresenter.startLoadStars(
-            intent.getStringExtra(KEY_USER_NAME),
-            intent.getStringExtra(KEY_REPOSITORY_NAME)
-        )
+        starsPresenter.setParams( intent.getStringExtra(KEY_USER_NAME), intent.getSerializableExtra(KEY_REPOSITORY) as Repository)
+        starsPresenter.startLoadStars()
 
         waitProgressView = findViewById(R.id.progress_view_stars)
         graphGraphView = findViewById(R.id.graph_view_stars)
+        yearTextView = findViewById(R.id.text_view_selected_year)
+        lessYearButton = findViewById(R.id.button_less_year)
+        moreYearButton = findViewById(R.id.button_more_year)
+
+        lessYearButton.setOnClickListener {
+            starsPresenter.changeCurrentYear(false)
+        }
+
+        moreYearButton.setOnClickListener {
+            starsPresenter.changeCurrentYear(true)
+        }
     }
 
     override fun showError(textResource: Int) {
@@ -58,6 +77,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
 
     override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double) {
 
+        graphGraphView.removeAllSeries()
         val points = pointsList.toTypedArray()
         graphGraphView.viewport.setMinX(0.0)
         graphGraphView.viewport.setMaxX(12.5)
@@ -88,6 +108,12 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
 
     override fun openUsersStared(starsInMonthList: MutableList<Star>) {
         startActivity(UserStarredActivity.createIntent(this, starsInMonthList))
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean) {
+        yearTextView.text = selectedYear.toString()
+        moreYearButton.isVisible = showMoreButton
     }
 
 

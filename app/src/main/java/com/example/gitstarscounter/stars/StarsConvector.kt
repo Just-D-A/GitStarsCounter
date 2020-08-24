@@ -1,5 +1,6 @@
 package com.example.gitstarscounter.stars
 
+import android.util.Log
 import com.example.gitstarscounter.git_api.Star
 import com.jjoe64.graphview.series.DataPoint
 
@@ -16,14 +17,16 @@ object StarsConvector{
         return pointsList
     }
 
-    fun setStarsMap(starsList: List<Star?>?) {
+    fun setStarsMap(starsList: List<Star?>?, currYear: Int) {
         initMap()
         starsList?.forEach {
-            val date = it?.starred_at
-            val starList: MutableList<Star>? = starsInMonthMap[date?.month?.plus(1)]
-            starList?.add(it!!)
-                starsInMonthMap.put(date?.month?.plus(1)!!, starList!!)
-
+            val date = it!!.starred_at
+            Log.d("YEAR", date.year.toString())
+            if(currYear == date.year) {
+                val starList: MutableList<Star>? = starsInMonthMap[date.month.plus(1)]
+                starList?.add(it)
+                starsInMonthMap[date.month.plus(1)] = starList!!
+            }
         }
     }
 

@@ -14,8 +14,10 @@ data class User(
 
 @JsonClass(generateAdapter = true)
 data class Repository(
-    @Json(name = "name") val name: String
-)
+    @Json(name = "name") val name: String,
+    @Json(name = "stargazers_count") val allStarsCount: Int
+): Serializable
+
 @JsonClass(generateAdapter = true)
 data class Star(
     @Json(name = "starred_at") val starred_at: Date,

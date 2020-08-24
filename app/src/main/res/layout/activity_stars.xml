@@ -15,18 +15,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/message_star_grafic"
-            android:textColor="@color/color_primary"
-            android:textSize="30sp"
-            android:textStyle="bold"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/button_less_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/less" />
+
+            <TextView
+                android:id="@+id/text_view_selected_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color_primary"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="YEAR" />
+
+            <Button
+                android:id="@+id/button_more_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/more"
+                />
+        </LinearLayout>
 
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph_view_stars"

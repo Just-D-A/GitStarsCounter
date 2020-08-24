@@ -11,7 +11,7 @@ interface LoginView: MvpView {
     fun startLoading()
     fun endLoading()
     fun setupRepositoriesList(repositoriesList: List<Repository?>?)
-    fun openStars(userName: String, repositoryName: String)
+    fun openStars(userName: String, repository: Repository)
     @StateStrategyType(value = SkipStrategy::class)
     fun showError(textResource: Int) // другая стратегия
 }
