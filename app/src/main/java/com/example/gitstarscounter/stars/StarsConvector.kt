@@ -4,39 +4,37 @@ import com.example.gitstarscounter.git_api.Star
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("DEPRECATION")
-class StarsConvector(val starsList: List<Star?>?) {
-    private var starsInMonthMap: MutableMap<Int, Int> = mutableMapOf()
-
+object StarsConvector{
+    private var starsInMonthMap: MutableMap<Int, MutableList<Star>> = mutableMapOf()
+    const val MONTH_IN_YEAR: Int = 12
 
     fun toDataPoint(): ArrayList<DataPoint> {
         val pointsList: ArrayList<DataPoint> = ArrayList()
-        countStars()
         starsInMonthMap.forEach {
-            pointsList.add(DataPoint(it.key.toDouble(), it.value.toDouble()))
+            pointsList.add(DataPoint(it.key.toDouble(), it.value.size.toDouble()))
         }
         return pointsList
     }
 
-    private fun countStars() {
+    fun setStarsMap(starsList: List<Star?>?) {
         initMap()
         starsList?.forEach {
             val date = it?.starred_at
-            var starsCount: Int? = starsInMonthMap.get(date?.month?.plus(1))
-            if (starsCount != null) {
-                starsCount++
-                starsInMonthMap.put(date?.month?.plus(1)!!, starsCount)
-            }
+            val starList: MutableList<Star>? = starsInMonthMap[date?.month?.plus(1)]
+            starList?.add(it!!)
+                starsInMonthMap.put(date?.month?.plus(1)!!, starList!!)
+
         }
     }
 
     private fun initMap() {
         for (i in 1..MONTH_IN_YEAR) {
-            starsInMonthMap[i] = 0
+            starsInMonthMap[i] = mutableListOf()
         }
     }
 
-    companion object {
-        const val MONTH_IN_YEAR: Int = 12
+    fun getStarListByMonth(monthNumber: Int): MutableList<Star>{
+        return starsInMonthMap.get(monthNumber)!!
     }
 }
 

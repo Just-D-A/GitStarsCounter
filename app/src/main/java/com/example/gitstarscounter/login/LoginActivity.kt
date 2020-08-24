@@ -24,7 +24,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
     private lateinit var findButton: Button
     private lateinit var repositoryRecycleView: RecyclerView
 
-    private lateinit var adapter: RepositoryAdapter
+    private lateinit var repositoriesAdapter: RepositoryAdapter
 
     @InjectPresenter
     lateinit var loginPresenter: LoginPresenter
@@ -39,7 +39,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         repositoryRecycleView = findViewById(R.id.recycler_repositories)
 
         val accountNameEditText: EditText = findViewById(R.id.text_rep_name)
-        var userName = ""
+        var userName = "" // как правильно передавать??
         findButton.setOnClickListener {
             userName = accountNameEditText.text.toString().trim()
             loginPresenter.loadUser(userName)
@@ -52,8 +52,8 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
                 }
             }
 
-        adapter = RepositoryAdapter(onRepositoryClickListener)
-        repositoryRecycleView.adapter = adapter
+        repositoriesAdapter = RepositoryAdapter(onRepositoryClickListener)
+        repositoryRecycleView.adapter = repositoriesAdapter
         repositoryRecycleView.layoutManager = LinearLayoutManager(
             applicationContext,
             OrientationHelper.VERTICAL,
@@ -73,7 +73,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
     }
 
     override fun setupRepositoriesList(repositoriesList: List<Repository?>?) {
-        adapter.setupRepositoriesList(repositoriesList)
+        repositoriesAdapter.setupRepositoriesList(repositoriesList)
         repositoryRecycleView.isVisible = true
     }
 

@@ -9,6 +9,8 @@ import androidx.core.view.isVisible
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
+import com.example.gitstarscounter.git_api.Star
+import com.example.gitstarscounter.user_starred.UserStarredActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
@@ -16,8 +18,7 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.OnDataPointTapListener
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class StarsActivity : MvpAppCompatActivity(),
-    StarsView {
+class StarsActivity : MvpAppCompatActivity(), StarsView {
 
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var graphGraphView: GraphView
@@ -64,7 +65,7 @@ class StarsActivity : MvpAppCompatActivity(),
         val series = BarGraphSeries(points)
         graphGraphView.addSeries(series)
 
-// styling
+        // styling
         series.setValueDependentColor { data ->
             Color.rgb(
                 data.x.toInt() * 255 / 4,
@@ -76,10 +77,13 @@ class StarsActivity : MvpAppCompatActivity(),
         series.valuesOnTopColor = Color.RED
 
         series.setOnDataPointTapListener { _, dataPoint ->
-            Toast.makeText(this, "Series1: On Data Point clicked: $dataPoint", Toast.LENGTH_SHORT)
-                .show()
+            starsPresenter.openUserStarred(dataPoint.x)
         }
         series.isDrawValuesOnTop = true
+    }
+
+    override fun openUsersStared(starsInMonthList: MutableList<Star>) {
+        startActivity(UserStarredActivity.createIntent(this, starsInMonthList))
     }
 
 

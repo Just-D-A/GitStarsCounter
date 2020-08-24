@@ -8,4 +8,5 @@
     <string name="button_use_rep">Использовать</string>
     <string name="unknown_user_text">Неизвестный пользователь</string>
     <string name="no_internet_text">Нет подключения</string>
+    <string name="hint_user_name">Имя пользователя</string>
 </resources>
