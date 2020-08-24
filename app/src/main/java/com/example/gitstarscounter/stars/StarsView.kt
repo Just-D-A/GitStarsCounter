@@ -2,6 +2,7 @@ package com.example.gitstarscounter.stars
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.example.gitstarscounter.git_api.Star
 import com.jjoe64.graphview.series.DataPoint
@@ -10,7 +11,8 @@ import com.jjoe64.graphview.series.DataPoint
 interface StarsView : MvpView {
     fun startLoading()
     fun endLoading()
-    fun setupStarsGrafic(pointsList: ArrayList<DataPoint>)
+    fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double)
     fun openUsersStared(starsInMonthList: MutableList<Star>)
+    @StateStrategyType(value = SkipStrategy::class)
     fun showError(textResource: Int) //другая стратегия
 }

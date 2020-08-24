@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.stars
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.gitstarscounter.git_api.Star
@@ -19,11 +18,11 @@ class StarsPresenter : MvpPresenter<StarsView>() {
     fun loadGrafic(starsList: List<Star?>?) {
         starsConvector.setStarsMap(starsList)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
-        Log.d("STAR ", pointsList.size.toString())
+        val maxValueOfY = starsConvector.getMaxCountValue()
 
 
         viewState.endLoading()
-        viewState.setupStarsGrafic(pointsList)
+        viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
     }
 
     fun showError(textResource: Int) {

@@ -3,7 +3,7 @@ package com.example.gitstarscounter.login
 import android.util.Log
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Repository
-import com.example.gitstarscounter.git_api.SearchRepositoryProvider
+import com.example.gitstarscounter.git_api.SearchProvider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,8 +12,7 @@ import retrofit2.Response
 class LoginProvider(var presenter: LoginPresenter) {
     //добавить интерфейс реализации для presenter
     fun loadUser(userName: String) {
-        //bacgroundThread
-        val repository = SearchRepositoryProvider.provideSearchRepository()
+        val repository = SearchProvider.provideSearchRepository()
         val repositoriesList = repository.getUserRepos(userName)
 
         repositoriesList.enqueue(object : Callback<List<Repository?>?> {
@@ -30,9 +29,6 @@ class LoginProvider(var presenter: LoginPresenter) {
                 presenter.showError(R.string.no_internet_text)
             }
         })
-
-        //Log.d("From LoginProvider: ", repositoriesList.isExecuted.toString())
-
     }
 }
 

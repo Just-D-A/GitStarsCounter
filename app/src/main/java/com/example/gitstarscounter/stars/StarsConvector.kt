@@ -36,5 +36,17 @@ object StarsConvector{
     fun getStarListByMonth(monthNumber: Int): MutableList<Star>{
         return starsInMonthMap.get(monthNumber)!!
     }
+
+    fun getMaxCountValue() : Double {
+        var result: Double = starsInMonthMap[1]!!.size.toDouble()
+        starsInMonthMap.forEach{
+            val starsInMonthList = it.value
+            val starsCount = starsInMonthList.size.toDouble()
+            if(result < starsCount) {
+                result = starsCount
+            }
+        }
+        return result
+    }
 }
 

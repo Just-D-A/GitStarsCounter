@@ -1,9 +1,7 @@
 package com.example.gitstarscounter.stars
 
-import android.util.Log
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.git_api.Repository
-import com.example.gitstarscounter.git_api.SearchRepositoryProvider
+import com.example.gitstarscounter.git_api.SearchProvider
 import com.example.gitstarscounter.git_api.Star
 import retrofit2.Call
 import retrofit2.Callback
@@ -13,8 +11,7 @@ import retrofit2.Response
 class StarsProvider(var presenter: StarsPresenter) {
 
     fun loadStars(userName: String, repositoryName: String) { // без rx сделать так чтобы работало
-        val repository = SearchRepositoryProvider.provideSearchRepository()
-        Log.d("STARS_PROVIDER", "$userName $repositoryName")
+        val repository = SearchProvider.provideSearchStars()
         val starsList = repository.getStars(userName, repositoryName)
 
         starsList.enqueue(object : Callback<List<Star?>?> {

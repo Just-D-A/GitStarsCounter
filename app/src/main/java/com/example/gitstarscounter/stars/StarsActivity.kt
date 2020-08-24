@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -15,7 +16,6 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.OnDataPointTapListener
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : MvpAppCompatActivity(), StarsView {
@@ -56,12 +56,16 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         Toast.makeText(applicationContext, textResource, Toast.LENGTH_SHORT).show()
     }
 
-    override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>) {
+    override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double) {
 
         val points = pointsList.toTypedArray()
         graphGraphView.viewport.setMinX(0.0)
         graphGraphView.viewport.setMaxX(12.5)
+        graphGraphView.viewport.setMinY(0.0)
+        graphGraphView.viewport.setMaxY(maxValueOfY)
+
         graphGraphView.viewport.isXAxisBoundsManual = true
+        graphGraphView.viewport.isYAxisBoundsManual = true
         val series = BarGraphSeries(points)
         graphGraphView.addSeries(series)
 

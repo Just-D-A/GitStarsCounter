@@ -11,13 +11,19 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-class RepositoryAdapter(val onRepositoryClickListener: OnRepositoryClickListener) :
+class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClickListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var repositoriesList: List<Repository?>? = listOf()
+    private var repositoriesList: ArrayList<Repository> = ArrayList()
 
-    fun setupRepositoriesList(repositoriesList: List<Repository?>?) {
-        this.repositoriesList = repositoriesList
+    fun setupRepositoriesList(repositoriesListInput: List<Repository?>?) {
+        var repositoriesArrayList: ArrayList<Repository> = ArrayList()
+        repositoriesListInput!!.forEach {
+            repositoriesArrayList.add(it!!)
+        }
+        repositoriesList.clear()
+        repositoriesList.addAll(repositoriesArrayList)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -28,12 +34,12 @@ class RepositoryAdapter(val onRepositoryClickListener: OnRepositoryClickListener
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is RepositoryViewHolder) {
-            repositoriesList?.get(position)?.let { holder.bind(it) }
+            holder.bind(repositoriesList[position])
         }
     }
 
     override fun getItemCount(): Int {
-        return repositoriesList!!.count()
+        return repositoriesList.count()
     }
 
 

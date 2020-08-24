@@ -3,15 +3,12 @@ package com.example.gitstarscounter.user_starred
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -19,9 +16,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Star
-import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
-import com.jjoe64.graphview.series.DataPoint
 import java.io.Serializable
 
 class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
@@ -44,7 +39,6 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
             UserStarredActivity::class.java
         )
             .putExtra(KEY_STAR_LIST, starsList as Serializable)
-           // .putExtra(KEY_REPOSITORY_NAME, repositoryName)
     }
 
     @SuppressLint("WrongConstant")
