@@ -32,3 +32,27 @@ class LoginProvider(var presenter: LoginPresenter) {
     }
 }
 
+//
+
+/*old fun
+  fun loadUser(userName: String) {
+        val repository = SearchProvider.provideSearchRepository()
+        val repositoriesList = repository.getUserRepos(userName)
+
+        repositoriesList.enqueue(object : Callback<List<Repository?>?> {
+            override fun onResponse(call: Call<List<Repository?>?>?, response: Response<List<Repository?>?>?) {
+                if (response?.isSuccessful!!) {
+                    Log.d("LoginProvider: ", "ALL GOOD")
+                    presenter.getRepositories(response.body())
+                } else {
+                    presenter.showError(R.string.unknown_user_text)
+                }
+            }
+
+            override fun onFailure(call: Call<List<Repository?>?>?, t: Throwable?) {
+                presenter.showError(R.string.no_internet_text)
+            }
+        })
+    }
+ */
+

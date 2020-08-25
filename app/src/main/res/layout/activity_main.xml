@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="@string/message_hello"
+            android:text="@string/user_name_text"
             android:textColor="@color/color_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:imeOptions="actionDone"
-            android:hint="@string/hint_rep_name"
+            android:hint="@string/hint_user_name"
             android:textStyle="bold"
             tools:ignore="MissingConstraints"/>
 

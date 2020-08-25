@@ -6,6 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -19,6 +22,7 @@ import com.example.gitstarscounter.git_api.Star
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import java.io.Serializable
 
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
 class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
     private lateinit var searchEditText: EditText
@@ -74,6 +78,17 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
             }
 
         })
+
+        searchEditText.setOnKeyListener { _, keyCode, event ->
+            if (event.action === KeyEvent.ACTION_DOWN) {
+
+                when (keyCode) {
+                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER ->
+                        hideKeyboard()
+                }
+            }
+            true
+        }
     }
 
     override fun startLoading() {
@@ -92,5 +107,10 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
     override fun showError(textResource: Int) {
         Toast.makeText(this, textResource, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun hideKeyboard(){
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).windowToken, 0)
     }
 }

@@ -35,6 +35,6 @@ class StarsProvider(var presenter: StarsPresenter) {
                 //break
             }
         })
-        //while(количество взятых звезд < количества звезд)
+        //while((allStarsCount > currStarsCount) && (yearOfLastELement > currYear))
     }
 }

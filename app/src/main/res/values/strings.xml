@@ -11,4 +11,5 @@
     <string name="hint_user_name">Имя пользователя</string>
     <string name="less"><![CDATA[<]]></string>
     <string name="more"><![CDATA[>]]></string>
+    <string name="user_name_text">Введите имя пользователя</string>
 </resources>
