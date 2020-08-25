@@ -49,12 +49,15 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
             userName = accountNameEditText.text.toString().trim()
             loginPresenter.loadUser(userName)
         }
+
+        accountNameEditText.setImeActionLabel("Custom text", KeyEvent.KEYCODE_ENTER);
         accountNameEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action === KeyEvent.ACTION_DOWN) {
 
                 when (keyCode) {
                         KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER ->
                         hideKeyboard()
+
                 }
             }
             true
@@ -105,6 +108,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
     }
 
     private fun hideKeyboard(){
+        findButton.performClick()
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).windowToken, 0)
     }

@@ -11,12 +11,14 @@ import com.jjoe64.graphview.series.DataPoint
 class StarsPresenter() : MvpPresenter<StarsView>() {
     private val starsConvector = StarsConvector
     private var currYear: Int
+
     private lateinit var userName: String
     private lateinit var repository: Repository
 
     init {
         currYear = YEAR_IS_NOW
     }
+
 
     fun setParams(userName: String, repository: Repository) {
         this.userName = userName
@@ -27,7 +29,8 @@ class StarsPresenter() : MvpPresenter<StarsView>() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.startLoading()
 
-        StarsProvider(this).loadStars(userName, repository)
+        val starsCallback = StarsCallback(this)
+        StarsProvider(starsCallback, currYear).loadStars(userName, repository)
     }
 
     fun loadGrafic(starsList: List<Star?>?) {
