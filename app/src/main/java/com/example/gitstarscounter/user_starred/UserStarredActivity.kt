@@ -84,7 +84,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
         })*/
 
-        searchEditText.setOnKeyListener { _, keyCode, event ->
+       searchEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action === KeyEvent.ACTION_DOWN) {
 
                 when (keyCode) {
@@ -92,7 +92,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
                         hideKeyboard()
                 }
             }
-            true
+            false
         }
     }
 
