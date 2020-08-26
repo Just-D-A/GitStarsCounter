@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.stars
 
-import android.util.Log
 import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.git_api.SearchProvider
 import com.example.gitstarscounter.git_api.Star
@@ -9,19 +8,13 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @Suppress("DEPRECATION")
-class StarsProvider(val starsCallback: StarsCallback, val currYear: Int) {
+class StarsProvider(val starsCallback: StarsCallback) {
 
     private val searchRepository = SearchProvider.provideSearchStars()
 
-    fun loadStars(userName: String, repository: Repository) { // без rx сделать так чтобы работало
-      //  val allStarsCount =  repository.getStarsCount(userName, repositoryName)
-        Log.d("All_Stars_Count", repository.allStarsCount.toString())
-        val allStarsCount = repository.allStarsCount
-        var currStarsCount: Int
-        var yearOfLastELement: Int
-        var error = false
-        do{
-        val starsList = searchRepository.getStars(userName, repository.name)
+    fun loadStars(userName: String, repository: Repository, pageNumber: Int) { // без rx сделать так чтобы работало
+
+        val starsList = searchRepository.getStars(userName, repository.name, pageNumber)
         starsList.enqueue(object : Callback<List<Star?>?> {
             override fun onResponse(call: Call<List<Star?>?>, response: Response<List<Star?>?>) {
                 starsCallback.getStarsResponse(response.body())
@@ -29,16 +22,15 @@ class StarsProvider(val starsCallback: StarsCallback, val currYear: Int) {
 
             override fun onFailure(call: Call<List<Star?>?>, t: Throwable) {
                 starsCallback.getError(t)
-                error = true
             }
 
         })
-            yearOfLastELement = starsCallback.getYearOfLastStar()
-            currStarsCount = starsCallback.getStrasListSize()
-            Log.d("IN_WHILE_CURR_COUNT: " , currStarsCount.toString())
-            Log.d("IN_WHILE_LAST_YEAR: " , currStarsCount.toString())
-        }while((allStarsCount > currStarsCount) && (yearOfLastELement <= currYear) && (!error))
-        starsCallback.loadGraph(error)
+        /*yearOfLastELement = starsCallback.getYearOfLastStar()
+        currStarsCount = starsCallback.getStrasListSize()
+        Log.d("IN_WHILE_CURR_COUNT: " , currStarsCount.toString())
+        Log.d("IN_WHILE_LAST_YEAR: " , currStarsCount.toString())*/
+        //  }while((allStarsCount > currStarsCount) && (yearOfLastELement <= currYear) && (!error))
+        //starsCallback.loadGraph(error)
     }
 }
 

@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.git_api
 
-import com.squareup.moshi.JsonReader
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import retrofit2.Call
@@ -9,6 +8,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.util.*
 
 interface GithubApiService {
@@ -22,13 +22,15 @@ interface GithubApiService {
     fun getStars(
         @Path("userName") userName: String,
         @Path("repositoryName") repositoryName: String,
-        @Header("Accept") param: String
+        @Header("Accept") param: String,
+        @Query("page") pageNumber: Int,
+        @Query("per_page") elementsCount: Int
     ): Call<List<Star?>?>
 
     @GET("repos/{userName}/{repositoryName}")
     fun getStarsCount(
         @Path("userName") userName: String,
-        @Path("repositoryName")  repositoryName: String
+        @Path("repositoryName") repositoryName: String
     ): Int
 
     /**
@@ -40,9 +42,6 @@ interface GithubApiService {
             val moshi: Moshi = Moshi.Builder()
                 .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
                 .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())//etc
-                /*.add(Date.class, new DateJsonAdapter())
-                .add(PrimitiveAdapterFactory.FACTORY)
-                .add(ArrayAdapterFactory.FACTORY);*/
                 .build()
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://api.github.com/")

@@ -1,3 +1,5 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package com.example.gitstarscounter.stars
 
 import android.util.Log
@@ -5,7 +7,7 @@ import com.example.gitstarscounter.git_api.Star
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("DEPRECATION")
-object StarsConvector{
+object StarsConvector {
     private var starsInMonthMap: MutableMap<Int, MutableList<Star>> = mutableMapOf()
     const val MONTH_IN_YEAR: Int = 12
 
@@ -22,7 +24,7 @@ object StarsConvector{
         starsList?.forEach {
             val date = it!!.starred_at
             Log.d("YEAR", date.year.toString())
-            if(currYear == date.year) {
+            if (currYear == date.year) {
                 val starList: MutableList<Star>? = starsInMonthMap[date.month.plus(1)]
                 starList?.add(it)
                 starsInMonthMap[date.month.plus(1)] = starList!!
@@ -36,16 +38,16 @@ object StarsConvector{
         }
     }
 
-    fun getStarListByMonth(monthNumber: Int): MutableList<Star>{
+    fun getStarListByMonth(monthNumber: Int): MutableList<Star> {
         return starsInMonthMap.get(monthNumber)!!
     }
 
-    fun getMaxCountValue() : Double {
+    fun getMaxCountValue(): Double {
         var result: Double = starsInMonthMap[1]!!.size.toDouble()
-        starsInMonthMap.forEach{
+        starsInMonthMap.forEach {
             val starsInMonthList = it.value
             val starsCount = starsInMonthList.size.toDouble()
-            if(result < starsCount) {
+            if (result < starsCount) {
                 result = starsCount
             }
         }

@@ -14,6 +14,7 @@ interface StarsView : MvpView {
     fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double)
     fun openUsersStared(starsInMonthList: MutableList<Star>)
     fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean)
+
     @StateStrategyType(value = SkipStrategy::class)
     fun showError(textResource: Int) //другая стратегия
 }

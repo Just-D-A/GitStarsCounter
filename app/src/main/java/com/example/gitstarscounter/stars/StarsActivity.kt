@@ -53,7 +53,10 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
-        starsPresenter.setParams( intent.getStringExtra(KEY_USER_NAME), intent.getSerializableExtra(KEY_REPOSITORY) as Repository)
+        starsPresenter.setParams(
+            intent.getStringExtra(KEY_USER_NAME),
+            intent.getSerializableExtra(KEY_REPOSITORY) as Repository
+        )
         starsPresenter.startLoadStars()
 
         waitProgressView = findViewById(R.id.progress_view_stars)

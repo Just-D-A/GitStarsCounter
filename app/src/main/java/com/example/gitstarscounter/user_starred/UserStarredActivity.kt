@@ -61,10 +61,11 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         userStarredAdapter = UserStarredAdapter()
 
         usersRecycleView.adapter = userStarredAdapter
-        usersRecycleView.layoutManager = LinearLayoutManager(applicationContext, OrientationHelper.VERTICAL, false)
+        usersRecycleView.layoutManager =
+            LinearLayoutManager(applicationContext, OrientationHelper.VERTICAL, false)
         usersRecycleView.hasFixedSize()
 
-        searchEditText.addTextChangedListener(object: TextWatcher {
+        searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -109,7 +110,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         Toast.makeText(this, textResource, Toast.LENGTH_SHORT).show()
     }
 
-    private fun hideKeyboard(){
+    private fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).windowToken, 0)
     }

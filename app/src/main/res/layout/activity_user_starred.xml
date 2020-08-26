@@ -22,6 +22,8 @@
             android:autofillHints=""
             android:hint="@string/hint_user_name"
             android:textStyle="bold"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
             tools:ignore="MissingConstraints" />
 
         <com.github.rahatarmanahmed.cpv.CircularProgressView

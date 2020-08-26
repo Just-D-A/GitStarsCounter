@@ -7,11 +7,12 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.example.gitstarscounter.git_api.Repository
 
 @StateStrategyType(value = AddToEndSingleStrategy::class)
-interface LoginView: MvpView {
+interface LoginView : MvpView {
     fun startLoading()
     fun endLoading()
     fun setupRepositoriesList(repositoriesList: List<Repository?>?)
     fun openStars(userName: String, repository: Repository)
+
     @StateStrategyType(value = SkipStrategy::class)
     fun showError(textResource: Int) // другая стратегия
 }
