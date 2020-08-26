@@ -3,17 +3,20 @@ package com.example.gitstarscounter.stars
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.git_api.Star
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
-class StarsPresenter() : MvpPresenter<StarsView>() {
-    val starsConvector = StarsConvector
-    val starsCallback = StarsCallback(this)
-    val starsProvider = StarsProvider(starsCallback)
-    var currYear: Int
+class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
+    private val starsConvector = StarsConvector
+    private val starsProvider = StarsProvider()
+    private var currYear: Int
+    private var starsList: MutableList<Star> = mutableListOf()
+    private var error = false
+    private var pageNumber = 1
     lateinit var userName: String
     lateinit var repository: Repository
 
@@ -32,14 +35,14 @@ class StarsPresenter() : MvpPresenter<StarsView>() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.startLoading()
 
-        starsProvider.loadStars(userName, repository, 1)
+        starsProvider.loadStars(userName, repository, pageNumber, this)
     }
 
     fun loadMoreStars(pageNumber: Int) {
-        starsProvider.loadStars(userName, repository, pageNumber)
+        starsProvider.loadStars(userName, repository, pageNumber, this)
     }
 
-    fun loadGrafic(starsList: List<Star?>?) {
+    fun loadGrafic() {
         Log.d("CURR_YEAR", currYear.toString())
         starsConvector.setStarsMap(starsList, currYear)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
@@ -71,7 +74,6 @@ class StarsPresenter() : MvpPresenter<StarsView>() {
     fun reloadStars() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.startLoading()
-        val starsList = starsCallback.getStrasList()
         starsConvector.setStarsMap(starsList, currYear)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
@@ -87,5 +89,38 @@ class StarsPresenter() : MvpPresenter<StarsView>() {
 
     companion object {
         private const val YEAR_IS_NOW = 120 //java date need -1900
+    }
+
+    override fun onStarsResponse(responseStarsList: List<Star?>?) {
+        if (responseStarsList != null) {
+            responseStarsList.forEach {
+                Log.d("StarsCallback", it?.user?.login)
+                starsList.add(it!!)
+            }
+            needMore()
+            //presenter.loadGrafic(responseStarsList)
+        } else {
+            showError(R.string.unknown_user_text)
+            error = true
+        }
+    }
+
+    override fun onError(textResource: Int) {
+        showError(textResource)
+    }
+
+    private fun needMore() {
+        var lastStarYear = 0
+        if (starsList.size != 0) {
+            lastStarYear = starsList[starsList.size - 1].starred_at.year
+        }
+        val currStarsCount = starsList.size
+        val allStarsCount = repository.allStarsCount
+        if ((lastStarYear <= currYear) && (currStarsCount < allStarsCount) && (!error)) {
+            pageNumber++
+            loadMoreStars(pageNumber)
+        } else if (!error) {
+            loadGrafic()
+        }
     }
 }

@@ -4,14 +4,10 @@ import android.util.Log
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Star
 
-@Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class StarsCallback(val presenter: StarsPresenter) {
-    private var starsList: MutableList<Star> = mutableListOf()
-    private var error = false
-    private var pageNumber = 1
+interface StarsCallback {
 
-    fun getStarsResponse(responseStarsList: List<Star?>?) {
-        if (responseStarsList != null) {
+    fun onStarsResponse(responseStarsList: List<Star?>?)
+    /*    if (responseStarsList != null) {
             responseStarsList.forEach {
                 Log.d("StarsCallback", it?.user?.login)
                 starsList.add(it!!)
@@ -21,12 +17,12 @@ class StarsCallback(val presenter: StarsPresenter) {
         } else {
             presenter.showError(R.string.unknown_user_text)
             error = true
-        }
-    }
+        }*/
 
-    private fun needMore() {
+
+    /*private fun needMore() {
         var lastStarYear = 0
-        if(starsList.size != 0) {
+        if (starsList.size != 0) {
             lastStarYear = starsList[starsList.size - 1].starred_at.year
         }
         val currYear = presenter.currYear
@@ -38,18 +34,16 @@ class StarsCallback(val presenter: StarsPresenter) {
         } else {
             loadGraph()
         }
+    }*/
+
+    fun onError(textResource: Int)
+        /*error = true
+        presenter.showError(R.string.no_internet_text)*/
 
 
-    }
-
-    fun getError(t: Throwable) {
-        error = true
-        presenter.showError(R.string.no_internet_text)
-    }
-
-    fun getStrasListSize(): Int {
+    /*fun getStrasListSize(): Int {
         return starsList.size
-    }
+    }*
 
     fun getYearOfLastStar(): Int {
         if (starsList.isEmpty()) {
@@ -63,11 +57,11 @@ class StarsCallback(val presenter: StarsPresenter) {
         if (!error) {
             presenter.loadGrafic(starsList)
         }
-    }
+    }*/
 
-    fun getStrasList(): List<Star> {
+    /*fun getStrasList(): List<Star> {
         return starsList
-    }
+    }*/
 }
 
 

@@ -9,9 +9,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class LoginProvider(var presenter: LoginPresenter) {
+class LoginProvider() {
     //добавить интерфейс реализации для presenter
-    fun loadUser(userName: String) {
+    fun loadUser(userName: String, loginCallback: LoginCallback) {
         val repository = SearchProvider.provideSearchRepository()
         val repositoriesList = repository.getUserRepos(userName)
 
@@ -20,16 +20,11 @@ class LoginProvider(var presenter: LoginPresenter) {
                 call: Call<List<Repository?>?>?,
                 response: Response<List<Repository?>?>?
             ) {
-                if (response?.isSuccessful!!) {
-                    Log.d("LoginProvider: ", "ALL GOOD")
-                    presenter.getRepositories(response.body())
-                } else {
-                    presenter.showError(R.string.unknown_user_text)
-                }
+                loginCallback.onLoginResponse(response?.body())
             }
 
             override fun onFailure(call: Call<List<Repository?>?>?, t: Throwable?) {
-                presenter.showError(R.string.no_internet_text)
+                loginCallback.onError(R.string.no_internet_text)
             }
         })
     }

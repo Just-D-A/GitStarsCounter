@@ -7,21 +7,14 @@ import com.example.gitstarscounter.git_api.Repository
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @InjectViewState
-class LoginPresenter : MvpPresenter<LoginView>() {
+class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback {
+
+    val loginProvider = LoginProvider()
 
     fun loadUser(userName: String) {
         viewState.startLoading()
-        LoginProvider(this).loadUser(userName)
-    }
 
-    fun getRepositories(repositoriesList: List<Repository?>?) {
-        //get reps of this user
-        if (repositoriesList?.isEmpty()!!) {
-            viewState.showError(R.string.login_error)
-        } else {
-            viewState.setupRepositoriesList(repositoriesList)
-        }
-        viewState.endLoading()
+        loginProvider.loadUser(userName, this)
     }
 
     fun openStars(userName: String, repository: Repository?) {
@@ -30,7 +23,16 @@ class LoginPresenter : MvpPresenter<LoginView>() {
         }
     }
 
-    fun showError(textResource: Int) {
+    override fun onLoginResponse(repositoryList: List<Repository?>?) {
+        if (repositoryList?.isEmpty()!!) {
+            viewState.showError(R.string.login_error)
+        } else {
+            viewState.setupRepositoriesList(repositoryList)
+        }
+        viewState.endLoading()
+    }
+
+    override fun onError(textResource: Int) {
         viewState.endLoading()
         viewState.showError(textResource)
     }

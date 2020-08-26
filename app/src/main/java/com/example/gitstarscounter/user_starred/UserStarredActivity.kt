@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -52,7 +53,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
         searchEditText = findViewById(R.id.edit_text_user_name)
         waitProgressView = findViewById(R.id.progress_view_user_starred)
-        usersRecycleView = findViewById(R.id.recycler_users) //chage
+        usersRecycleView = findViewById(R.id.recycler_users) //chage-----
 
         val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<Star>
 
@@ -65,20 +66,23 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
             LinearLayoutManager(applicationContext, OrientationHelper.VERTICAL, false)
         usersRecycleView.hasFixedSize()
 
+        searchEditText.addTextChangedListener(onTextChanged = { charSequence: CharSequence?, i: Int, i1: Int, i2: Int ->
+            userStarredAdapter.filter(charSequence.toString())
+        })
+/*
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                userStarredAdapter.filter(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {
 
             }
 
-        })
+        })*/
 
         searchEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action === KeyEvent.ACTION_DOWN) {

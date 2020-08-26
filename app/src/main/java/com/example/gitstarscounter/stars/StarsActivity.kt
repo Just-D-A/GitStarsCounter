@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -116,7 +117,11 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     @SuppressLint("SetTextI18n")
     override fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean) {
         yearTextView.text = selectedYear.toString()
-        moreYearButton.isVisible = showMoreButton
+        if(showMoreButton) {
+            moreYearButton.isVisible = true
+        } else {
+            moreYearButton.visibility = View.INVISIBLE
+        }
     }
 
 
