@@ -22,7 +22,7 @@ object StarsConvector {
     fun setStarsMap(starsList: List<Star?>?, currYear: Int) {
         initMap()
         starsList?.forEach {
-            val date = it!!.starred_at
+            val date = it!!.starredAt
             Log.d("YEAR", date.year.toString())
             if (currYear == date.year) {
                 val starList: MutableList<Star>? = starsInMonthMap[date.month.plus(1)]

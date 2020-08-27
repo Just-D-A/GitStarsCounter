@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
@@ -43,6 +44,8 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         repositoryRecycleView = findViewById(R.id.recycler_repositories)
 
 
+
+
         var userName = "" // как правильно передавать??
         val accountNameEditText: EditText = findViewById(R.id.text_rep_name)
         findButton.setOnClickListener {
@@ -50,7 +53,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
             loginPresenter.loadUser(userName)
         }
 
-        accountNameEditText.setImeActionLabel("Custom text", KeyEvent.KEYCODE_ENTER);
+        accountNameEditText.setImeActionLabel("user_name", KeyEvent.KEYCODE_ENTER);
         accountNameEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action === KeyEvent.ACTION_DOWN) {
 
@@ -60,7 +63,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
 
                 }
             }
-            true
+            false
         }
 
 

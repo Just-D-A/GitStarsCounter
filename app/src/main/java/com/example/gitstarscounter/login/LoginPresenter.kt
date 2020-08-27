@@ -23,12 +23,9 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback {
         }
     }
 
-    override fun onLoginResponse(repositoryList: List<Repository?>?) {
-        if (repositoryList?.isEmpty()!!) {
-            viewState.showError(R.string.login_error)
-        } else {
+    override fun onLoginResponse(repositoryList: List<Repository>) {
+
             viewState.setupRepositoriesList(repositoryList)
-        }
         viewState.endLoading()
     }
 

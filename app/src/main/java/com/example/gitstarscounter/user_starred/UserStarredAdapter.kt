@@ -60,7 +60,7 @@ class UserStarredAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         @SuppressLint("SetTextI18n")
         fun bind(user: User) {
-            Picasso.get().load(user.avatar_url).into(userPhoto)
+            Picasso.get().load(user.avatarUrl).into(userPhoto)
             userNameTextView.text = user.login
         }
 

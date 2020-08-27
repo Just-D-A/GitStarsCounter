@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -16,13 +17,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.git_api.Star
-import com.example.gitstarscounter.login.LoginPresenter
 import com.example.gitstarscounter.user_starred.UserStarredActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import java.io.Serializable
+
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : MvpAppCompatActivity(), StarsView {
@@ -65,6 +66,10 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         yearTextView = findViewById(R.id.text_view_selected_year)
         lessYearButton = findViewById(R.id.button_less_year)
         moreYearButton = findViewById(R.id.button_more_year)
+
+        val actionBar= supportActionBar
+        actionBar?.setHomeButtonEnabled(true);
+        actionBar?.setDisplayHomeAsUpEnabled(true);
 
         lessYearButton.setOnClickListener {
             starsPresenter.changeCurrentYear(false)
@@ -112,6 +117,28 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
 
     override fun openUsersStared(starsInMonthList: MutableList<Star>) {
         startActivity(UserStarredActivity.createIntent(this, starsInMonthList))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.home -> {
+                //Log.d("BackButton", "pressed")
+                this.finish()
+                true
+            }
+
+            16908332 -> {
+                //Log.d("BackButton", "pressed by num id")
+                this.finish()
+                true
+            }
+
+            else -> {
+                //Log.d("BackButtonElse", "${item.itemId} == ${R.id.home}")
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")

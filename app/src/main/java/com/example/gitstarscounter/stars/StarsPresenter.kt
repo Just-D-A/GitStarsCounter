@@ -13,18 +13,17 @@ import com.jjoe64.graphview.series.DataPoint
 class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     private val starsConvector = StarsConvector
     private val starsProvider = StarsProvider()
-    private var currYear: Int
+    private var currYear: Int = YEAR_IS_NOW
     private var starsList: MutableList<Star> = mutableListOf()
     private var error = false
     private var pageNumber = 1
+
     lateinit var userName: String
     lateinit var repository: Repository
 
-
-    init {
-        currYear = YEAR_IS_NOW
+    companion object {
+        private const val YEAR_IS_NOW = 120 //java date need -1900
     }
-
 
     fun setParams(userName: String, repository: Repository) {
         this.userName = userName
@@ -48,19 +47,10 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
 
-        pointsList.forEach {
-            Log.d("PINTS_COUNT", "${it.x} ${it.y}")
-        }
-
-
         viewState.endLoading()
         viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
     }
 
-    fun showError(textResource: Int) {
-        viewState.endLoading()
-        viewState.showError(textResource)
-    }
 
     fun changeCurrentYear(more: Boolean) {
         if (more && (currYear + 1 <= YEAR_IS_NOW)) {
@@ -69,6 +59,19 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
             currYear--
         }
         reloadStars()
+    }
+
+    override fun onStarsResponse(responseStarsList: List<Star>) {
+        responseStarsList.forEach {
+            Log.d("StarsCallback", it.user.login)
+            starsList.add(it)
+        }
+        needMore()
+    }
+
+    override fun onError(textResource: Int) {
+        viewState.endLoading()
+        viewState.showError(textResource)
     }
 
     fun reloadStars() {
@@ -87,32 +90,10 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     }
 
 
-    companion object {
-        private const val YEAR_IS_NOW = 120 //java date need -1900
-    }
-
-    override fun onStarsResponse(responseStarsList: List<Star?>?) {
-        if (responseStarsList != null) {
-            responseStarsList.forEach {
-                Log.d("StarsCallback", it?.user?.login)
-                starsList.add(it!!)
-            }
-            needMore()
-            //presenter.loadGrafic(responseStarsList)
-        } else {
-            showError(R.string.unknown_user_text)
-            error = true
-        }
-    }
-
-    override fun onError(textResource: Int) {
-        showError(textResource)
-    }
-
     private fun needMore() {
         var lastStarYear = 0
         if (starsList.size != 0) {
-            lastStarYear = starsList[starsList.size - 1].starred_at.year
+            lastStarYear = starsList[starsList.size - 1].starredAt.year
         }
         val currStarsCount = starsList.size
         val allStarsCount = repository.allStarsCount

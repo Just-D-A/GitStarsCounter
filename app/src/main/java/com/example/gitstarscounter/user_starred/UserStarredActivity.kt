@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -22,6 +24,7 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Star
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import java.io.Serializable
+
 
 @Suppress("DEPRECATED_IDENTITY_EQUALS")
 class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
@@ -57,6 +60,10 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
         val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<Star>
 
+        val actionBar= supportActionBar
+        actionBar?.setHomeButtonEnabled(true);
+        actionBar?.setDisplayHomeAsUpEnabled(true);
+
         userStarredPresenter.loadUserList(starsList!!)
 
         userStarredAdapter = UserStarredAdapter()
@@ -69,24 +76,11 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         searchEditText.addTextChangedListener(onTextChanged = { charSequence: CharSequence?, i: Int, i1: Int, i2: Int ->
             userStarredAdapter.filter(charSequence.toString())
         })
-/*
-        searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-        })*/
-
-       searchEditText.setOnKeyListener { _, keyCode, event ->
+        //searchEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchEditText.setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER);
+        searchEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action === KeyEvent.ACTION_DOWN) {
-
                 when (keyCode) {
                     KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER ->
                         hideKeyboard()
@@ -115,7 +109,29 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
     }
 
     private fun hideKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).windowToken, 0)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.home -> {
+                //Log.d("BackButton", "pressed")
+                this.finish()
+                true
+            }
+
+            16908332 -> {
+                //Log.d("BackButton", "pressed by num id")
+                this.finish()
+                true
+            }
+
+            else -> {
+                //Log.d("BackButtonElse", "${item.itemId} == ${R.id.home}")
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 }
