@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "Users")
 data class User(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Long,
     val name: String?,
     @ColumnInfo(name = "avatar_url") val avatarUrl: String
 )

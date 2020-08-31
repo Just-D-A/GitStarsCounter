@@ -9,7 +9,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.ActionBar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
+import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
@@ -43,8 +43,8 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         findButton = findViewById(R.id.button_find_rep)
         repositoryRecycleView = findViewById(R.id.recycler_repositories)
 
-
-
+        //For database
+        GitStarsDatabase.createDatabase(applicationContext)
 
         var userName = "" // как правильно передавать??
         val accountNameEditText: EditText = findViewById(R.id.text_rep_name)
@@ -66,11 +66,10 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
             false
         }
 
-
         val onRepositoryClickListener: RepositoryAdapter.OnRepositoryClickListener =
             object : RepositoryAdapter.OnRepositoryClickListener {
                 override fun onRepositoryClick(repository: Repository?) {
-                    loginPresenter.openStars(userName, repository)
+                    loginPresenter.openStars(repository)
                 }
             }
 

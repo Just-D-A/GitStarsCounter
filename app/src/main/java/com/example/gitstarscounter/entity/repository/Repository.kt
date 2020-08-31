@@ -1,14 +1,25 @@
 package com.example.gitstarscounter.entity.repository
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 import com.example.gitstarscounter.entity.user.User
 
-@Entity
+@Entity(
+    tableName = "Repositories", foreignKeys = [
+        ForeignKey(
+            entity = User::class,
+            parentColumns = ["id"],
+            childColumns = ["user_id"],
+            onDelete = CASCADE
+        )]
+)
 data class Repository(
-    @PrimaryKey val id: Int,
+    @PrimaryKey
+    val id: Long,
+
     val name: String?,
-    @ColumnInfo(name = "user_id") val user_id: Long
+
+    @ColumnInfo(name = "user_id")
+    val userId: Long
 )
 

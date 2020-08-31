@@ -1,24 +1,26 @@
 package com.example.gitstarscounter.entity.star
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import com.example.gitstarscounter.entity.star.Star
+import androidx.room.*
+import com.example.gitstarscounter.entity.convectors.DateConverter
+import java.util.*
 
+
+@Dao
+@TypeConverters(DateConverter::class)
 interface StarDao {
-    @Query("SELECT * FROM star")
+    @Query("SELECT * FROM stars")
     fun getAll(): List<Star>
 
-    @Query("SELECT * FROM star WHERE id IN (:starIds)")
-    fun loadAllByIds(starIds: IntArray): List<Star>
+    @Query("SELECT * FROM stars WHERE starred_at LIKE :starredAt")
+    fun loadAllByIds(starredAt: Date?): List<Star>
 
-    @Query("SELECT * FROM star WHERE repository_id LIKE :repositoryId")
-    //AND " + //"last_name LIKE :last LIMIT 1")
+    @Query("SELECT * FROM stars WHERE repository_id LIKE :repositoryId")
     fun findByRepositoryId(repositoryId: Long): List<Star>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg stars: Star)
 
     @Delete
     fun delete(star: Star)
 }
+

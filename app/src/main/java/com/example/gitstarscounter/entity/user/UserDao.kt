@@ -1,21 +1,22 @@
 package com.example.gitstarscounter.entity.user
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM users")
     fun getAll(): List<User>
 
-    @Query("SELECT * FROM user WHERE id IN (:userId)")
+    @Query("SELECT * FROM users WHERE id IN (:userId)")
     fun getUserById(userId: Long): User
 
-    @Insert
+    @Query("SELECT * FROM users WHERE name LIKE (:userName)")
+    fun getUserByName(userName: String): User
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg users: User)
 
     @Delete
     fun delete(user: User)
+
 }

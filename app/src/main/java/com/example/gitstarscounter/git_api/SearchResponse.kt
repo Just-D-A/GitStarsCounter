@@ -14,6 +14,7 @@ data class User(
 
 @JsonClass(generateAdapter = true)
 data class Repository(
+    @Json(name = "id") val id: Long,
     @Json(name = "name") val name: String,
     @Json(name = "stargazers_count") val allStarsCount: Int,
     @Json(name = "owner") val user: User
