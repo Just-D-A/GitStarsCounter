@@ -11,7 +11,11 @@ import com.example.gitstarscounter.entity.user.User
 import com.example.gitstarscounter.entity.user.UserDao
 
 
-@Database(entities = [User::class, Repository::class, Star::class], version = 2, exportSchema = false)
+@Database(
+    entities = [User::class, Repository::class, Star::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao?
     abstract fun repositoryDao(): RepositoryDao?

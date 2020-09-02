@@ -13,12 +13,16 @@ class StarsProvider() {
 
     private val searchRepository = SearchProvider.provideSearchStars()
 
-    fun loadStars(userName: String, repository: Repository, pageNumber: Int, starsCallback: StarsCallback) { // без rx сделать так чтобы работало
-
+    fun loadStars(
+        userName: String,
+        repository: Repository,
+        pageNumber: Int,
+        starsCallback: StarsCallback
+    ) {
         val starsList = searchRepository.getStars(userName, repository.name, pageNumber)
         starsList.enqueue(object : Callback<List<Star?>?> {
             override fun onResponse(call: Call<List<Star?>?>, response: Response<List<Star?>?>) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     starsCallback.onStarsResponse(response.body() as List<Star>, false)
                 }
             }

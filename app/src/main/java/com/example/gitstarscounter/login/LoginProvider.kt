@@ -15,7 +15,10 @@ class LoginProvider() {
         val repositoriesList = repository.getUserRepos(userName)
 
         repositoriesList.enqueue(object : Callback<List<Repository?>?> {
-            override fun onResponse(call: Call<List<Repository?>?>?, response: Response<List<Repository?>?>?) {
+            override fun onResponse(
+                call: Call<List<Repository?>?>?,
+                response: Response<List<Repository?>?>?
+            ) {
                 if (response?.body() != null) {
                     loginCallback.onLoginResponse(response.body() as List<Repository>, false)
                 } else {

@@ -6,9 +6,7 @@ import retrofit2.Call
 
 
 class SearchRepository(val apiService: GithubApiService) {
-
     fun getUserRepos(userName: String): Call<List<Repository?>?> {
         return apiService.getUserRepos(userName)
     }
-
 }

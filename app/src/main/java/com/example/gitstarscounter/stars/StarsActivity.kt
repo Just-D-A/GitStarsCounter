@@ -61,16 +61,14 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
             intent.getStringExtra(KEY_USER_NAME),
             intent.getSerializableExtra(KEY_REPOSITORY) as Repository
         )
-        starsPresenter.startLoadStars()
-
-        waitProgressView = findViewById(R.id.progress_view_stars)
+        starsPresenter.startLoadStars() ///////////^^^^/////////////////////////////////////////////////////ЧТО С ЭТИМ ДЕЛАТЬ
         graphGraphView = findViewById(R.id.graph_view_stars)
         yearTextView = findViewById(R.id.text_view_selected_year)
         lessYearButton = findViewById(R.id.button_less_year)
         moreYearButton = findViewById(R.id.button_more_year)
         noInternetTextView = findViewById(R.id.text_view_no_internet_stars)
 
-        val actionBar= supportActionBar
+        val actionBar = supportActionBar
         actionBar?.setHomeButtonEnabled(true);
         actionBar?.setDisplayHomeAsUpEnabled(true);
 
@@ -112,6 +110,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         series.spacing = 50
         series.valuesOnTopColor = Color.RED
 
+        //tap listner
         series.setOnDataPointTapListener { _, dataPoint ->
             starsPresenter.openUserStarred(dataPoint.x)
         }
@@ -152,7 +151,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     @SuppressLint("SetTextI18n")
     override fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean) {
         yearTextView.text = selectedYear.toString()
-        if(showMoreButton) {
+        if (showMoreButton) {
             moreYearButton.isVisible = true
         } else {
             moreYearButton.visibility = View.INVISIBLE

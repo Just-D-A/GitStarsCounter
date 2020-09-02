@@ -4,15 +4,12 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
 import com.example.gitstarscounter.git_api.Repository
-import com.example.gitstarscounter.stars.StarsEntityProvider
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @InjectViewState
 class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback {
 
-    var isNoInternetVisible: Boolean = false
     val loginProvider = LoginProvider()
- //   lateinit var database: AppDatabase
     lateinit var userName: String
 
 
@@ -23,13 +20,11 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback {
     }
 
     fun openStars(repository: Repository?) {
-      /*  val loginEntityProvider = LoginEntityProvider(this)
-        loginEntityProvider.insertUserAndRepository(repository!!.user, repository)*/
         viewState.openStars(repository!!.user.login, repository)
     }
 
-    override fun onLoginResponse(repositoryList: List<Repository>, noInternerIsVisible: Boolean) {
-        viewState.changeVisibilityOfNoInternetView(noInternerIsVisible)
+    override fun onLoginResponse(repositoryList: List<Repository>, noInternetIsVisible: Boolean) {
+        viewState.changeVisibilityOfNoInternetView(noInternetIsVisible)
         viewState.setupRepositoriesList(repositoryList)
         viewState.endLoading()
     }

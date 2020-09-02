@@ -19,10 +19,8 @@ class LoginEntityProvider(val loginCallback: LoginCallback) {
     val repositoryDao = database.repositoryDao()
     lateinit var userEntity: com.example.gitstarscounter.entity.user.User
     lateinit var repositoryEntity: com.example.gitstarscounter.entity.repository.Repository
-    val databaseWriteExecutor: ExecutorService =
-        Executors.newFixedThreadPool(NUMBER_OF_THREADS)
+    val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
     var repositoryTypeList: MutableList<Repository> = mutableListOf()
-    // val loginHandler = Handler()
 
 
     fun checkDatabase() {
@@ -61,7 +59,7 @@ class LoginEntityProvider(val loginCallback: LoginCallback) {
             user?.let { user ->
                 val repositoriesList = repositoryDao?.getRepositoriesByUserId(user.id)
 
-                if(repositoriesList?.isEmpty()!!) {
+                if (repositoriesList?.isEmpty()!!) {
                     Log.d("REP", "EMPTY REP LIST")
                 }
                 repositoriesList?.forEach {

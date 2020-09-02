@@ -67,8 +67,6 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
                 .into(bookCircleImageView)
             nameRepositoryTextView.text = repository.name
         }
-
-
     }
 
     interface OnRepositoryClickListener {

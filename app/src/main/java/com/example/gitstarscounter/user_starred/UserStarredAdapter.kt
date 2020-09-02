@@ -13,7 +13,7 @@ import com.example.gitstarscounter.git_api.User
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserStarredAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserStarredAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var usersList: ArrayList<User> = ArrayList()
     private var sourceList: ArrayList<User> = ArrayList()
 
@@ -51,12 +51,13 @@ class UserStarredAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return  usersList.count()
+        return usersList.count()
     }
 
     class UsersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var userNameTextView: TextView = itemView.findViewById(R.id.text_view_user_name)
-        private var userPhoto: CircleImageView = itemView.findViewById(R.id.circle_image_view_user_photo)
+        private var userPhoto: CircleImageView =
+            itemView.findViewById(R.id.circle_image_view_user_photo)
 
         @SuppressLint("SetTextI18n")
         fun bind(user: User) {
