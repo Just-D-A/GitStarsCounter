@@ -17,6 +17,9 @@ interface StarDao {
     @Query("SELECT * FROM stars WHERE repository_id LIKE :repositoryId")
     fun findByRepositoryId(repositoryId: Long): List<Star>
 
+    @Query("SELECT * FROM stars WHERE repository_id LIKE :repositoryId AND user_id LIKE :userId ")
+    fun findByRepositoryUserAndId(repositoryId: Long, userId: Long): Star
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg stars: Star)
 

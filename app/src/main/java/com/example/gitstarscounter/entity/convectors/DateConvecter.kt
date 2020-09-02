@@ -5,7 +5,7 @@ import java.util.*
 
 class DateConverter {
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+    fun dateToTimestamp(date: Date?): String? {
+        return date?.toString()
     }
 }

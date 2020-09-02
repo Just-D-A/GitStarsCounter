@@ -1,6 +1,6 @@
 @file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 
-package com.example.gitstarscounter.stars
+package com.example.gitstarscounter.login
 
 
 import android.os.Handler
@@ -9,7 +9,6 @@ import android.util.Log
 import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.git_api.User
-import com.example.gitstarscounter.login.LoginCallback
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -50,7 +49,7 @@ class LoginEntityProvider(val loginCallback: LoginCallback) {
         val handler: Handler = object : Handler() {
             override fun handleMessage(msg: Message) {
                 if (msg.what == 0) {
-                    loginCallback.onLoginResponse(repositoryTypeList)
+                    loginCallback.onLoginResponse(repositoryTypeList, true)
                 }
             }
         }
@@ -62,15 +61,15 @@ class LoginEntityProvider(val loginCallback: LoginCallback) {
             user?.let { user ->
                 val repositoriesList = repositoryDao?.getRepositoriesByUserId(user.id)
 
-
+                if(repositoriesList?.isEmpty()!!) {
+                    Log.d("REP", "EMPTY REP LIST")
+                }
                 repositoriesList?.forEach {
                     repositoryTypeList.add(covertEntityToRepository(it, user))
                     Log.d("GET_FROM_DB", it.name)
                 }
 
                 handler.sendEmptyMessage(0)
-
-
             }
         }
     }

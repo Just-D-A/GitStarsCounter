@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var findButton: Button
     private lateinit var repositoryRecycleView: RecyclerView
+    private lateinit var noInternetTextView: TextView
 
     private lateinit var repositoriesAdapter: RepositoryAdapter
 
@@ -42,6 +44,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         waitProgressView = findViewById(R.id.progress_view_login) // need login in name??
         findButton = findViewById(R.id.button_find_rep)
         repositoryRecycleView = findViewById(R.id.recycler_repositories)
+        noInternetTextView = findViewById(R.id.text_view_no_internet_login)
 
         //For database
         GitStarsDatabase.createDatabase(applicationContext)
@@ -56,11 +59,9 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
         accountNameEditText.setImeActionLabel("user_name", KeyEvent.KEYCODE_ENTER);
         accountNameEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action === KeyEvent.ACTION_DOWN) {
-
                 when (keyCode) {
                     KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER ->
                         hideKeyboard()
-
                 }
             }
             false
@@ -101,6 +102,10 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
 
     override fun openStars(userName: String, repository: Repository) {
         startActivity(StarsActivity.createIntent(this, userName, repository))
+    }
+
+    override fun changeVisibilityOfNoInternetView(visible: Boolean) {
+        noInternetTextView.isVisible = visible
     }
 
     override fun showError(textResource: Int) {

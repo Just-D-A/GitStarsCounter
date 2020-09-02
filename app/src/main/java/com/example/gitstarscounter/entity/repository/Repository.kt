@@ -1,7 +1,9 @@
 package com.example.gitstarscounter.entity.repository
 
-import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import com.example.gitstarscounter.entity.user.User
 
 @Entity(
@@ -10,7 +12,7 @@ import com.example.gitstarscounter.entity.user.User
             entity = User::class,
             parentColumns = ["id"],
             childColumns = ["user_id"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.NO_ACTION
         )]
 )
 data class Repository(

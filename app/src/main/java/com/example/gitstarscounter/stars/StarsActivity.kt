@@ -33,6 +33,8 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     private lateinit var yearTextView: TextView
     private lateinit var moreYearButton: Button
     private lateinit var lessYearButton: Button
+    private lateinit var noInternetTextView: TextView
+    private var hasInternet = true
 
     @InjectPresenter
     lateinit var starsPresenter: StarsPresenter
@@ -66,6 +68,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         yearTextView = findViewById(R.id.text_view_selected_year)
         lessYearButton = findViewById(R.id.button_less_year)
         moreYearButton = findViewById(R.id.button_more_year)
+        noInternetTextView = findViewById(R.id.text_view_no_internet_stars)
 
         val actionBar= supportActionBar
         actionBar?.setHomeButtonEnabled(true);
@@ -115,8 +118,13 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         series.isDrawValuesOnTop = true
     }
 
+    override fun changeVisibilityOfNoInternetView(visible: Boolean) {
+        hasInternet = visible
+        noInternetTextView.isVisible = visible
+    }
+
     override fun openUsersStared(starsInMonthList: MutableList<Star>) {
-        startActivity(UserStarredActivity.createIntent(this, starsInMonthList))
+        startActivity(UserStarredActivity.createIntent(this, starsInMonthList, hasInternet))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

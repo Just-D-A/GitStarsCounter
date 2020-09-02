@@ -17,7 +17,7 @@ class LoginProvider() {
         repositoriesList.enqueue(object : Callback<List<Repository?>?> {
             override fun onResponse(call: Call<List<Repository?>?>?, response: Response<List<Repository?>?>?) {
                 if (response?.body() != null) {
-                    loginCallback.onLoginResponse(response.body() as List<Repository>)
+                    loginCallback.onLoginResponse(response.body() as List<Repository>, false)
                 } else {
                     loginCallback.onError(R.string.unknown_user_text)// maybe unknown user fun ?????????
                 }

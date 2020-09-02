@@ -4,7 +4,7 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Repository
 
 interface LoginCallback {
-    fun onLoginResponse(repositoryList: List<Repository>)
+    fun onLoginResponse(repositoryList: List<Repository>, noInternerIsVisible: Boolean)
 
     fun onError(textResource: Int)
 }

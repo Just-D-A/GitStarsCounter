@@ -19,7 +19,7 @@ class StarsProvider() {
         starsList.enqueue(object : Callback<List<Star?>?> {
             override fun onResponse(call: Call<List<Star?>?>, response: Response<List<Star?>?>) {
                 if(response.body() != null) {
-                    starsCallback.onStarsResponse(response.body() as List<Star>)
+                    starsCallback.onStarsResponse(response.body() as List<Star>, false)
                 }
             }
 

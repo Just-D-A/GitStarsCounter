@@ -6,6 +6,7 @@ import com.arellomobile.mvp.MvpPresenter
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.git_api.Star
+import com.example.gitstarscounter.login.LoginEntityProvider
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
@@ -20,6 +21,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
 
     lateinit var userName: String
     lateinit var repository: Repository
+    lateinit var starsEntityProvider: StarsEntityProvider
 
     companion object {
         private const val YEAR_IS_NOW = 120 //java date need -1900
@@ -28,6 +30,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     fun setParams(userName: String, repository: Repository) {
         this.userName = userName
         this.repository = repository
+        starsEntityProvider = StarsEntityProvider(this, repository)
     }
 
     fun startLoadStars() {
@@ -61,7 +64,9 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         reloadStars()
     }
 
-    override fun onStarsResponse(responseStarsList: List<Star>) {
+    override fun onStarsResponse(responseStarsList: List<Star>, noInternerIsVisible: Boolean) {
+        starsEntityProvider.insertToDatabase(responseStarsList)
+        viewState.changeVisibilityOfNoInternetView(noInternerIsVisible)
         responseStarsList.forEach {
             Log.d("StarsCallback", it.user.login)
             starsList.add(it)
@@ -71,7 +76,8 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
 
     override fun onError(textResource: Int) {
         viewState.endLoading()
-        viewState.showError(textResource)
+
+        starsEntityProvider.getRepositoryStars()
     }
 
     fun reloadStars() {
