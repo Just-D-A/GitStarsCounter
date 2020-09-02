@@ -73,7 +73,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
         userStarredPresenter.loadUserList(starsList!!)
 
-        userStarredAdapter = UserStarredAdapter()
+        userStarredAdapter = UserStarredAdapter(this)
 
         usersRecycleView.adapter = userStarredAdapter
         usersRecycleView.layoutManager =

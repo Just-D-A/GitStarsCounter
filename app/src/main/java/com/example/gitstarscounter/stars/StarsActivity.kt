@@ -45,6 +45,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         private const val KEY_REPOSITORY = "repository"
 
 
+
         fun createIntent(context: Context, userName: String, repository: Repository) = Intent(
             context,
             StarsActivity::class.java
@@ -66,6 +67,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         yearTextView = findViewById(R.id.text_view_selected_year)
         lessYearButton = findViewById(R.id.button_less_year)
         moreYearButton = findViewById(R.id.button_more_year)
+        waitProgressView = findViewById(R.id.progress_view_stars)
         noInternetTextView = findViewById(R.id.text_view_no_internet_stars)
 
         val actionBar = supportActionBar

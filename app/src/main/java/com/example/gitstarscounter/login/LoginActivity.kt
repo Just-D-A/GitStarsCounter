@@ -21,6 +21,7 @@ import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.git_api.Repository
 import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
+import com.omegar.libs.omegalaunchers.ActivityLauncher
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
@@ -74,7 +75,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
                 }
             }
 
-        repositoriesAdapter = RepositoryAdapter(onRepositoryClickListener)
+        repositoriesAdapter = RepositoryAdapter(onRepositoryClickListener, this)
         repositoryRecycleView.adapter = repositoriesAdapter
         repositoryRecycleView.layoutManager = LinearLayoutManager(
             applicationContext,
@@ -102,7 +103,9 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
 
     override fun openStars(userName: String, repository: Repository) {
         startActivity(StarsActivity.createIntent(this, userName, repository))
+        //ActivityLauncher(StarsActivity, )
     }
+
 
     override fun changeVisibilityOfNoInternetView(visible: Boolean) {
         noInternetTextView.isVisible = visible

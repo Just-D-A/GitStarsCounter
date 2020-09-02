@@ -1,17 +1,19 @@
 package com.example.gitstarscounter.login
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.Repository
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClickListener) :
+class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClickListener, val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var repositoriesList: ArrayList<Repository> = ArrayList()
@@ -29,7 +31,7 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(R.layout.cell_repository, parent, false)
-        return RepositoryViewHolder(itemView, repositoriesList, onRepositoryClickListener)
+        return RepositoryViewHolder(itemView, repositoriesList, onRepositoryClickListener, context)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -46,7 +48,8 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
     class RepositoryViewHolder(
         itemView: View,
         repositoriesList: List<Repository?>?,
-        onRepositoryClickListener: OnRepositoryClickListener
+        onRepositoryClickListener: OnRepositoryClickListener,
+        val context: Context
     ) : RecyclerView.ViewHolder(itemView) {
         private var bookCircleImageView: CircleImageView =
             itemView.findViewById(R.id.circle_image_view_book)
@@ -63,8 +66,11 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
         fun bind(repository: Repository) {
             val imageURL =
                 "https://img2.freepng.ru/20180516/ohq/kisspng-used-book-computer-icons-5afc9d4ed92065.8296718615265047828894.jpg"
-            Picasso.get().load(imageURL)
-                .into(bookCircleImageView)
+            Glide
+                .with(context)
+                .load(R.drawable.repository_img)
+                .centerCrop()
+                .into(bookCircleImageView);
             nameRepositoryTextView.text = repository.name
         }
     }
