@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -15,13 +14,16 @@ import androidx.core.view.isVisible
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.git_api.Repository
-import com.example.gitstarscounter.git_api.Star
+import com.example.gitstarscounter.git_api.RepositoryModel
+import com.example.gitstarscounter.git_api.StarModel
+import com.example.gitstarscounter.service.StarService
 import com.example.gitstarscounter.user_starred.UserStarredActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
+import com.omegar.libs.omegalaunchers.createActivityLauncher
+import com.omegar.libs.omegalaunchers.tools.put
 import java.io.Serializable
 
 
@@ -46,12 +48,18 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
 
 
 
-        fun createIntent(context: Context, userName: String, repository: Repository) = Intent(
+        fun createIntent(context: Context, userName: String, repositoryModel: RepositoryModel) = Intent(
             context,
             StarsActivity::class.java
         )
             .putExtra(KEY_USER_NAME, userName)
-            .putExtra(KEY_REPOSITORY, repository as Serializable)
+            .putExtra(KEY_REPOSITORY, repositoryModel as Serializable)
+
+        fun createLauncher(userName: String, repositoryModel: RepositoryModel) = createActivityLauncher(
+            KEY_USER_NAME put userName
+        )
+
+
 
     }
 
@@ -60,7 +68,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         setContentView(R.layout.activity_stars)
         starsPresenter.setParams(
             intent.getStringExtra(KEY_USER_NAME),
-            intent.getSerializableExtra(KEY_REPOSITORY) as Repository
+            intent.getSerializableExtra(KEY_REPOSITORY) as RepositoryModel
         )
         starsPresenter.startLoadStars() ///////////^^^^/////////////////////////////////////////////////////ЧТО С ЭТИМ ДЕЛАТЬ
         graphGraphView = findViewById(R.id.graph_view_stars)
@@ -124,7 +132,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         noInternetTextView.isVisible = visible
     }
 
-    override fun openUsersStared(starsInMonthList: MutableList<Star>) {
+    override fun openUsersStared(starsInMonthList: MutableList<StarModel>) {
         startActivity(UserStarredActivity.createIntent(this, starsInMonthList, hasInternet))
     }
 
@@ -172,4 +180,8 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         graphGraphView.isVisible = true
     }
 
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        startService(Intent(this, StarService::class.java))
+    }
 }

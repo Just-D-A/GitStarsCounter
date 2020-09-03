@@ -7,12 +7,9 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -22,7 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.git_api.Star
+import com.example.gitstarscounter.git_api.StarModel
+import com.example.gitstarscounter.service.StarService
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import java.io.Serializable
 
@@ -46,7 +44,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         private const val KEY_HAS_INTERNET = "hasInternet"
 
 
-        fun createIntent(context: Context, starsList: MutableList<Star>, noInternetVisible: Boolean) = Intent(
+        fun createIntent(context: Context, starsList: MutableList<StarModel>, noInternetVisible: Boolean) = Intent(
             context,
             UserStarredActivity::class.java
         )
@@ -65,7 +63,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         noInternetTextView = findViewById(R.id.text_view_no_internet_user_starred) //chage-----
         noInternetTextView.isVisible = intent.getBooleanExtra(KEY_HAS_INTERNET, false)
 
-        val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<Star>
+        val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<StarModel>
 
         val actionBar= supportActionBar
         actionBar?.setHomeButtonEnabled(true);
@@ -106,8 +104,8 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         waitProgressView.isVisible = false
     }
 
-    override fun setupUsersList(starList: MutableList<Star>) {
-        userStarredAdapter.setupUsers(starList)
+    override fun setupUsersList(starModelList: MutableList<StarModel>) {
+        userStarredAdapter.setupUsers(starModelList)
         usersRecycleView.isVisible = true
     }
 
@@ -124,21 +122,23 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         // Handle item selection
         return when (item.itemId) {
             R.id.home -> {
-                //Log.d("BackButton", "pressed")
                 this.finish()
                 true
             }
 
             16908332 -> {
-                //Log.d("BackButton", "pressed by num id")
                 this.finish()
                 true
             }
 
             else -> {
-                //Log.d("BackButtonElse", "${item.itemId} == ${R.id.home}")
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        startService(Intent(this, StarService::class.java))
     }
 }

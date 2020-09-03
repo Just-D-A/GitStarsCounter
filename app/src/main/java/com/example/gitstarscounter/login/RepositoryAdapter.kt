@@ -1,6 +1,8 @@
 package com.example.gitstarscounter.login
 
+
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,22 +10,35 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.git_api.Repository
-import com.squareup.picasso.Picasso
+import com.example.gitstarscounter.git_api.RepositoryModel
+import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
+import com.omega_r.libs.omegarecyclerview.pagination.PaginationViewCreator
 import de.hdodenhof.circleimageview.CircleImageView
 
+class RepositoryAdapter(
+    private val onRepositoryClickListener: OnRepositoryClickListener,
+    val context: Context
+) :
+    OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClickListener, val context: Context) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var repositoriesList: ArrayList<RepositoryModel> = ArrayList()
+    lateinit var adapterCallback: Callback
 
-    private var repositoriesList: ArrayList<Repository> = ArrayList()
-
-    fun setupRepositoriesList(repositoriesListInput: List<Repository?>?) {
-        var repositoriesArrayList: ArrayList<Repository> = ArrayList()
+    fun setupRepositoriesList(repositoriesListInput: List<RepositoryModel?>?) {
+        val repositoriesArrayList: ArrayList<RepositoryModel> = ArrayList()
         repositoriesListInput!!.forEach {
             repositoriesArrayList.add(it!!)
         }
         repositoriesList.clear()
+        repositoriesList.addAll(repositoriesArrayList)
+        notifyDataSetChanged()
+    }
+
+    fun addMoreRepositories(repositoriesListInput: List<RepositoryModel?>?) {
+        val repositoriesArrayList: ArrayList<RepositoryModel> = ArrayList()
+        repositoriesListInput!!.forEach {
+            repositoriesArrayList.add(it!!)
+        }
         repositoriesList.addAll(repositoriesArrayList)
         notifyDataSetChanged()
     }
@@ -40,6 +55,10 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
         }
     }
 
+    fun setCallback(callback: Callback) {
+        adapterCallback = callback
+    }
+
     override fun getItemCount(): Int {
         return repositoriesList.count()
     }
@@ -47,7 +66,7 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
 
     class RepositoryViewHolder(
         itemView: View,
-        repositoriesList: List<Repository?>?,
+        repositoriesList: List<RepositoryModel?>?,
         onRepositoryClickListener: OnRepositoryClickListener,
         val context: Context
     ) : RecyclerView.ViewHolder(itemView) {
@@ -58,12 +77,12 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
         init {
             //обработка клика
             itemView.setOnClickListener {
-                val repository: Repository? = repositoriesList?.get(layoutPosition)
+                val repository: RepositoryModel? = repositoriesList?.get(layoutPosition)
                 onRepositoryClickListener.onRepositoryClick(repository)
             }
         }
 
-        fun bind(repository: Repository) {
+        fun bind(repository: RepositoryModel) {
             val imageURL =
                 "https://img2.freepng.ru/20180516/ohq/kisspng-used-book-computer-icons-5afc9d4ed92065.8296718615265047828894.jpg"
             Glide
@@ -76,6 +95,10 @@ class RepositoryAdapter(private val onRepositoryClickListener: OnRepositoryClick
     }
 
     interface OnRepositoryClickListener {
-        fun onRepositoryClick(repository: Repository?)
+        fun onRepositoryClick(repository: RepositoryModel?)
+    }
+
+    interface Callback {
+        fun onRetryClicked()
     }
 }

@@ -15,7 +15,7 @@ interface GithubApiService {
 
     //https://api.github.com/users/Just-D-A/repos
     @GET("users/{name}/repos")
-    fun getUserRepos(@Path("name") userName: String): Call<List<Repository?>?>
+    fun getUserRepos(@Path("name") userName: String): Call<List<RepositoryModel?>?>
 
     //https://api.github.com/repos/Just-D-A/GitStarsCounter/stargazers
     @GET("repos/{userName}/{repositoryName}/stargazers")
@@ -25,7 +25,7 @@ interface GithubApiService {
         @Header("Accept") param: String,
         @Query("page") pageNumber: Int,
         @Query("per_page") elementsCount: Int
-    ): Call<List<Star?>?>
+    ): Call<List<StarModel?>?>
 
     @GET("repos/{userName}/{repositoryName}")
     fun getStarsCount(

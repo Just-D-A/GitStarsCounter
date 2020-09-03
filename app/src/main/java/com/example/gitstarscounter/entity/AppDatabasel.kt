@@ -2,7 +2,6 @@ package com.example.gitstarscounter.entity
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.gitstarscounter.entity.repository.Repository
 import com.example.gitstarscounter.entity.repository.RepositoryDao
 import com.example.gitstarscounter.entity.star.Star

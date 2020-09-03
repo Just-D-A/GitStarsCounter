@@ -13,4 +13,6 @@
     <string name="more"><![CDATA[>]]></string>
     <string name="user_name_text">Введите имя пользователя</string>
     <string name="no_internet_message">Нет подключения</string>
+    <string name="start">Start service</string>
+    <string name="stop">Stop service</string>
 </resources>

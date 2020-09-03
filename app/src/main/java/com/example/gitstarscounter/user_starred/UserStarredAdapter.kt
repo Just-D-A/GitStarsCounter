@@ -10,21 +10,21 @@
     import androidx.recyclerview.widget.RecyclerView
     import com.bumptech.glide.Glide
     import com.example.gitstarscounter.R
-    import com.example.gitstarscounter.git_api.Star
-    import com.example.gitstarscounter.git_api.User
+    import com.example.gitstarscounter.git_api.StarModel
+    import com.example.gitstarscounter.git_api.UserModel
     import de.hdodenhof.circleimageview.CircleImageView
 
     class UserStarredAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        private var usersList: ArrayList<User> = ArrayList()
-        private var sourceList: ArrayList<User> = ArrayList()
+        private var usersList: ArrayList<UserModel> = ArrayList()
+        private var sourceList: ArrayList<UserModel> = ArrayList()
 
-        fun setupUsers(starList: MutableList<Star>) {
-            val userList: ArrayList<User> = ArrayList()
-            starList.forEach {
-                userList.add(it.user)
+        fun setupUsers(starModelList: MutableList<StarModel>) {
+            val userModelList: ArrayList<UserModel> = ArrayList()
+            starModelList.forEach {
+                userModelList.add(it.user)
             }
             sourceList.clear()
-            sourceList.addAll(userList)
+            sourceList.addAll(userModelList)
             filter("")
         }
 
@@ -61,13 +61,13 @@
                 itemView.findViewById(R.id.circle_image_view_user_photo)
 
             @SuppressLint("SetTextI18n")
-            fun bind(user: User) {
+            fun bind(userModel: UserModel) {
                 Glide
                     .with(context)
-                    .load(user.avatarUrl)
+                    .load(userModel.avatarUrl)
                     .centerCrop()
                     .into(userPhotoImageView)
-                userNameTextView.text = user.login
+                userNameTextView.text = userModel.login
             }
 
         }

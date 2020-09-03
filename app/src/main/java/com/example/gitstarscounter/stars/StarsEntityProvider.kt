@@ -3,28 +3,27 @@
 package com.example.gitstarscounter.stars
 
 
-import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
 import com.example.gitstarscounter.entity.GitStarsDatabase
-import com.example.gitstarscounter.git_api.Repository
-import com.example.gitstarscounter.git_api.Star
-import com.example.gitstarscounter.git_api.User
+import com.example.gitstarscounter.entity.convectors.EntityConvector
+import com.example.gitstarscounter.git_api.RepositoryModel
+import com.example.gitstarscounter.git_api.StarModel
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class StarsEntityProvider(val starsCallback: StarsCallback, val repository: Repository) {
+class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel: RepositoryModel) {
     val database = GitStarsDatabase.getDatabase()
     val userDao = database.userDao()
     val repositoryDao = database.repositoryDao()
     val starDao = database.starDao()
     val databaseWriteExecutor: ExecutorService =
         Executors.newFixedThreadPool(NUMBER_OF_THREADS)
-    var starsTypeList: MutableList<Star> = mutableListOf()
+    var starsTypeList: MutableList<StarModel> = mutableListOf()
 
 
     fun checkDatabase() {
@@ -37,25 +36,25 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repository: Repo
         }
     }
 
-    fun insertToDatabase(starList: List<Star>) {
+    fun insertToDatabase(starModelList: List<StarModel>) {
         databaseWriteExecutor.execute {
-            userDao?.insertAll(covertUserToEntity(repository.user))
-            repositoryDao?.insertAll(covertRepositoryToEntity())
+            userDao?.insertAll(EntityConvector.covertUserToEntity(repositoryModel.user))
+            repositoryDao?.insertAll(EntityConvector.covertRepositoryToEntity(repositoryModel))
 
-            val repositoryLocal = repositoryDao?.getRepositoryById(repository.id)
+            val repositoryLocal = repositoryDao?.getRepositoryById(repositoryModel.id)
 
             val list = repositoryDao?.getAll()
             list?.forEach { lol ->
                 Log.d("REP_NAME", lol.name)
             }
-            starList.forEach {
-                val star = convertStarToEntity(
+            starModelList.forEach {
+                val star = EntityConvector.convertStarToEntity(
                     it,
                     repositoryLocal?.id!!
                 )
 
 
-                    userDao?.insertAll(covertUserToEntity(it.user))
+                    userDao?.insertAll(EntityConvector.covertUserToEntity(it.user))
 
                 val user = userDao?.getUserById(star.userId)
                 val starFromDB = starDao?.findByRepositoryUserAndId(star.repositoryId, star.userId)
@@ -77,68 +76,14 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repository: Repo
             }
         }
         databaseWriteExecutor.execute {
-            val starsList = starDao?.findByRepositoryId(repository.id)
+            val starsList = starDao?.findByRepositoryId(repositoryModel.id)
             starsList?.forEach {
-                starsTypeList.add(covertEntityToStar(it, userDao?.getUserById(it.userId)!!))
+                starsTypeList.add(EntityConvector.covertEntityToStar(it, userDao?.getUserById(it.userId)!!))
             }
             handler.sendEmptyMessage(0)
         }
     }
 
-    private fun covertUserToEntity(user: User): com.example.gitstarscounter.entity.user.User {
-        return com.example.gitstarscounter.entity.user.User(
-            user.id,
-            user.login,
-            user.avatarUrl
-        )
-    }
-
-    private fun covertRepositoryToEntity(): com.example.gitstarscounter.entity.repository.Repository {
-        return com.example.gitstarscounter.entity.repository.Repository(
-            id = repository.id,
-            name = repository.name,
-            userId = repository.user.id
-        )
-    }
-
-    private fun covertEntityToRepository(
-        repository: com.example.gitstarscounter.entity.repository.Repository,
-        user: com.example.gitstarscounter.entity.user.User
-    ): Repository {
-        return Repository(
-            id = repository.id,
-            name = repository.name.toString(),
-            allStarsCount = 0,
-            user = convertEntityToUser(user)
-        )
-    }
-
-
-    private fun convertEntityToUser(user: com.example.gitstarscounter.entity.user.User): User {
-        return User(user.id, user.name!!, user.avatarUrl)
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private fun covertEntityToStar(
-        star: com.example.gitstarscounter.entity.star.Star,
-        user: com.example.gitstarscounter.entity.user.User
-    ): Star {
-        return Star(sdf3.parse(star.starredAt), convertEntityToUser(user))
-        // val lol = SimpleDateFormat("dd/MM/yyyy").parse(star.starredAt)
-    }
-
-    private fun convertStarToEntity(
-        star: Star,
-        repositoryId: Long
-    ): com.example.gitstarscounter.entity.star.Star {
-        /* Log.d("USER_ID",  star.user.id.toString())
-         Log.d("REP_ID",  repository.id.toString())*/
-        return com.example.gitstarscounter.entity.star.Star(
-            starredAt = star.starredAt.toString(),
-            repositoryId = repositoryId,
-            userId = star.user.id
-        )
-    }
 
     companion object {
         private const val NUMBER_OF_THREADS = 4

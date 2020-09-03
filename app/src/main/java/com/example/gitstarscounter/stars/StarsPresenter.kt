@@ -3,10 +3,8 @@ package com.example.gitstarscounter.stars
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.gitstarscounter.R
-import com.example.gitstarscounter.git_api.Repository
-import com.example.gitstarscounter.git_api.Star
-import com.example.gitstarscounter.login.LoginEntityProvider
+import com.example.gitstarscounter.git_api.RepositoryModel
+import com.example.gitstarscounter.git_api.StarModel
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
@@ -15,33 +13,31 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     private val starsConvector = StarsConvector
     private val starsProvider = StarsProvider()
     private var currYear: Int = YEAR_IS_NOW
-    private var starsList: MutableList<Star> = mutableListOf()
+    private var starsList: MutableList<StarModel> = mutableListOf()
     private var error = false
     private var pageNumber = 1
 
     lateinit var userName: String
-    lateinit var repository: Repository
+    lateinit var repositoryModel: RepositoryModel
     lateinit var starsEntityProvider: StarsEntityProvider
 
-    companion object {
-        private const val YEAR_IS_NOW = 120 //java date need -1900
-    }
 
-    fun setParams(userName: String, repository: Repository) {
+
+    fun setParams(userName: String, repositoryModel: RepositoryModel) {
         this.userName = userName
-        this.repository = repository
-        starsEntityProvider = StarsEntityProvider(this, repository)
+        this.repositoryModel = repositoryModel
+        starsEntityProvider = StarsEntityProvider(this, repositoryModel)
     }
 
     fun startLoadStars() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.startLoading()
 
-        starsProvider.loadStars(userName, repository, pageNumber, this)
+        starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
     }
 
     fun loadMoreStars(pageNumber: Int) {
-        starsProvider.loadStars(userName, repository, pageNumber, this)
+        starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
     }
 
     fun loadGrafic() {
@@ -64,7 +60,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         reloadStars()
     }
 
-    override fun onStarsResponse(responseStarsList: List<Star>, noInternerIsVisible: Boolean) {
+    override fun onStarsResponse(responseStarsList: List<StarModel>, noInternerIsVisible: Boolean) {
         starsEntityProvider.insertToDatabase(responseStarsList)
         viewState.changeVisibilityOfNoInternetView(noInternerIsVisible)
         responseStarsList.forEach {
@@ -102,12 +98,16 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
             lastStarYear = starsList[starsList.size - 1].starredAt.year
         }
         val currStarsCount = starsList.size
-        val allStarsCount = repository.allStarsCount
+        val allStarsCount = repositoryModel.allStarsCount
         if ((lastStarYear <= currYear) && (currStarsCount < allStarsCount) && (!error)) {
             pageNumber++
             loadMoreStars(pageNumber)
         } else if (!error) {
             loadGrafic()
         }
+    }
+
+    companion object {
+        private const val YEAR_IS_NOW = 120 //java date need -1900
     }
 }

@@ -4,14 +4,15 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.example.gitstarscounter.git_api.Repository
+
+import com.example.gitstarscounter.git_api.RepositoryModel
 
 @StateStrategyType(value = AddToEndSingleStrategy::class)
 interface LoginView : MvpView {
     fun startLoading()
     fun endLoading()
-    fun setupRepositoriesList(repositoriesList: List<Repository?>?)
-    fun openStars(userName: String, repository: Repository)
+    fun setupRepositoriesList(repositoriesList: List<RepositoryModel?>?)
+    fun openStars(userName: String, repository: RepositoryModel)
     fun changeVisibilityOfNoInternetView(visible: Boolean)
 
     @StateStrategyType(value = SkipStrategy::class)

@@ -1,10 +1,9 @@
 package com.example.gitstarscounter.login
 
-import com.example.gitstarscounter.R
-import com.example.gitstarscounter.git_api.Repository
+import com.example.gitstarscounter.git_api.RepositoryModel
 
 interface LoginCallback {
-    fun onLoginResponse(repositoryList: List<Repository>, noInternetIsVisible: Boolean)
+    fun onLoginResponse(repositoryModelList: List<RepositoryModel>, noInternetIsVisible: Boolean)
 
     fun onError(textResource: Int)
 }

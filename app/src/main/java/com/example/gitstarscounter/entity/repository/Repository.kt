@@ -21,6 +21,9 @@ data class Repository(
 
     val name: String?,
 
+    @ColumnInfo(name = "all_stars_count")
+    val allStarsCount: Int,
+
     @ColumnInfo(name = "user_id")
     val userId: Long
 )

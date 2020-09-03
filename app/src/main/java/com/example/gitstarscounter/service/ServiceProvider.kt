@@ -1,4 +1,4 @@
-package com.example.gitstarscounter.stars
+package com.example.gitstarscounter.service
 
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.RepositoryModel
@@ -8,28 +8,29 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-@Suppress("DEPRECATION", "UNCHECKED_CAST")
-class StarsProvider() {
-
+class ServiceProvider() {
     private val searchRepository = SearchProvider.provideSearchStars()
 
     fun loadStars(
         userName: String,
         repositoryModel: RepositoryModel,
         pageNumber: Int,
-        starsCallback: StarsCallback
+        serviceCallback: ServiceCallback,
+        starsList: MutableList<StarModel>
     ) {
-        val starsList = searchRepository.getStars(userName, repositoryModel.name, pageNumber)
-        starsList.enqueue(object : Callback<List<StarModel?>?> {
+        val starsListGet = searchRepository.getStars(userName, repositoryModel.name, pageNumber)
+        starsListGet.enqueue(object : Callback<List<StarModel?>?> {
             override fun onResponse(call: Call<List<StarModel?>?>, response: Response<List<StarModel?>?>) {
                 if (response.body() != null) {
-                    starsCallback.onStarsResponse(response.body() as List<StarModel>, false)
+                    starsList.addAll(response.body() as List<StarModel>)
+                    serviceCallback.onStarsResponse(starsList, repositoryModel ,pageNumber)
                 }
             }
 
             override fun onFailure(call: Call<List<StarModel?>?>, t: Throwable) {
-                starsCallback.onError(R.string.no_internet_text)
+                serviceCallback.onError(R.string.no_internet_text)
             }
         })
     }
 }
+//alarm sevice
