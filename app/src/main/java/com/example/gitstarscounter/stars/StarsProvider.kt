@@ -1,5 +1,6 @@
 package com.example.gitstarscounter.stars
 
+import android.util.Log
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.SearchProvider
@@ -23,6 +24,7 @@ class StarsProvider() {
         starsList.enqueue(object : Callback<List<StarModel?>?> {
             override fun onResponse(call: Call<List<StarModel?>?>, response: Response<List<StarModel?>?>) {
                 if (response.body() != null) {
+                    Log.d("HELLO", "WORLD")
                     starsCallback.onStarsResponse(response.body() as List<StarModel>, false)
                 }
             }

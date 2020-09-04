@@ -61,18 +61,21 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     }
 
     override fun onStarsResponse(responseStarsList: List<StarModel>, noInternerIsVisible: Boolean) {
-        starsEntityProvider.insertToDatabase(responseStarsList)
+        if(!noInternerIsVisible) {
+            starsEntityProvider.insertToDatabase(responseStarsList)
+            starsEntityProvider.checkUnstars(responseStarsList, repositoryModel)
+        }
         viewState.changeVisibilityOfNoInternetView(noInternerIsVisible)
         responseStarsList.forEach {
             Log.d("StarsCallback", it.user.login)
             starsList.add(it)
         }
-        needMore()
+            needMore()
     }
 
     override fun onError(textResource: Int) {
         viewState.endLoading()
-
+        error = true
         starsEntityProvider.getRepositoryStars()
     }
 
@@ -102,7 +105,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         if ((lastStarYear <= currYear) && (currStarsCount < allStarsCount) && (!error)) {
             pageNumber++
             loadMoreStars(pageNumber)
-        } else if (!error) {
+        } else {
             loadGrafic()
         }
     }

@@ -47,18 +47,19 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         private const val KEY_REPOSITORY = "repository"
 
 
+        fun createIntent(context: Context, userName: String, repositoryModel: RepositoryModel) =
+            Intent(
+                context,
+                StarsActivity::class.java
+            )
+                .putExtra(KEY_USER_NAME, userName)
+                .putExtra(KEY_REPOSITORY, repositoryModel as Serializable)
 
-        fun createIntent(context: Context, userName: String, repositoryModel: RepositoryModel) = Intent(
-            context,
-            StarsActivity::class.java
-        )
-            .putExtra(KEY_USER_NAME, userName)
-            .putExtra(KEY_REPOSITORY, repositoryModel as Serializable)
-
-        fun createLauncher(userName: String, repositoryModel: RepositoryModel) = createActivityLauncher(
-            KEY_USER_NAME put userName
-        )
-
+        fun createLauncher(userName: String, repositoryModel: RepositoryModel) =
+            createActivityLauncher(
+                KEY_USER_NAME put userName,
+                KEY_REPOSITORY put repositoryModel
+            )
 
 
     }

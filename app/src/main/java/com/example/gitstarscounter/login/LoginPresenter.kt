@@ -54,8 +54,12 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
 
     override fun onGetMoreRepositories(repositoriesModelList: List<RepositoryModel>?) {
         Log.d("PAGINATION", "GETTED")
-        viewState.addPagination(repositoriesModelList!!)
-        if(repositoriesModelList.size < 30) {
+        if(repositoriesModelList != null) {
+            viewState.addPagination(repositoriesModelList)
+            if (repositoriesModelList.size < 30) {
+                viewState.endPagination()
+            }
+        } else {
             viewState.endPagination()
         }
     }

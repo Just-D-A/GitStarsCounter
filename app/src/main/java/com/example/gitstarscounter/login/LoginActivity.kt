@@ -24,11 +24,14 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.git_api.RepositoryModel
+import com.example.gitstarscounter.service.StarIntentService
 import com.example.gitstarscounter.service.StarService
 import com.example.gitstarscounter.stars.StarsActivity
+import com.example.gitstarscounter.user_starred.UserStarredActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
+import com.omegar.libs.omegalaunchers.ActivityLauncher
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
@@ -138,8 +141,9 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
     }
 
     override fun openStars(userName: String, repository: RepositoryModel) {
+        //val launcher = StarsActivity.createLauncher(userName, repository)
         startActivity(StarsActivity.createIntent(this, userName, repository))
-        //ActivityLauncher(StarsActivity, )
+        //ActivityLauncher(StarsActivity::class.java, null, 0)
     }
 
 
@@ -168,7 +172,9 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        startService(Intent(this, StarService::class.java))
+        Log.d("onUserLeaveHint", "IT WORK")
+      //  startService(Intent(this, StarService::class.java))
+        startService(Intent(this, StarIntentService::class.java))
     }
 
     override fun onBackPressed() {
@@ -191,7 +197,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
         val handler = Handler()
         handler.postDelayed(Runnable {
             Log.d("PAGGINATION", "downloadItems()")
-          //  repositoriesAdapter.addMoreRepositories(mutableListOf())//Image.createImageList(10))
+            //  repositoriesAdapter.addMoreRepositories(mutableListOf())//Image.createImageList(10))
         }, 3000)
     }
 

@@ -8,6 +8,7 @@ import android.os.Message
 import android.util.Log
 import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.entity.convectors.EntityConvector
+import com.example.gitstarscounter.entity.star.Star
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.StarModel
 import java.text.SimpleDateFormat
@@ -64,6 +65,32 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
             }
             Log.d("DATA_BASE", "ALL ADDED")
         }
+
+    }
+
+    fun checkUnstars(starsListFromApi: List<StarModel>, repositoryModel: RepositoryModel) {
+        databaseWriteExecutor.execute {
+            //взять все звезды из бд по id rep
+            val starsListFromDB = starDao?.findByRepositoryId(repositoryModel.id)
+            //создать map по ключу star.user из star-api
+            val starsMap = mutableMapOf<Long, Star>()
+            starsListFromApi.forEach {
+                val star = EntityConvector.convertStarToEntity(it, repositoryModel.id)
+                starsMap[star.userId] = star
+            }
+            //для каждой звезды с БД найти звезду с api по id_user если не найдено, значит удалить\
+            var i = 0
+            starsListFromDB?.forEach{
+                val starFromApi = starsMap[it.userId]
+                if(starFromApi == null) {
+                    starDao?.delete(it)
+                    i++
+                }
+            }
+            Log.d("Database", "DELETED $i STARS")
+
+        }
+
 
     }
 

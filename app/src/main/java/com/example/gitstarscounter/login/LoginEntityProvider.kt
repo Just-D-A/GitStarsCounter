@@ -46,7 +46,6 @@ class LoginEntityProvider(val loginCallback: LoginCallback) {
                     repositoryModelTypeList.add(EntityConvector.covertEntityToRepository(it, user))
                     Log.d("GET_FROM_DB", it.name)
                 }
-
                 handler.sendEmptyMessage(0)
             }
         }
