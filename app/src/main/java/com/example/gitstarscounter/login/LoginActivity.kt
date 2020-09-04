@@ -2,11 +2,14 @@ package com.example.gitstarscounter.login
 
 //import com.example.gitstarscounter.entity.repository.Repository
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -173,8 +176,22 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         Log.d("onUserLeaveHint", "IT WORK")
+        val alarmManager =
+            this.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        val pendingIntent =
+            PendingIntent.getService(this, 0, intent,
+                PendingIntent.FLAG_NO_CREATE)
+        if (pendingIntent != null && alarmManager != null) {
+            Log.d("ALARM_CALL", "ERROR")
+            alarmManager.cancel(pendingIntent)
+        }
       //  startService(Intent(this, StarService::class.java))
-        startService(Intent(this, StarIntentService::class.java))
+        alarmManager?.setInexactRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
+            AlarmManager.INTERVAL_HALF_HOUR, pendingIntent
+        )
+
     }
 
     override fun onBackPressed() {
