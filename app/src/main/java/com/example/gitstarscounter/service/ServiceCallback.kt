@@ -4,7 +4,6 @@ import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.StarModel
 
 interface ServiceCallback {
-    fun onDatabaseStarResponse(starModelList: List<StarModel>)
     fun onDatabaseRepositoryResponse(repositoryModelList: List<RepositoryModel>)
     fun onStarsResponse(
         responseStarsList: MutableList<StarModel>,

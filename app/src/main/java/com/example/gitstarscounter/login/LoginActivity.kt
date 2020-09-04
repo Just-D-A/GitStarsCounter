@@ -32,13 +32,14 @@ import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
-class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener, RepositoryAdapter.Callback {
+class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var findButton: Button
     private lateinit var repositoryOmegaRecycleView: OmegaRecyclerView
     private lateinit var noInternetTextView: TextView
     private lateinit var repositoriesAdapter: RepositoryAdapter
+    private var pageNumber = 1
 
     @InjectPresenter
     lateinit var loginPresenter: LoginPresenter
@@ -61,7 +62,10 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener, 
         val accountNameEditText: EditText = findViewById(R.id.text_rep_name)
         findButton.setOnClickListener {
             userName = accountNameEditText.text.toString().trim()
-            loginPresenter.loadUser(userName)
+            pageNumber = 1
+            loginPresenter.loadRepositories(userName, pageNumber)
+            repositoriesAdapter.setupRepositoriesList(mutableListOf())
+            repositoryOmegaRecycleView.showProgressPagination()
         }
 
         accountNameEditText.setImeActionLabel("user_name", KeyEvent.KEYCODE_ENTER);
@@ -80,12 +84,13 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener, 
             object : RepositoryAdapter.OnRepositoryClickListener {
                 override fun onRepositoryClick(repository: RepositoryModel?) {
                     loginPresenter.openStars(repository)
+
                 }
             }
 
         repositoriesAdapter = RepositoryAdapter(onRepositoryClickListener, this)
 
-        repositoriesAdapter.setCallback(this)
+        repositoriesAdapter.setCallback(loginPresenter)
         repositoryOmegaRecycleView.adapter = repositoriesAdapter
         repositoryOmegaRecycleView.setPaginationCallback(this)
         repositoryOmegaRecycleView.layoutManager = LinearLayoutManager(
@@ -98,18 +103,21 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener, 
         //OMEGA_R PAGGINATION
         repositoryOmegaRecycleView.setPaginationCallback(object : OnPageRequestListener {
             override fun onPageRequest(page: Int) {
-                Log.d("PAGGINATION", "onPageRequest")// You can load data inside this callback
-               // repositoryOmegaRecycleView.hidePagination()
+                Log.d("PAGGINATION", "onPageRequest")
+                pageNumber++
+                loginPresenter.loadMoreRepositories(pageNumber)
+                //loginPresenter.
             }
 
             override fun getPagePreventionForEnd(): Int {
                 //repositoryOmegaRecycleView.showProgressPagination()
                 Log.d("PAGGINATION", "getPagePreventionForEnd")
-               // You can load data inside this callback
-                return 8 // PREVENTION_VALUE - for how many positions until the end you want to be informed
+
+                // You can load data inside this callback
+                return 5 // PREVENTION_VALUE - for how many positions until the end you want to be informed
             }
         })
-        repositoryOmegaRecycleView.showProgressPagination()
+
 
     }
 
@@ -139,6 +147,15 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener, 
         noInternetTextView.isVisible = visible
     }
 
+    override fun addPagination(repositoriesList: List<RepositoryModel>) {
+        repositoriesAdapter.addMoreRepositories(repositoriesList)
+        //loginPresenter.endPagination(repositoriesAdapter.getRepositoriesListSize())
+    }
+
+    override fun endPagination() {
+        repositoryOmegaRecycleView.hidePagination();
+    }
+
     override fun showError(textResource: Int) {
         Toast.makeText(this, textResource, Toast.LENGTH_SHORT).show()
     }
@@ -161,8 +178,8 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener, 
 
     override fun onPageRequest(page: Int) {
         Log.d("PAGGINATION", "onPageRequest()")// You can load data inside this callback
-        repositoryOmegaRecycleView.showProgressPagination()
-        downloadItems()
+   //     repositoryOmegaRecycleView.showProgressPagination()
+      //  downloadItems()
     }
 
     override fun getPagePreventionForEnd(): Int {
@@ -174,11 +191,9 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener, 
         val handler = Handler()
         handler.postDelayed(Runnable {
             Log.d("PAGGINATION", "downloadItems()")
-            repositoriesAdapter.addMoreRepositories(mutableListOf())//Image.createImageList(10))
+          //  repositoriesAdapter.addMoreRepositories(mutableListOf())//Image.createImageList(10))
         }, 3000)
     }
 
-    override fun onRetryClicked() {
-        Log.d("PAGGINATION", "onRetryCliced()")
-    }
+
 }

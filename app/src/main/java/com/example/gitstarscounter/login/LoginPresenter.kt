@@ -1,5 +1,6 @@
 package com.example.gitstarscounter.login
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.gitstarscounter.entity.repository.Repository
@@ -7,30 +8,39 @@ import com.example.gitstarscounter.git_api.RepositoryModel
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @InjectViewState
-class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback {
+class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapter.Callback {
 
-    val loginProvider = LoginProvider()
-    lateinit var userName: String
+    private val loginProvider = LoginProvider()
+    private var userName = ""
 
 
-    fun loadUser(userName: String) {
-        viewState.startLoading()
+    fun loadRepositories(userName: String, pageNumber: Int) {
+    //    viewState.startLoading()
         this.userName = userName
-        loginProvider.loadUser(userName, this)
+        loginProvider.loadUser(userName, 1, this)
+    }
+
+    fun loadMoreRepositories(pageNumber: Int) {
+        if (!userName.isEmpty()) {
+            Log.d("PAGINATION", "LOAD")
+            loginProvider.loadMoreRepositories(userName, pageNumber, this)
+        }
     }
 
     fun openStars(repository: RepositoryModel?) {
         viewState.openStars(repository!!.user.login, repository)
     }
 
-    fun loadMoreRepositories() {
-
-    }
-
-    override fun onLoginResponse(repositoryList: List<RepositoryModel>, noInternetIsVisible: Boolean) {
+    override fun onLoginResponse(
+        repositoryList: List<RepositoryModel>,
+        noInternetIsVisible: Boolean
+    ) {
         viewState.changeVisibilityOfNoInternetView(noInternetIsVisible)
         viewState.setupRepositoriesList(repositoryList)
-        viewState.endLoading()
+     //   viewState.endLoading()
+        if(repositoryList.size < 30) {
+            viewState.endPagination()
+        }
     }
 
 
@@ -41,4 +51,13 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback {
         loginEntityProvider.getUsersRepositories(userName)
 
     }
+
+    override fun onGetMoreRepositories(repositoriesModelList: List<RepositoryModel>?) {
+        Log.d("PAGINATION", "GETTED")
+        viewState.addPagination(repositoriesModelList!!)
+        if(repositoriesModelList.size < 30) {
+            viewState.endPagination()
+        }
+    }
+
 }

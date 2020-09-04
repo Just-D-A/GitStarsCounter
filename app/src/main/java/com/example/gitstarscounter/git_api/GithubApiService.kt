@@ -15,7 +15,7 @@ interface GithubApiService {
 
     //https://api.github.com/users/Just-D-A/repos
     @GET("users/{name}/repos")
-    fun getUserRepos(@Path("name") userName: String): Call<List<RepositoryModel?>?>
+    fun getUserRepos(@Path("name") userName: String,   @Query("page") pageNumber: Int): Call<List<RepositoryModel?>?>
 
     //https://api.github.com/repos/Just-D-A/GitStarsCounter/stargazers
     @GET("repos/{userName}/{repositoryName}/stargazers")

@@ -14,6 +14,8 @@ interface LoginView : MvpView {
     fun setupRepositoriesList(repositoriesList: List<RepositoryModel?>?)
     fun openStars(userName: String, repository: RepositoryModel)
     fun changeVisibilityOfNoInternetView(visible: Boolean)
+    fun addPagination(repositoriesList: List<RepositoryModel>)
+    fun endPagination()
 
     @StateStrategyType(value = SkipStrategy::class)
     fun showError(textResource: Int) // другая стратегия

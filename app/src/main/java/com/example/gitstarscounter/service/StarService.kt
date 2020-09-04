@@ -52,9 +52,6 @@ class StarService : Service(), ServiceCallback {
         ServiceEntity.getAllDatabaseRepositories(this)
     }
 
-    override fun onDatabaseStarResponse(starModelList: List<StarModel>) {
-        TODO("Not yet implemented")
-    }
 
     override fun onDatabaseRepositoryResponse(repositoryModelList: List<RepositoryModel>) {
         //Получить список всех репозиториев

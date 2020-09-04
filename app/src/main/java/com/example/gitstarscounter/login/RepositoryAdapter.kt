@@ -34,7 +34,7 @@ class RepositoryAdapter(
         notifyDataSetChanged()
     }
 
-    fun addMoreRepositories(repositoriesListInput: List<RepositoryModel?>?) {
+    fun addMoreRepositories(repositoriesListInput: List<RepositoryModel>) {
         val repositoriesArrayList: ArrayList<RepositoryModel> = ArrayList()
         repositoriesListInput!!.forEach {
             repositoriesArrayList.add(it!!)
@@ -99,6 +99,10 @@ class RepositoryAdapter(
     }
 
     interface Callback {
-        fun onRetryClicked()
+        fun onGetMoreRepositories(repositoriesModel: List<RepositoryModel>?)
+    }
+
+    fun getRepositoriesListSize(): Int {
+        return repositoriesList.size
     }
 }
