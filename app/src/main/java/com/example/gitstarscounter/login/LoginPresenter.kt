@@ -3,7 +3,6 @@ package com.example.gitstarscounter.login
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.gitstarscounter.entity.repository.Repository
 import com.example.gitstarscounter.git_api.RepositoryModel
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -32,13 +31,13 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
     }
 
     override fun onLoginResponse(
-        repositoryList: List<RepositoryModel>,
+        repositoryModelList: List<RepositoryModel>,
         noInternetIsVisible: Boolean
     ) {
         viewState.changeVisibilityOfNoInternetView(noInternetIsVisible)
-        viewState.setupRepositoriesList(repositoryList)
+        viewState.setupRepositoriesList(repositoryModelList)
      //   viewState.endLoading()
-        if(repositoryList.size < 30) {
+        if(repositoryModelList.size < 30) {
             viewState.endPagination()
         }
     }

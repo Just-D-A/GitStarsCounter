@@ -22,7 +22,10 @@ class StarsProvider() {
     ) {
         val starsList = searchRepository.getStars(userName, repositoryModel.name, pageNumber)
         starsList.enqueue(object : Callback<List<StarModel?>?> {
-            override fun onResponse(call: Call<List<StarModel?>?>, response: Response<List<StarModel?>?>) {
+            override fun onResponse(
+                call: Call<List<StarModel?>?>,
+                response: Response<List<StarModel?>?>
+            ) {
                 if (response.body() != null) {
                     Log.d("HELLO", "WORLD")
                     starsCallback.onStarsResponse(response.body() as List<StarModel>, false)

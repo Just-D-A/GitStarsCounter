@@ -46,7 +46,7 @@ object ServiceEntity {
         val handler: Handler = object : Handler() {
             override fun handleMessage(msg: Message) {
                 if (msg.what == 0) {
-                    serviceCallback.onFindStarResponse(newStars, repositoryModel)
+                    serviceCallback.onDatabaseFindStarResponse(newStars, repositoryModel)
                 }
             }
         }
@@ -62,6 +62,4 @@ object ServiceEntity {
         }
 
     }
-
-
 }

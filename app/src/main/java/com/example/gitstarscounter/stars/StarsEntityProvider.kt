@@ -55,11 +55,11 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
                 )
 
 
-                    userDao?.insertAll(EntityConvector.covertUserToEntity(it.user))
+                userDao?.insertAll(EntityConvector.covertUserToEntity(it.user))
 
                 val user = userDao?.getUserById(star.userId)
                 val starFromDB = starDao?.findByRepositoryUserAndId(star.repositoryId, star.userId)
-                if(starFromDB == null) {
+                if (starFromDB == null) {
                     starDao?.insertAll(star)
                 }
             }
@@ -80,9 +80,9 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
             }
             //для каждой звезды с БД найти звезду с api по id_user если не найдено, значит удалить\
             var i = 0
-            starsListFromDB?.forEach{
+            starsListFromDB?.forEach {
                 val starFromApi = starsMap[it.userId]
-                if(starFromApi == null) {
+                if (starFromApi == null) {
                     starDao?.delete(it)
                     i++
                 }
@@ -105,7 +105,12 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
         databaseWriteExecutor.execute {
             val starsList = starDao?.findByRepositoryId(repositoryModel.id)
             starsList?.forEach {
-                starsTypeList.add(EntityConvector.covertEntityToStar(it, userDao?.getUserById(it.userId)!!))
+                starsTypeList.add(
+                    EntityConvector.covertEntityToStar(
+                        it,
+                        userDao?.getUserById(it.userId)!!
+                    )
+                )
             }
             handler.sendEmptyMessage(0)
         }

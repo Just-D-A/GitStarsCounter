@@ -22,7 +22,6 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     lateinit var starsEntityProvider: StarsEntityProvider
 
 
-
     fun setParams(userName: String, repositoryModel: RepositoryModel) {
         this.userName = userName
         this.repositoryModel = repositoryModel
@@ -61,7 +60,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     }
 
     override fun onStarsResponse(responseStarsList: List<StarModel>, noInternerIsVisible: Boolean) {
-        if(!noInternerIsVisible) {
+        if (!noInternerIsVisible) {
             starsEntityProvider.insertToDatabase(responseStarsList)
             starsEntityProvider.checkUnstars(responseStarsList, repositoryModel)
         }
@@ -70,7 +69,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
             Log.d("StarsCallback", it.user.login)
             starsList.add(it)
         }
-            needMore()
+        needMore()
     }
 
     override fun onError(textResource: Int) {
@@ -79,7 +78,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         starsEntityProvider.getRepositoryStars()
     }
 
-    fun reloadStars() {
+    private fun reloadStars() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.startLoading()
         starsConvector.setStarsMap(starsList, currYear)

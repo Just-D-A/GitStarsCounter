@@ -13,14 +13,8 @@
         android:theme="@style/AppTheme">
         <service
             android:name=".service.StarIntentService"
-            android:exported="false"></service>
-        <service
-            android:name=".service.StarIntentService"
             android:exported="false" />
-        <service
-            android:name=".service.StarService"
-            android:enabled="true"
-            android:exported="true" />
+
 
         <activity android:name=".user_starred.UserStarredActivity" />
         <activity android:name=".stars.StarsActivity" />

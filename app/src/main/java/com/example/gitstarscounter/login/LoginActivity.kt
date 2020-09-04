@@ -25,13 +25,13 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.service.StarIntentService
-import com.example.gitstarscounter.service.StarService
+import com.example.gitstarscounter.service.StarIntentService.Companion.startActionFoo
 import com.example.gitstarscounter.stars.StarsActivity
-import com.example.gitstarscounter.user_starred.UserStarredActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
 import com.omegar.libs.omegalaunchers.ActivityLauncher
+import com.omegar.libs.omegalaunchers.createActivityLauncher
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
@@ -141,9 +141,9 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
     }
 
     override fun openStars(userName: String, repository: RepositoryModel) {
-        //val launcher = StarsActivity.createLauncher(userName, repository)
-        startActivity(StarsActivity.createIntent(this, userName, repository))
-        //ActivityLauncher(StarsActivity::class.java, null, 0)
+        StarsActivity.createLauncher(userName, repository).launch(this)
+       // startActivity(StarsActivity.createIntent(this, userName, repository))
+       // ActivityLauncher(StarsActivity::class.java, null, 0)
     }
 
 
@@ -179,7 +179,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        startService(Intent(this, StarService::class.java))
+        startService(Intent(this, StarIntentService::class.java))
     }
 
     override fun onPageRequest(page: Int) {

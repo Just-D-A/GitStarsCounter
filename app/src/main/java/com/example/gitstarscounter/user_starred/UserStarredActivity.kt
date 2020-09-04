@@ -19,9 +19,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
+import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.StarModel
-import com.example.gitstarscounter.service.StarService
+import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
+import com.omegar.libs.omegalaunchers.createActivityLauncher
+import com.omegar.libs.omegalaunchers.tools.put
 import java.io.Serializable
 
 
@@ -44,12 +47,24 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         private const val KEY_HAS_INTERNET = "hasInternet"
 
 
-        fun createIntent(context: Context, starsList: MutableList<StarModel>, noInternetVisible: Boolean) = Intent(
+        fun createIntent(
+            context: Context,
+            starsList: MutableList<StarModel>,
+            noInternetVisible: Boolean
+        ) = Intent(
             context,
             UserStarredActivity::class.java
         )
             .putExtra(KEY_STAR_LIST, starsList as Serializable)
             .putExtra(KEY_HAS_INTERNET, noInternetVisible)
+
+        fun createLauncher( starsList: MutableList<StarModel>,
+                            noInternetVisible: Boolean) =
+            createActivityLauncher(
+                KEY_STAR_LIST put starsList as Serializable,
+                KEY_HAS_INTERNET put noInternetVisible
+            )
+
     }
 
     @SuppressLint("WrongConstant")
@@ -65,7 +80,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
         val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<StarModel>
 
-        val actionBar= supportActionBar
+        val actionBar = supportActionBar
         actionBar?.setHomeButtonEnabled(true);
         actionBar?.setDisplayHomeAsUpEnabled(true);
 
@@ -139,6 +154,6 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        startService(Intent(this, StarService::class.java))
+        //       startService(Intent(this, StarIntentService::class.java))
     }
 }

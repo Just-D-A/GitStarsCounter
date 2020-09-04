@@ -16,7 +16,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.StarModel
-import com.example.gitstarscounter.service.StarService
+import com.example.gitstarscounter.service.StarIntentService
 import com.example.gitstarscounter.user_starred.UserStarredActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.jjoe64.graphview.GraphView
@@ -134,7 +134,8 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     }
 
     override fun openUsersStared(starsInMonthList: MutableList<StarModel>) {
-        startActivity(UserStarredActivity.createIntent(this, starsInMonthList, hasInternet))
+        UserStarredActivity.createLauncher(starsInMonthList, hasInternet).launch(this)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -183,6 +184,6 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        startService(Intent(this, StarService::class.java))
+        // startService(Intent(this, StarIntentService::class.java))
     }
 }

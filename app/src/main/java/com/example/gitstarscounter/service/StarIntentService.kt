@@ -1,9 +1,6 @@
 package com.example.gitstarscounter.service
 
-import android.app.IntentService
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -14,27 +11,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.StarModel
+import com.example.gitstarscounter.stars.StarsActivity
 
-// TODO: Rename actions, choose action names that describe tasks that this
-// IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-private const val ACTION_FOO = "com.example.gitstarscounter.service.action.FOO"
-private const val ACTION_BAZ = "com.example.gitstarscounter.service.action.BAZ"
-
-// TODO: Rename parameters
-private const val EXTRA_PARAM1 = "com.example.gitstarscounter.service.extra.PARAM1"
-private const val EXTRA_PARAM2 = "com.example.gitstarscounter.service.extra.PARAM2"
-
-/**
- * An [IntentService] subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
 class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
-    val LOG_TAG = "StarIntentService"
-
+    private val LOG_TAG = "StarIntentService"
     private val YEAR_IS_NOW = 120 //java date need -1900
-    val CHANNEL_ID = " com.example.gitstarscounter.service"
+    private val CHANNEL_ID = " com.example.gitstarscounter.service"
     private val serviceProvider = ServiceProvider()
     private var error = false
 
@@ -47,9 +29,9 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
      * Handle action Foo in the provided background thread with the provided
      * parameters.
      */
-    private fun handleActionFoo(param1: String, param2: String) {
-        TODO("Handle action Foo")
+    private fun handleActionFoo() {
         Log.d(TAG, "handleActionFoo")
+
     }
 
     /**
@@ -57,7 +39,6 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
      * parameters.
      */
     private fun handleActionBaz(param1: String, param2: String) {
-        TODO("Handle action Baz")
         Log.d(TAG, "handleActionBaz")
     }
 
@@ -70,14 +51,11 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
          *
          * @see IntentService
          */
-        // TODO: Customize helper method
         @JvmStatic
         fun startActionFoo(context: Context) {
-            val intent = Intent(context, StarIntentService::class.java).apply {
-                action = ACTION_FOO
-            }
+
             Log.d(TAG, "startActionFoo")
-            context.startService(intent)
+            // context.startService(intent)
         }
 
 
@@ -87,23 +65,23 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
          *
          * @see IntentService
          */
-        // TODO: Customize helper method
+
         @JvmStatic
         fun startActionBaz(context: Context, param1: String, param2: String) {
-            val intent = Intent(context, StarIntentService::class.java).apply {
-                action = ACTION_BAZ
-                putExtra(EXTRA_PARAM1, param1)
-                putExtra(EXTRA_PARAM2, param2)
-            }
+
             Log.d(TAG, "startActionBaz")
-            context.startService(intent)
+            //  context.startService(intent)
         }
     }
 
+    //Получить список всех репозиториев
+    //Получил все звезды с Api по интресуещим репозиториям  starListFromApi ++++++++++++
+    //Отправить запрос к БД найти звезды которых не было(те которые вставили)
+    //Получить список НОВЫХ звезд которые были добавлены
+    //Отправить push уведомление
     fun getNewStars() {
         ServiceEntity.getAllDatabaseRepositories(this)
     }
-
 
     override fun onDatabaseRepositoryResponse(repositoryModelList: List<RepositoryModel>) {
         //Получить список всех репозиториев
@@ -111,10 +89,7 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
             Log.d("REP_FROM_DB_IN_SERVICE", it.name)
             startLoadStars(it)
         }
-        //Получил все звезды с Api по интресуещим репозиториям  starListFromApi ++++++++++++
-        //Отправить запрос к БД найти звезды которых не было(те которые вставили)
-        //Получить список НОВЫХ звезд которые были добавлены
-        //Отправить push уведомление
+
 
     }
 
@@ -134,19 +109,24 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onFindStarResponse(
+    override fun onDatabaseFindStarResponse(
         newStars: MutableList<StarModel>,
         repositoryModel: RepositoryModel
     ) {
         Log.d(LOG_TAG, "FIND ${newStars.size} NEW STARS IN REP: ${repositoryModel.name}")
         if (newStars.size > 0) {
             val channelId = createNotificationChannel(this, CHANNEL_ID, "Channel")
+            /*val intent = StarsActivity.createIntent(this, repositoryModel.user.login, repositoryModel)
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)*/
+            val launcher = StarsActivity.createLauncher(repositoryModel.user.login, repositoryModel)
+            val pendingIntent = launcher.getPendingIntent(this, 0, 0)
             val builder = NotificationCompat.Builder(
                 applicationContext, channelId
             )
-                .setContentTitle("Новые звезды")//Звезда тебе, парень
+                .setContentTitle("Новые звезды")//Звезда
                 .setContentText("У репозитория ${repositoryModel.name} появилось ${newStars.size} новых звезд")// N пользовательей поставили свои звезды репозиторию M
                 .setSmallIcon(com.example.gitstarscounter.R.drawable.ic_launcher_foreground)
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
             val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(
@@ -218,6 +198,4 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
         service.createNotificationChannel(chan)
         return channelId
     }
-
-
 }
