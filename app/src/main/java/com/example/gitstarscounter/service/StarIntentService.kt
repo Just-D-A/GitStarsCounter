@@ -40,6 +40,7 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
     //Получить список НОВЫХ звезд которые были добавлены
     //Отправить push уведомление
     fun getNewStars() {
+
         ServiceEntity.getAllDatabaseRepositories(this)
     }
 
@@ -92,8 +93,6 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
             )
             notificationManager.notify(0, builder.build())
         }
-
-
     }
 
     private fun startLoadStars(repositoryModel: RepositoryModel) {
@@ -156,6 +155,7 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
         service.createNotificationChannel(chan)
         return channelId
     }
+
     companion object {
         const val TAG = "StarIntentService"
         const val LOG_TAG = "StarIntentService"

@@ -11,7 +11,6 @@ import com.example.gitstarscounter.git_api.RepositoryModel
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-
 class LoginEntityProvider(val loginCallback: LoginCallback) {
     private val database = GitStarsDatabase.getDatabase()
     private val userDao = database.userDao()
@@ -30,19 +29,16 @@ class LoginEntityProvider(val loginCallback: LoginCallback) {
 
         databaseWriteExecutor.execute {
             val user = userDao?.getUserByName(userName) //запрос к БД
-
             Log.d("DATA_BASE", "${user?.name} getted")
 
             user?.let { user ->
                 val repositoriesList = repositoryDao?.getRepositoriesByUserId(user.id)
 
-                if (repositoriesList?.isEmpty()!!) {
-                    Log.d("REP", "EMPTY REP LIST")
-                }
                 repositoriesList?.forEach {
                     repositoryModelTypeList.add(EntityConvector.covertEntityToRepository(it, user))
                     Log.d("GET_FROM_DB", it.name)
                 }
+
                 handler.sendEmptyMessage(0)
             }
         }

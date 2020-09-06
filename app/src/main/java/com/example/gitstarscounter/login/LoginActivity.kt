@@ -1,13 +1,9 @@
 package com.example.gitstarscounter.login
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -25,7 +21,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.git_api.RepositoryModel
-import com.example.gitstarscounter.service.StarIntentService
+import com.example.gitstarscounter.service.Alarm
 import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
@@ -157,7 +153,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        Log.d("onUserLeaveHint", "IT WORK")
+      /*  Log.d("onUserLeaveHint", "IT WORK")
         val alarmManager =
             this.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val pendingIntent =
@@ -174,13 +170,15 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
             AlarmManager.INTERVAL_HALF_HOUR, pendingIntent
-        )
+        )*/
 
     }
 
+
     override fun onBackPressed() {
         super.onBackPressed()
-        startService(Intent(this, StarIntentService::class.java))
+        Log.d("LoginActivity", "Start Receiver")
+        startFindStarsReceiver()
     }
 
     override fun onPageRequest(page: Int) {
@@ -190,5 +188,11 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
     override fun getPagePreventionForEnd(): Int {
         Log.d("PAGGINATION", "getPagePreventionForEnd()")
         return 5
+    }
+
+    fun startFindStarsReceiver() {
+      //  startService(intent)
+        val a = Alarm()
+        a.setAlarm(this)
     }
 }

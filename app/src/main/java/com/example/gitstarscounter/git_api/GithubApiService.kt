@@ -29,12 +29,6 @@ interface GithubApiService {
         @Query("per_page") elementsCount: Int
     ): Call<List<StarModel?>?>
 
-    @GET("repos/{userName}/{repositoryName}")
-    fun getStarsCount(
-        @Path("userName") userName: String,
-        @Path("repositoryName") repositoryName: String
-    ): Int
-
     /**
      * Companion object to create the GithubApiService
      */

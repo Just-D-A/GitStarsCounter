@@ -21,24 +21,25 @@ object ServiceEntity {
         Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
     fun getAllDatabaseRepositories(serviceCallback: ServiceCallback) {
-        val handler: Handler = object : Handler() {
+     /*   val handler: Handler = object : Handler() {
             override fun handleMessage(msg: Message) {
                 if (msg.what == 0) {
                     Log.d("SERVICE FB OBJECT2", repositoryModelList?.size.toString())
                     serviceCallback.onDatabaseRepositoryResponse(repositoryModelList)
                 }
             }
-        }
+        }*/
 
-        databaseWriteExecutor.execute {
+    //    databaseWriteExecutor.execute {
             val repositoryEntityList = repositoryDao?.getAll()
             Log.d("SERVICE FB OBJECT", repositoryEntityList?.size.toString())
             repositoryEntityList?.forEach {
                 val user = userDao?.getUserById(it.userId)
                 repositoryModelList.add(EntityConvector.covertEntityToRepository(it, user!!))
             }
-            handler.sendEmptyMessage(0)
-        }
+            serviceCallback.onDatabaseRepositoryResponse(repositoryModelList)
+     //       handler.sendEmptyMessage(0)
+      //  }
     }
 
     fun findNewStars(serviceCallback: ServiceCallback, starListFromApi: List<StarModel>, repositoryModel: RepositoryModel) {

@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.login
 
-
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.SearchProvider

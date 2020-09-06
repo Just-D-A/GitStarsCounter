@@ -1,8 +1,6 @@
 package com.example.gitstarscounter.login
 
-
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
-import com.omega_r.libs.omegarecyclerview.pagination.PaginationViewCreator
 import de.hdodenhof.circleimageview.CircleImageView
 
 class RepositoryAdapter(

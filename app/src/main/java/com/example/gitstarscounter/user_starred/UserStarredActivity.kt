@@ -2,7 +2,6 @@ package com.example.gitstarscounter.user_starred
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -50,7 +49,6 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
                 KEY_STAR_LIST put starsList as Serializable,
                 KEY_HAS_INTERNET put noInternetVisible
             )
-
     }
 
     @SuppressLint("WrongConstant")

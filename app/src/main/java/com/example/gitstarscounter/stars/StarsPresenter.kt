@@ -17,9 +17,9 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     private var error = false
     private var pageNumber = 1
 
-    lateinit var userName: String
-    lateinit var repositoryModel: RepositoryModel
-    lateinit var starsEntityProvider: StarsEntityProvider
+    private  lateinit var userName: String
+    private  lateinit var repositoryModel: RepositoryModel
+    private  lateinit var starsEntityProvider: StarsEntityProvider
 
 
     fun setParams(userName: String, repositoryModel: RepositoryModel) {
@@ -59,17 +59,13 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         reloadStars()
     }
 
-    override fun onStarsResponse(responseStarsList: List<StarModel>, noInternerIsVisible: Boolean) {
-        if (!noInternerIsVisible) {
-            starsEntityProvider.insertToDatabase(responseStarsList)
-            starsEntityProvider.checkUnstars(responseStarsList, repositoryModel)
-        }
-        viewState.changeVisibilityOfNoInternetView(noInternerIsVisible)
+    override fun onStarsResponse(responseStarsList: List<StarModel>, noInternetIsVisible: Boolean) {
+        viewState.changeVisibilityOfNoInternetView(noInternetIsVisible)
         responseStarsList.forEach {
             Log.d("StarsCallback", it.user.login)
             starsList.add(it)
         }
-        needMore()
+        needMore(responseStarsList)
     }
 
     override fun onError(textResource: Int) {
@@ -93,17 +89,19 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         viewState.openUsersStared(starsInMonthList)
     }
 
-    private fun needMore() {
-        var lastStarYear = 0
+    private fun needMore(responseStarsList: List<StarModel>) {
+       /* var lastStarYear = 0
         if (starsList.size != 0) {
             lastStarYear = starsList[starsList.size - 1].starredAt.year
         }
         val currStarsCount = starsList.size
-        val allStarsCount = repositoryModel.allStarsCount
-        if ((lastStarYear <= currYear) && (currStarsCount < allStarsCount) && (!error)) {
+        val allStarsCount = repositoryModel.allStarsCount*/
+        if (responseStarsList.size == SearchStars.MAX_ELEMENTS_FROM_API) {
             pageNumber++
             loadMoreStars(pageNumber)
         } else {
+            starsEntityProvider.insertToDatabase(starsList)
+            starsEntityProvider.checkUnstars(starsList, repositoryModel)
             loadGrafic()
         }
     }

@@ -16,7 +16,6 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-
 class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel: RepositoryModel) {
     private val database = GitStarsDatabase.getDatabase()
     private val userDao = database.userDao()
@@ -109,7 +108,6 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
             handler.sendEmptyMessage(0)
         }
     }
-
 
     companion object {
         private const val NUMBER_OF_THREADS = 4

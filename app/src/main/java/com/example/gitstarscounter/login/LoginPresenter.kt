@@ -13,7 +13,7 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
 
     fun loadRepositories(userName: String, pageNumber: Int) {
         this.userName = userName
-        loginProvider.loadUser(userName, 1, this)
+        loginProvider.loadUser(userName, pageNumber, this)
     }
 
     fun loadMoreRepositories(pageNumber: Int) {

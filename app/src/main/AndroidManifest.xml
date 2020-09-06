@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".service.AlarmReceiver"
+            android:name=".service.TimerReceiver"
             android:enabled="true"
             android:exported="true" />
 

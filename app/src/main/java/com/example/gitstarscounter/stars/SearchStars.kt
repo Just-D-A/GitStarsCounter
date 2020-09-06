@@ -21,6 +21,6 @@ class SearchStars(val apiService: GithubApiService) {
 
     companion object {
         const val MAX_ELEMENTS_FROM_API = 100
-        const val URL_API = "application/vnd.github.v3.star+json"
+        const val URL_API = "application/vnd.github.v3.star+json" //header for get param starred_at
     }
 }
