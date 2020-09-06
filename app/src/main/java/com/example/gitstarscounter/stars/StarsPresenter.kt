@@ -93,7 +93,6 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         viewState.openUsersStared(starsInMonthList)
     }
 
-
     private fun needMore() {
         var lastStarYear = 0
         if (starsList.size != 0) {

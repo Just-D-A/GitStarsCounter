@@ -8,19 +8,16 @@ import com.example.gitstarscounter.git_api.RepositoryModel
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @InjectViewState
 class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapter.Callback {
-
     private val loginProvider = LoginProvider()
     private var userName = ""
 
-
     fun loadRepositories(userName: String, pageNumber: Int) {
-    //    viewState.startLoading()
         this.userName = userName
         loginProvider.loadUser(userName, 1, this)
     }
 
     fun loadMoreRepositories(pageNumber: Int) {
-        if (!userName.isEmpty()) {
+        if (userName.isNotEmpty()) {
             Log.d("PAGINATION", "LOAD")
             loginProvider.loadMoreRepositories(userName, pageNumber, this)
         }
@@ -36,12 +33,10 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
     ) {
         viewState.changeVisibilityOfNoInternetView(noInternetIsVisible)
         viewState.setupRepositoriesList(repositoryModelList)
-     //   viewState.endLoading()
         if(repositoryModelList.size < 30) {
             viewState.endPagination()
         }
     }
-
 
     override fun onError(textResource: Int) {
         viewState.endLoading()
@@ -62,5 +57,4 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
             viewState.endPagination()
         }
     }
-
 }

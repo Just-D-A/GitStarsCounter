@@ -70,7 +70,5 @@ class UserStarredAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
                 .into(userPhotoImageView)
             userNameTextView.text = userModel.login
         }
-
     }
-
 }

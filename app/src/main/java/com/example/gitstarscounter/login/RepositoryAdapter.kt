@@ -17,11 +17,9 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class RepositoryAdapter(
     private val onRepositoryClickListener: OnRepositoryClickListener,
-    val context: Context
-) :
-    OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var repositoriesList: ArrayList<RepositoryModel> = ArrayList()
+    val context: Context)
+    : OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var repositoriesList: ArrayList<RepositoryModel> = ArrayList() //как праильно по соглашению??
     lateinit var adapterCallback: Callback
 
     fun setupRepositoriesList(repositoriesListInput: List<RepositoryModel?>?) {
@@ -63,7 +61,6 @@ class RepositoryAdapter(
         return repositoriesList.count()
     }
 
-
     class RepositoryViewHolder(
         itemView: View,
         repositoriesList: List<RepositoryModel?>?,
@@ -100,9 +97,5 @@ class RepositoryAdapter(
 
     interface Callback {
         fun onGetMoreRepositories(repositoriesModel: List<RepositoryModel>?)
-    }
-
-    fun getRepositoriesListSize(): Int {
-        return repositoriesList.size
     }
 }

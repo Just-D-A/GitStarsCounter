@@ -9,7 +9,6 @@ import com.example.gitstarscounter.entity.star.StarDao
 import com.example.gitstarscounter.entity.user.User
 import com.example.gitstarscounter.entity.user.UserDao
 
-
 @Database(
     entities = [User::class, Repository::class, Star::class],
     version = 2,

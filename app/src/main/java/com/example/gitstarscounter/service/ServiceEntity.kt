@@ -11,12 +11,12 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 object ServiceEntity {
+    private const val NUMBER_OF_THREADS = 4
     private val database = GitStarsDatabase.getDatabase()
     private val userDao = database.userDao()
     private val repositoryDao = database.repositoryDao()
     private val starDao = database.starDao()
     private val repositoryModelList = mutableListOf<RepositoryModel>()
-    private const val NUMBER_OF_THREADS = 4
     private val databaseWriteExecutor: ExecutorService =
         Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
@@ -29,8 +29,8 @@ object ServiceEntity {
                 }
             }
         }
-        databaseWriteExecutor.execute {
 
+        databaseWriteExecutor.execute {
             val repositoryEntityList = repositoryDao?.getAll()
             Log.d("SERVICE FB OBJECT", repositoryEntityList?.size.toString())
             repositoryEntityList?.forEach {
@@ -50,6 +50,7 @@ object ServiceEntity {
                 }
             }
         }
+
         databaseWriteExecutor.execute {
             starListFromApi.forEach { starFromApi -> //стоит ли так делать или лучше it??
                 val starFromDB = starDao?.findByRepositoryUserAndId(repositoryModel.id, starFromApi.user.id)
@@ -60,6 +61,5 @@ object ServiceEntity {
             }
             handler.sendEmptyMessage(0)
         }
-
     }
 }

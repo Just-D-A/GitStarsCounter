@@ -10,8 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @Suppress("DEPRECATION", "UNCHECKED_CAST")
-class StarsProvider() {
-
+class StarsProvider {
     private val searchRepository = SearchProvider.provideSearchStars()
 
     fun loadStars(

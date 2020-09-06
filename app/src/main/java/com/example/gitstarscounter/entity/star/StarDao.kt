@@ -4,7 +4,6 @@ import androidx.room.*
 import com.example.gitstarscounter.entity.convectors.DateConverter
 import java.util.*
 
-
 @Dao
 @TypeConverters(DateConverter::class)
 interface StarDao {
@@ -26,4 +25,3 @@ interface StarDao {
     @Delete
     fun delete(star: Star)
 }
-

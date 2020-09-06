@@ -27,4 +27,3 @@ data class Repository(
     @ColumnInfo(name = "user_id")
     val userId: Long
 )
-

@@ -2,9 +2,6 @@ package com.example.gitstarscounter.entity
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-
 
 object GitStarsDatabase {
     lateinit var db: AppDatabase
@@ -20,6 +17,4 @@ object GitStarsDatabase {
     fun getDatabase(): AppDatabase {
         return db
     }
-
-
 }

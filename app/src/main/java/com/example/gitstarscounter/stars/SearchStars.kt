@@ -5,7 +5,6 @@ import com.example.gitstarscounter.git_api.StarModel
 import retrofit2.Call
 
 class SearchStars(val apiService: GithubApiService) {
-
     fun getStars(
         userName: String,
         repositoryName: String,
@@ -14,9 +13,14 @@ class SearchStars(val apiService: GithubApiService) {
         return apiService.getStars(
             userName,
             repositoryName,
-            "application/vnd.github.v3.star+json",
+            URL_API,
             pageNumber,
-            100
+            MAX_ELEMENTS_FROM_API
         )
+    }
+
+    companion object {
+        const val MAX_ELEMENTS_FROM_API = 100
+        const val URL_API = "application/vnd.github.v3.star+json"
     }
 }

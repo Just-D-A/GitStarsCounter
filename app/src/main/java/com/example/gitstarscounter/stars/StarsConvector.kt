@@ -54,4 +54,3 @@ object StarsConvector {
         return result
     }
 }
-

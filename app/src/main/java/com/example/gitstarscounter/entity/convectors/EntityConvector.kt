@@ -15,9 +15,9 @@ object EntityConvector {
 
     fun covertUserToEntity(userModel: UserModel): User {
         return User(
-            userModel.id,
-            userModel.login,
-            userModel.avatarUrl
+            id =userModel.id,
+            name = userModel.login,
+            avatarUrl = userModel.avatarUrl
         )
     }
 
@@ -42,9 +42,12 @@ object EntityConvector {
         )
     }
 
-
     fun convertEntityToUser(user: User): UserModel {
-        return UserModel(user.id, user.name!!, user.avatarUrl)
+        return UserModel(
+            id = user.id,
+            login =  user.name!!,
+            avatarUrl = user.avatarUrl
+        )
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -52,8 +55,10 @@ object EntityConvector {
         star: Star,
         user: User
     ): StarModel {
-        return StarModel(StarsEntityProvider.sdf3.parse(star.starredAt), convertEntityToUser(user))
-
+        return StarModel(
+            starredAt = StarsEntityProvider.sdf3.parse(star.starredAt),
+            user = convertEntityToUser(user)
+        )
     }
 
     fun convertStarToEntity(

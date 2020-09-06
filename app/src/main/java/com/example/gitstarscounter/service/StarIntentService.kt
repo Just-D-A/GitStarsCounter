@@ -17,9 +17,7 @@ import com.example.gitstarscounter.git_api.StarModel
 import com.example.gitstarscounter.stars.StarsActivity
 
 class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
-    private val LOG_TAG = "StarIntentService"
-    private val YEAR_IS_NOW = 120 //java date need -1900
-    private val CHANNEL_ID = " com.example.gitstarscounter.service"
+
     private val serviceProvider = ServiceProvider()
     private var error = false
 
@@ -28,57 +26,16 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
         getNewStars()
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
     private fun handleActionFoo() {
         Log.d(TAG, "handleActionFoo")
-
     }
 
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
     private fun handleActionBaz(param1: String, param2: String) {
         Log.d(TAG, "handleActionBaz")
     }
 
-    companion object {
-        val TAG = "StarIntentService"
-
-        /**
-         * Starts this service to perform action Foo with the given parameters. If
-         * the service is already performing a task this action will be queued.
-         *
-         * @see IntentService
-         */
-        @JvmStatic
-        fun startActionFoo(context: Context) {
-
-            Log.d(TAG, "startActionFoo")
-            // context.startService(intent)
-        }
-
-
-        /**
-         * Starts this service to perform action Baz with the given parameters. If
-         * the service is already performing a task this action will be queued.
-         *
-         * @see IntentService
-         */
-
-        @JvmStatic
-        fun startActionBaz(context: Context, param1: String, param2: String) {
-
-            Log.d(TAG, "startActionBaz")
-            //  context.startService(intent)
-        }
-    }
-
     //Получить список всех репозиториев
-    //Получил все звезды с Api по интресуещим репозиториям  starListFromApi ++++++++++++
+    //Получил все звезды с Api по интресуещим репозиториям  starListFromApi
     //Отправить запрос к БД найти звезды которых не было(те которые вставили)
     //Получить список НОВЫХ звезд которые были добавлены
     //Отправить push уведомление
@@ -95,7 +52,6 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
 
 
     }
-
 
     override fun onStarsResponse(
         responseStarsList: MutableList<StarModel>,
@@ -119,10 +75,9 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
         Log.d(LOG_TAG, "FIND ${newStars.size} NEW STARS IN REP: ${repositoryModel.name}")
         if (newStars.size > 0) {
             val channelId = createNotificationChannel(this, CHANNEL_ID, "Channel")
-            /*val intent = StarsActivity.createIntent(this, repositoryModel.user.login, repositoryModel)
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)*/
             val launcher = StarsActivity.createLauncher(repositoryModel.user.login, repositoryModel)
             val pendingIntent = launcher.getPendingIntent(this, 0, 0)
+
             val builder = NotificationCompat.Builder(
                 applicationContext, channelId
             )
@@ -200,5 +155,22 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
         val service = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         service.createNotificationChannel(chan)
         return channelId
+    }
+    companion object {
+        const val TAG = "StarIntentService"
+        const val LOG_TAG = "StarIntentService"
+        const val YEAR_IS_NOW = 120 //java date need -1900
+        const val CHANNEL_ID = " com.example.gitstarscounter.service"
+        @JvmStatic
+        fun startActionFoo(context: Context) {
+            Log.d(TAG, "startActionFoo")
+            //context.startService(intent)
+        }
+
+        @JvmStatic
+        fun startActionBaz(context: Context, param1: String, param2: String) {
+            Log.d(TAG, "startActionBaz")
+            //  context.startService(intent)
+        }
     }
 }

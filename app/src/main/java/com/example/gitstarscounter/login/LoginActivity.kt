@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.login
 
-//import com.example.gitstarscounter.entity.repository.Repository
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -8,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.SystemClock
 import android.util.Log
 import android.view.KeyEvent
@@ -28,18 +26,13 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.GitStarsDatabase
 import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.service.StarIntentService
-import com.example.gitstarscounter.service.StarIntentService.Companion.startActionFoo
 import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
-import com.omegar.libs.omegalaunchers.ActivityLauncher
-import com.omegar.libs.omegalaunchers.createActivityLauncher
-
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
 class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
-
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var findButton: Button
     private lateinit var repositoryOmegaRecycleView: OmegaRecyclerView
@@ -85,7 +78,6 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
             false
         }
 
-
         val onRepositoryClickListener: RepositoryAdapter.OnRepositoryClickListener =
             object : RepositoryAdapter.OnRepositoryClickListener {
                 override fun onRepositoryClick(repository: RepositoryModel?) {
@@ -95,8 +87,8 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
             }
 
         repositoriesAdapter = RepositoryAdapter(onRepositoryClickListener, this)
-
         repositoriesAdapter.setCallback(loginPresenter)
+
         repositoryOmegaRecycleView.adapter = repositoriesAdapter
         repositoryOmegaRecycleView.setPaginationCallback(this)
         repositoryOmegaRecycleView.layoutManager = LinearLayoutManager(
@@ -112,21 +104,14 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
                 Log.d("PAGGINATION", "onPageRequest")
                 pageNumber++
                 loginPresenter.loadMoreRepositories(pageNumber)
-                //loginPresenter.
             }
 
             override fun getPagePreventionForEnd(): Int {
-                //repositoryOmegaRecycleView.showProgressPagination()
                 Log.d("PAGGINATION", "getPagePreventionForEnd")
-
-                // You can load data inside this callback
                 return 5 // PREVENTION_VALUE - for how many positions until the end you want to be informed
             }
         })
-
-
     }
-
 
     override fun startLoading() {
         findButton.isVisible = false
@@ -145,8 +130,6 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun openStars(userName: String, repository: RepositoryModel) {
         StarsActivity.createLauncher(userName, repository).launch(this)
-       // startActivity(StarsActivity.createIntent(this, userName, repository))
-       // ActivityLauncher(StarsActivity::class.java, null, 0)
     }
 
 
@@ -156,7 +139,6 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun addPagination(repositoriesList: List<RepositoryModel>) {
         repositoriesAdapter.addMoreRepositories(repositoriesList)
-        //loginPresenter.endPagination(repositoriesAdapter.getRepositoriesListSize())
     }
 
     override fun endPagination() {
@@ -164,7 +146,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
     }
 
     override fun showError(textResource: Int) {
-        Toast.makeText(this, textResource, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, textResource, Toast.LENGTH_SHORT).show() //поменять на диалог
     }
 
     private fun hideKeyboard() {
@@ -179,13 +161,15 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
         val alarmManager =
             this.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val pendingIntent =
-            PendingIntent.getService(this, 0, intent,
-                PendingIntent.FLAG_NO_CREATE)
+            PendingIntent.getService(
+                this, 0, intent,
+                PendingIntent.FLAG_NO_CREATE
+            )
         if (pendingIntent != null && alarmManager != null) {
             Log.d("ALARM_CALL", "ERROR")
             alarmManager.cancel(pendingIntent)
         }
-      //  startService(Intent(this, StarService::class.java))
+
         alarmManager?.setInexactRepeating(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
@@ -201,22 +185,10 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun onPageRequest(page: Int) {
         Log.d("PAGGINATION", "onPageRequest()")// You can load data inside this callback
-   //     repositoryOmegaRecycleView.showProgressPagination()
-      //  downloadItems()
     }
 
     override fun getPagePreventionForEnd(): Int {
         Log.d("PAGGINATION", "getPagePreventionForEnd()")
         return 5
     }
-
-    fun downloadItems() {
-        val handler = Handler()
-        handler.postDelayed(Runnable {
-            Log.d("PAGGINATION", "downloadItems()")
-            //  repositoriesAdapter.addMoreRepositories(mutableListOf())//Image.createImageList(10))
-        }, 3000)
-    }
-
-
 }

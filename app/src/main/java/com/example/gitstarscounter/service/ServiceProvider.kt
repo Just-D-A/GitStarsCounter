@@ -19,11 +19,15 @@ class ServiceProvider() {
         starsList: MutableList<StarModel>
     ) {
         val starsListGet = searchRepository.getStars(userName, repositoryModel.name, pageNumber)
+
         starsListGet.enqueue(object : Callback<List<StarModel?>?> {
-            override fun onResponse(call: Call<List<StarModel?>?>, response: Response<List<StarModel?>?>) {
+            override fun onResponse(
+                call: Call<List<StarModel?>?>,
+                response: Response<List<StarModel?>?>
+            ) {
                 if (response.body() != null) {
                     starsList.addAll(response.body() as List<StarModel>)
-                    serviceCallback.onStarsResponse(starsList, repositoryModel ,pageNumber)
+                    serviceCallback.onStarsResponse(starsList, repositoryModel, pageNumber)
                 }
             }
 
@@ -33,4 +37,3 @@ class ServiceProvider() {
         })
     }
 }
-//alarm sevice

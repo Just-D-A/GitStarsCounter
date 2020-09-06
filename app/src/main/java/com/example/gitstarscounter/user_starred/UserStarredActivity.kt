@@ -19,9 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.git_api.RepositoryModel
 import com.example.gitstarscounter.git_api.StarModel
-import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.libs.omegalaunchers.tools.put
@@ -46,18 +44,6 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
         private const val KEY_STAR_LIST = "starsList"
         private const val KEY_HAS_INTERNET = "hasInternet"
 
-
-        fun createIntent(
-            context: Context,
-            starsList: MutableList<StarModel>,
-            noInternetVisible: Boolean
-        ) = Intent(
-            context,
-            UserStarredActivity::class.java
-        )
-            .putExtra(KEY_STAR_LIST, starsList as Serializable)
-            .putExtra(KEY_HAS_INTERNET, noInternetVisible)
-
         fun createLauncher( starsList: MutableList<StarModel>,
                             noInternetVisible: Boolean) =
             createActivityLauncher(
@@ -74,8 +60,8 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
         searchEditText = findViewById(R.id.edit_text_user_name)
         waitProgressView = findViewById(R.id.progress_view_user_starred)
-        usersRecycleView = findViewById(R.id.recycler_users) //chage-----
-        noInternetTextView = findViewById(R.id.text_view_no_internet_user_starred) //chage-----
+        usersRecycleView = findViewById(R.id.recycler_view_users)
+        noInternetTextView = findViewById(R.id.text_view_no_internet_user_starred)
         noInternetTextView.isVisible = intent.getBooleanExtra(KEY_HAS_INTERNET, false)
 
         val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<StarModel>
@@ -97,7 +83,6 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
             userStarredAdapter.filter(charSequence.toString())
         })
 
-        //searchEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchEditText.setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER);
         searchEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action === KeyEvent.ACTION_DOWN) {
@@ -154,6 +139,5 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        //       startService(Intent(this, StarIntentService::class.java))
     }
 }

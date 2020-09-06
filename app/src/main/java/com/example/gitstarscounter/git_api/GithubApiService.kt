@@ -12,10 +12,12 @@ import retrofit2.http.Query
 import java.util.*
 
 interface GithubApiService {
-
     //https://api.github.com/users/Just-D-A/repos
     @GET("users/{name}/repos")
-    fun getUserRepos(@Path("name") userName: String,   @Query("page") pageNumber: Int): Call<List<RepositoryModel?>?>
+    fun getUserRepos(
+        @Path("name") userName: String,
+        @Query("page") pageNumber: Int
+    ): Call<List<RepositoryModel?>?>
 
     //https://api.github.com/repos/Just-D-A/GitStarsCounter/stargazers
     @GET("repos/{userName}/{repositoryName}/stargazers")
@@ -38,11 +40,11 @@ interface GithubApiService {
      */
     companion object Factory {
         fun create(): GithubApiService {
-
             val moshi: Moshi = Moshi.Builder()
                 .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
                 .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())//etc
                 .build()
+
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -50,6 +52,5 @@ interface GithubApiService {
 
             return retrofit.create(GithubApiService::class.java)
         }
-
     }
 }

@@ -1,9 +1,11 @@
 package com.example.gitstarscounter.entity.star
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import com.example.gitstarscounter.entity.repository.Repository
 import com.example.gitstarscounter.entity.user.User
-import java.sql.Date
 
 @Entity(
     tableName = "Stars", foreignKeys = [

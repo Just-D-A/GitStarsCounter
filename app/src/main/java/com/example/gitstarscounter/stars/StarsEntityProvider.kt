@@ -18,13 +18,13 @@ import java.util.concurrent.Executors
 
 
 class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel: RepositoryModel) {
-    val database = GitStarsDatabase.getDatabase()
-    val userDao = database.userDao()
-    val repositoryDao = database.repositoryDao()
-    val starDao = database.starDao()
-    val databaseWriteExecutor: ExecutorService =
+    private val database = GitStarsDatabase.getDatabase()
+    private val userDao = database.userDao()
+    private val repositoryDao = database.repositoryDao()
+    private val starDao = database.starDao()
+    private val databaseWriteExecutor: ExecutorService =
         Executors.newFixedThreadPool(NUMBER_OF_THREADS)
-    var starsTypeList: MutableList<StarModel> = mutableListOf()
+    private var starsTypeList: MutableList<StarModel> = mutableListOf()
 
 
     fun checkDatabase() {
@@ -43,7 +43,6 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
             repositoryDao?.insertAll(EntityConvector.covertRepositoryToEntity(repositoryModel))
 
             val repositoryLocal = repositoryDao?.getRepositoryById(repositoryModel.id)
-
             val list = repositoryDao?.getAll()
             list?.forEach { lol ->
                 Log.d("REP_NAME", lol.name)
@@ -53,7 +52,6 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
                     it,
                     repositoryLocal?.id!!
                 )
-
 
                 userDao?.insertAll(EntityConvector.covertUserToEntity(it.user))
 
@@ -65,7 +63,6 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
             }
             Log.d("DATA_BASE", "ALL ADDED")
         }
-
     }
 
     fun checkUnstars(starsListFromApi: List<StarModel>, repositoryModel: RepositoryModel) {
@@ -88,10 +85,7 @@ class StarsEntityProvider(val starsCallback: StarsCallback, val repositoryModel:
                 }
             }
             Log.d("Database", "DELETED $i STARS")
-
         }
-
-
     }
 
     fun getRepositoryStars() {

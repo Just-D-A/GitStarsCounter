@@ -6,7 +6,6 @@ import com.example.gitstarscounter.git_api.StarModel
 
 @InjectViewState
 class UserStarredPresenter() : MvpPresenter<UserStarredView>() {
-
     fun loadUserList(starModelList: MutableList<StarModel>) {
         viewState.startLoading()
         viewState.setupUsersList(starModelList)
