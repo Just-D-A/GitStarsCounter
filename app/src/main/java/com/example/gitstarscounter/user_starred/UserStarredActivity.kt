@@ -27,7 +27,6 @@ import java.io.Serializable
 
 @Suppress("DEPRECATED_IDENTITY_EQUALS")
 class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
-
     private lateinit var searchEditText: EditText
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var usersRecycleView: RecyclerView
@@ -39,12 +38,15 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
     lateinit var userStarredPresenter: UserStarredPresenter
 
     companion object {
+        const val BACK_BUTTON_ID = 16908332
 
         private const val KEY_STAR_LIST = "starsList"
         private const val KEY_HAS_INTERNET = "hasInternet"
 
-        fun createLauncher( starsList: MutableList<StarModel>,
-                            noInternetVisible: Boolean) =
+        fun createLauncher(
+            starsList: MutableList<StarModel>,
+            noInternetVisible: Boolean
+        ) =
             createActivityLauncher(
                 KEY_STAR_LIST put starsList as Serializable,
                 KEY_HAS_INTERNET put noInternetVisible
@@ -124,7 +126,7 @@ class UserStarredActivity : MvpAppCompatActivity(), UserStarredView {
                 true
             }
 
-            16908332 -> {
+            BACK_BUTTON_ID -> {
                 this.finish()
                 true
             }

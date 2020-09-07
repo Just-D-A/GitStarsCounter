@@ -20,29 +20,21 @@ object ServiceEntity {
     private val databaseWriteExecutor: ExecutorService =
         Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
-    fun getAllDatabaseRepositories(serviceCallback: ServiceCallback) {
-     /*   val handler: Handler = object : Handler() {
-            override fun handleMessage(msg: Message) {
-                if (msg.what == 0) {
-                    Log.d("SERVICE FB OBJECT2", repositoryModelList?.size.toString())
-                    serviceCallback.onDatabaseRepositoryResponse(repositoryModelList)
-                }
-            }
-        }*/
-
-    //    databaseWriteExecutor.execute {
-            val repositoryEntityList = repositoryDao?.getAll()
-            Log.d("SERVICE FB OBJECT", repositoryEntityList?.size.toString())
-            repositoryEntityList?.forEach {
-                val user = userDao?.getUserById(it.userId)
-                repositoryModelList.add(EntityConvector.covertEntityToRepository(it, user!!))
-            }
-            serviceCallback.onDatabaseRepositoryResponse(repositoryModelList)
-     //       handler.sendEmptyMessage(0)
-      //  }
+    fun getAllDatabaseRepositories(): List<RepositoryModel> {
+        val repositoryEntityList = repositoryDao?.getAll()
+        Log.d("SERVICE FB OBJECT", repositoryEntityList?.size.toString())
+        repositoryEntityList?.forEach {
+            val user = userDao?.getUserById(it.userId)
+            repositoryModelList.add(EntityConvector.covertEntityToRepository(it, user!!))
+        }
+        return repositoryModelList
     }
 
-    fun findNewStars(serviceCallback: ServiceCallback, starListFromApi: List<StarModel>, repositoryModel: RepositoryModel) {
+    fun findNewStars(
+        serviceCallback: ServiceCallback,
+        starListFromApi: List<StarModel>,
+        repositoryModel: RepositoryModel
+    ) {
         val newStars = mutableListOf<StarModel>()
         val handler: Handler = object : Handler() {
             override fun handleMessage(msg: Message) {
@@ -54,10 +46,16 @@ object ServiceEntity {
 
         databaseWriteExecutor.execute {
             starListFromApi.forEach { starFromApi -> //стоит ли так делать или лучше it??
-                val starFromDB = starDao?.findByRepositoryUserAndId(repositoryModel.id, starFromApi.user.id)
+                val starFromDB =
+                    starDao?.findByRepositoryUserAndId(repositoryModel.id, starFromApi.user.id)
                 if (starFromDB == null) {
                     newStars.add(starFromApi)
-                    starDao?.insertAll(EntityConvector.convertStarToEntity(starFromApi, repositoryModel.id))
+                    starDao?.insertAll(
+                        EntityConvector.convertStarToEntity(
+                            starFromApi,
+                            repositoryModel.id
+                        )
+                    )
                 }
             }
             handler.sendEmptyMessage(0)

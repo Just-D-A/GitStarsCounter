@@ -15,6 +15,7 @@ interface StarsView : MvpView {
     fun openUsersStared(starsInMonthList: MutableList<StarModel>)
     fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean)
     fun changeVisibilityOfNoInternetView(visible: Boolean)
+    fun changeVisibilityOfLimitedView(visible: Boolean)
 
     @StateStrategyType(value = SkipStrategy::class)
     fun showError(textResource: Int) //другая стратегия

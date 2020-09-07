@@ -14,10 +14,10 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class RepositoryAdapter(
     private val onRepositoryClickListener: OnRepositoryClickListener,
-    val context: Context)
-    : OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var repositoriesList: ArrayList<RepositoryModel> = ArrayList() //как праильно по соглашению??
-    lateinit var adapterCallback: Callback
+    val context: Context
+) : OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var repositoriesList: ArrayList<RepositoryModel> = ArrayList()
+    private lateinit var adapterCallback: Callback
 
     fun setupRepositoriesList(repositoriesListInput: List<RepositoryModel?>?) {
         val repositoriesArrayList: ArrayList<RepositoryModel> = ArrayList()
@@ -31,8 +31,8 @@ class RepositoryAdapter(
 
     fun addMoreRepositories(repositoriesListInput: List<RepositoryModel>) {
         val repositoriesArrayList: ArrayList<RepositoryModel> = ArrayList()
-        repositoriesListInput!!.forEach {
-            repositoriesArrayList.add(it!!)
+        repositoriesListInput.forEach {
+            repositoriesArrayList.add(it)
         }
         repositoriesList.addAll(repositoriesArrayList)
         notifyDataSetChanged()
@@ -66,7 +66,8 @@ class RepositoryAdapter(
     ) : RecyclerView.ViewHolder(itemView) {
         private var bookCircleImageView: CircleImageView =
             itemView.findViewById(R.id.circle_image_view_book)
-        private var nameRepositoryTextView: TextView = itemView.findViewById(R.id.text_rep_name)
+        private var nameRepositoryTextView: TextView =
+            itemView.findViewById(R.id.text_view_repository_name)
 
         init {
             //обработка клика
@@ -77,8 +78,6 @@ class RepositoryAdapter(
         }
 
         fun bind(repository: RepositoryModel) {
-            val imageURL =
-                "https://img2.freepng.ru/20180516/ohq/kisspng-used-book-computer-icons-5afc9d4ed92065.8296718615265047828894.jpg"
             Glide
                 .with(context)
                 .load(R.drawable.repository_img)

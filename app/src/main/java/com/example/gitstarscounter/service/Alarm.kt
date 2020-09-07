@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 
-
 class Alarm {
     val TAG = "AlarmReceiver"
     fun setAlarm(ctx: Context) {

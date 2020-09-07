@@ -22,8 +22,9 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
         if (limitResourceCount > 0) {
             loginProvider.loadUser(userName, pageNumber, this)
             limitResourceCount--
+            viewState.changeVisibilityOfLimitedView(false)
         } else {
-            Log.d(TAG, MESSAGE)
+            showLimitedMessage()
         }
     }
 
@@ -34,13 +35,17 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
                 loginProvider.loadMoreRepositories(userName, pageNumber, this)
                 limitResourceCount--
             } else {
-                Log.d(TAG, MESSAGE)
+                showLimitedMessage()
             }
         }
-
     }
 
     fun openStars(repository: RepositoryModel?) {
+        if(limitResourceCount > 0) {
+            viewState.changeVisibilityOfLimitedView(false)
+        } else {
+            showLimitedMessage()
+        }
         viewState.openStars(repository!!.user.login, repository, limitResourceCount)
     }
 
@@ -48,7 +53,7 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
         repositoryModelList: List<RepositoryModel>,
         noInternetIsVisible: Boolean
     ) {
-        viewState.changeVisibilityOfNoInternetView(noInternetIsVisible)
+        //viewState.changeVisibilityOfLimitedView(noInternetIsVisible)
         viewState.setupRepositoriesList(repositoryModelList)
         if (repositoryModelList.size < 30) {
             viewState.endPagination()
@@ -57,9 +62,8 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
 
     override fun onError(textResource: Int) {
         viewState.endLoading()
-        viewState.changeVisibilityOfNoInternetView(false)
-        val loginEntityProvider = LoginEntityProvider(this)
-        loginEntityProvider.getUsersRepositories(userName)
+        viewState.changeVisibilityOfNoInternetView(true)
+        getFromEntity()
     }
 
     override fun onLimitRemaining(resourceModel: ResourceModel) {
@@ -82,6 +86,18 @@ class LoginPresenter : MvpPresenter<LoginView>(), LoginCallback, RepositoryAdapt
     fun setLimitResourceCount(limitResourceCount: Int) {
         Log.d(TAG, limitResourceCount.toString() + "GETTED")
         this.limitResourceCount = limitResourceCount
+    }
+
+    private fun showLimitedMessage() {
+        Log.d(TAG, MESSAGE)
+        getFromEntity()
+        viewState.endPagination()
+        viewState.endLoading()
+    }
+
+    private fun getFromEntity() {
+        val loginEntityProvider = LoginEntityProvider(this)
+        loginEntityProvider.getUsersRepositories(userName)
     }
 
     companion object {

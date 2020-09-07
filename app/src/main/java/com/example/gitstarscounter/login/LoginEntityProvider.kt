@@ -2,6 +2,7 @@
 
 package com.example.gitstarscounter.login
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
@@ -15,11 +16,13 @@ class LoginEntityProvider(val loginCallback: LoginCallback) {
     private val database = GitStarsDatabase.getDatabase()
     private val userDao = database.userDao()
     private val repositoryDao = database.repositoryDao()
-    private val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
+
     private var repositoryModelTypeList: MutableList<RepositoryModel> = mutableListOf()
+    private val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
     fun getUsersRepositories(userName: String) {
-        val handler: Handler = object : Handler() {
+        val handler: Handler = @SuppressLint("HandlerLeak")
+        object : Handler() {
             override fun handleMessage(msg: Message) {
                 if (msg.what == 0) {
                     loginCallback.onLoginResponse(repositoryModelTypeList, true)

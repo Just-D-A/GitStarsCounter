@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -23,7 +24,6 @@ import com.jjoe64.graphview.series.DataPoint
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.libs.omegalaunchers.tools.put
 
-
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : MvpAppCompatActivity(), StarsView {
 
@@ -33,6 +33,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     private lateinit var moreYearButton: Button
     private lateinit var lessYearButton: Button
     private lateinit var noInternetTextView: TextView
+    private lateinit var limitedTextView: TextView
 
     private var hasInternet = true
 
@@ -40,6 +41,8 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     lateinit var starsPresenter: StarsPresenter
 
     companion object {
+        const val BACK_BUTTON_ID = 16908332
+
         private const val KEY_USER_NAME = "userName"
         private const val KEY_REPOSITORY = "repository"
         private const val KEY_LIMIT_RESOURCE_COUNT = "limitResourceCount"
@@ -71,6 +74,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         moreYearButton = findViewById(R.id.button_more_year)
         waitProgressView = findViewById(R.id.progress_view_stars)
         noInternetTextView = findViewById(R.id.text_view_no_internet_stars)
+        limitedTextView = findViewById(R.id.text_view_limited_resource_stars)
 
         val actionBar = supportActionBar
         actionBar?.setHomeButtonEnabled(true);
@@ -89,10 +93,13 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         Toast.makeText(applicationContext, textResource, Toast.LENGTH_SHORT).show()
     }
 
+    override fun changeVisibilityOfLimitedView(visible: Boolean) {
+        limitedTextView.isVisible = visible
+    }
+
     override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double) {
         val points = pointsList.toTypedArray()
         graphGraphView.removeAllSeries() // clear graph
-
         graphGraphView.viewport.setMinX(0.0)
         graphGraphView.viewport.setMaxX(12.5)
         graphGraphView.viewport.setMinY(0.0)
@@ -143,7 +150,7 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
                 true
             }
 
-            16908332 -> {
+            BACK_BUTTON_ID -> {
                 //Log.d("BackButton", "pressed by num id")
                 val limitResourceCount = starsPresenter.getLimitResourceCount()
                 val intent = Intent()
@@ -154,7 +161,6 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
             }
 
             else -> {
-                //Log.d("BackButtonElse", "${item.itemId} == ${R.id.home}")
                 super.onOptionsItemSelected(item)
             }
         }
@@ -170,7 +176,6 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         }
     }
 
-
     override fun startLoading() {
         waitProgressView.isVisible = true
         graphGraphView.isVisible = false
@@ -183,6 +188,6 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        // startService(Intent(this, StarIntentService::class.java))
+        Log.d("Stars", "onUserLeaveHint")
     }
 }

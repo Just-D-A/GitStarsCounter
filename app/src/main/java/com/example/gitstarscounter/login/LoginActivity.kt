@@ -28,13 +28,13 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
 
-
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
 class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
     private lateinit var waitProgressView: CircularProgressView
     private lateinit var findButton: Button
     private lateinit var repositoryOmegaRecycleView: OmegaRecyclerView
     private lateinit var noInternetTextView: TextView
+    private lateinit var limitedTextView: TextView
     private lateinit var repositoriesAdapter: RepositoryAdapter
     private var pageNumber = 1
 
@@ -51,14 +51,15 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
         findButton = findViewById(R.id.button_find_rep)
         repositoryOmegaRecycleView = findViewById(R.id.recycler_repositories)
         noInternetTextView = findViewById(R.id.text_view_no_internet_login)
+        limitedTextView = findViewById(R.id.text_view_limited_resource_login)
 
         //For database
         GitStarsDatabase.createDatabase(applicationContext)
 
-        var userName = "" // как правильно передавать??
-        val accountNameEditText: EditText = findViewById(R.id.text_rep_name)
+     //   var userName = "" // как правильно передавать??
+        val accountNameEditText: EditText = findViewById(R.id.text_view_repository_name)
         findButton.setOnClickListener {
-            userName = accountNameEditText.text.toString().trim()
+            val  userName = accountNameEditText.text.toString().trim()
             pageNumber = 1
             loginPresenter.loadRepositories(userName, pageNumber)
             repositoriesAdapter.setupRepositoriesList(mutableListOf())
@@ -128,9 +129,12 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
         StarsActivity.createLauncher(userName, repository, limitResourceCount).launchForResult(this, 1)
     }
 
-
     override fun changeVisibilityOfNoInternetView(visible: Boolean) {
         noInternetTextView.isVisible = visible
+    }
+
+    override fun changeVisibilityOfLimitedView(visible: Boolean) {
+        limitedTextView.isVisible = visible
     }
 
     override fun addPagination(repositoriesList: List<RepositoryModel>) {
@@ -153,7 +157,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-
+        Log.d("Login", "onUserLeaveHint")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -163,7 +167,6 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
         }
         val limitResourceCount = data.getIntExtra("limitResourceCount", 0)
         loginPresenter.setLimitResourceCount(limitResourceCount)
-        //tvName.setText("Your name is $name")
     }
 
     override fun onBackPressed() {
@@ -182,7 +185,6 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
     }
 
     fun startFindStarsReceiver() {
-      //  startService(intent)
         val a = Alarm()
         a.setAlarm(this)
     }

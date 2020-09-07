@@ -26,7 +26,6 @@ class StarsProvider {
                 response: Response<List<StarModel?>?>
             ) {
                 if (response.body() != null) {
-                    Log.d("HELLO", "WORLD")
                     starsCallback.onStarsResponse(response.body() as List<StarModel>, false)
                 }
             }

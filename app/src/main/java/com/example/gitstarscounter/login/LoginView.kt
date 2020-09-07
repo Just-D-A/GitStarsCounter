@@ -14,6 +14,7 @@ interface LoginView : MvpView {
     fun setupRepositoriesList(repositoriesList: List<RepositoryModel?>?)
     fun openStars(userName: String, repository: RepositoryModel, limitResourceCount: Int)
     fun changeVisibilityOfNoInternetView(visible: Boolean)
+    fun changeVisibilityOfLimitedView(visible: Boolean)
     fun addPagination(repositoriesList: List<RepositoryModel>)
     fun endPagination()
 

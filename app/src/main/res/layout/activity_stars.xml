@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".stars.StarsActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:background="@color/color_gold"
         tools:ignore="MissingConstraints">
 
@@ -24,6 +24,28 @@
             android:textSize="16sp"
             android:visibility="gone"
             tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_gold"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/text_view_limited_resource_stars"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:text="@string/limited_resource_message"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -76,6 +98,7 @@
                 android:background="@color/color_primary"
                 android:text="@string/more"
                 android:textColor="@android:color/white" />
+
         </LinearLayout>
 
         <com.jjoe64.graphview.GraphView

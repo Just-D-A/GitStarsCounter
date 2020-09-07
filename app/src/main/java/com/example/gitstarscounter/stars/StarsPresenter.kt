@@ -18,10 +18,9 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     private var pageNumber = 1
     private var limitResourceCount = 0
 
-
-    private  lateinit var userName: String
-    private  lateinit var repositoryModel: RepositoryModel
-    private  lateinit var starsEntityProvider: StarsEntityProvider
+    private lateinit var userName: String
+    private lateinit var repositoryModel: RepositoryModel
+    private lateinit var starsEntityProvider: StarsEntityProvider
 
 
     fun setParams(userName: String, repositoryModel: RepositoryModel, limitResourceCount: Int) {
@@ -36,24 +35,24 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.startLoading()
 
-        if(limitResourceCount > 0) {
+        if (limitResourceCount > 0) {
             starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
             limitResourceCount--
         } else {
-            Log.d(TAG, MESSAGE)
+            showLimitedMessage()
         }
     }
 
-    fun loadMoreStars(pageNumber: Int) {
-        if(limitResourceCount > 0) {
+    private fun loadMoreStars(pageNumber: Int) {
+        if (limitResourceCount > 0) {
             starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
             limitResourceCount--
         } else {
-            Log.d(TAG, MESSAGE)
+            showLimitedMessage()
         }
     }
 
-    fun loadGrafic() {
+    private fun loadGraph() {
         Log.d("CURR_YEAR", currYear.toString())
         starsConvector.setStarsMap(starsList, currYear)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
@@ -62,7 +61,6 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         viewState.endLoading()
         viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
     }
-
 
     fun changeCurrentYear(more: Boolean) {
         if (more && (currYear + 1 <= YEAR_IS_NOW)) {
@@ -85,7 +83,7 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     override fun onError(textResource: Int) {
         viewState.endLoading()
         error = true
-        starsEntityProvider.getRepositoryStars()
+        getStarsFromEntity()
     }
 
     private fun reloadStars() {
@@ -104,24 +102,29 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     }
 
     private fun needMore(responseStarsList: List<StarModel>) {
-       /* var lastStarYear = 0
-        if (starsList.size != 0) {
-            lastStarYear = starsList[starsList.size - 1].starredAt.year
-        }
-        val currStarsCount = starsList.size
-        val allStarsCount = repositoryModel.allStarsCount*/
         if (responseStarsList.size == SearchStars.MAX_ELEMENTS_FROM_API) {
             pageNumber++
             loadMoreStars(pageNumber)
         } else {
             starsEntityProvider.insertToDatabase(starsList)
             starsEntityProvider.checkUnstars(starsList, repositoryModel)
-            loadGrafic()
+            loadGraph()
         }
     }
 
     fun getLimitResourceCount(): Int {
         return limitResourceCount
+    }
+
+    private fun showLimitedMessage() {
+        Log.d(TAG, MESSAGE)
+        getStarsFromEntity()
+        viewState.endLoading()
+        viewState.changeVisibilityOfLimitedView(true)
+    }
+
+    private fun getStarsFromEntity() {
+        starsEntityProvider.getRepositoryStars()
     }
 
     companion object {

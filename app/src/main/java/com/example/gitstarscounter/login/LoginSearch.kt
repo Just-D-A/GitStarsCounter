@@ -9,6 +9,7 @@ class LoginSearch(val apiService: GithubApiService) {
     fun getUserRepos(userName: String,  pageNumber: Int): Call<List<RepositoryModel?>?> {
         return apiService.getUserRepos(userName, pageNumber)
     }
+
     fun getLimitRemaining(): Call<ResourceModel> {
         return  apiService.getLimitRemaining()
     }

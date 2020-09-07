@@ -62,7 +62,6 @@ class LoginProvider() {
             override fun onFailure(call: Call<ResourceModel>, t: Throwable) {
                 loginCallback.onError(R.string.no_internet_text)
             }
-
         })
     }
 }

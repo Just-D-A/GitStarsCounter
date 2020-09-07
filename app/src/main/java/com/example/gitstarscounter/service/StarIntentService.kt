@@ -39,19 +39,12 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
     //Отправить запрос к БД найти звезды которых не было(те которые вставили)
     //Получить список НОВЫХ звезд которые были добавлены
     //Отправить push уведомление
-    fun getNewStars() {
-
-        ServiceEntity.getAllDatabaseRepositories(this)
-    }
-
-    override fun onDatabaseRepositoryResponse(repositoryModelList: List<RepositoryModel>) {
-        //Получить список всех репозиториев
+    private fun getNewStars() {
+        val repositoryModelList = ServiceEntity.getAllDatabaseRepositories()
         repositoryModelList.forEach {
             Log.d("REP_FROM_DB_IN_SERVICE", it.name)
             startLoadStars(it)
         }
-
-
     }
 
     override fun onStarsResponse(
@@ -76,7 +69,7 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
         Log.d(LOG_TAG, "FIND ${newStars.size} NEW STARS IN REP: ${repositoryModel.name}")
         if (newStars.size > 0) {
             val channelId = createNotificationChannel(this, CHANNEL_ID, "Channel")
-            val launcher = StarsActivity.createLauncher(repositoryModel.user.login, repositoryModel, 0)
+            val launcher = StarsActivity.createLauncher(repositoryModel.user.login, repositoryModel, 50)
             val pendingIntent = launcher.getPendingIntent(this, 0, 0)
 
             val builder = NotificationCompat.Builder(

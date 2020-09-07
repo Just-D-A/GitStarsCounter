@@ -6,5 +6,3 @@ interface StarsCallback {
     fun onStarsResponse(responseStarsList: List<StarModel>, noInternetIsVisible: Boolean)
     fun onError(textResource: Int)
 }
-
-
