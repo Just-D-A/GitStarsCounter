@@ -76,7 +76,7 @@ class StarIntentService : IntentService("StarIntentService"), ServiceCallback {
         Log.d(LOG_TAG, "FIND ${newStars.size} NEW STARS IN REP: ${repositoryModel.name}")
         if (newStars.size > 0) {
             val channelId = createNotificationChannel(this, CHANNEL_ID, "Channel")
-            val launcher = StarsActivity.createLauncher(repositoryModel.user.login, repositoryModel)
+            val launcher = StarsActivity.createLauncher(repositoryModel.user.login, repositoryModel, 0)
             val pendingIntent = launcher.getPendingIntent(this, 0, 0)
 
             val builder = NotificationCompat.Builder(

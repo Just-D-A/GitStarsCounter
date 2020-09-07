@@ -2,6 +2,7 @@ package com.example.gitstarscounter.login
 
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.git_api.RepositoryModel
+import com.example.gitstarscounter.git_api.ResourceModel
 import com.example.gitstarscounter.git_api.SearchProvider
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,8 +33,8 @@ class LoginProvider() {
     }
 
     fun loadMoreRepositories(userName: String, pageNumber: Int, callback: RepositoryAdapter.Callback) {
-        val repository = SearchProvider.provideSearchRepository()
-        val repositoriesList = repository.getUserRepos(userName, pageNumber)
+        val loginSearch = SearchProvider.provideSearchRepository()
+        val repositoriesList = loginSearch.getUserRepos(userName, pageNumber)
 
         repositoriesList.enqueue(object : Callback<List<RepositoryModel?>?> {
             override fun onResponse(
@@ -46,6 +47,22 @@ class LoginProvider() {
             override fun onFailure(call: Call<List<RepositoryModel?>?>?, t: Throwable?) {
                 callback.onGetMoreRepositories(null)
             }
+        })
+    }
+
+    fun getLimitRemaining(loginCallback: LoginCallback) {
+        val loginSearch = SearchProvider.provideSearchRepository()
+        val limitRemaining = loginSearch.getLimitRemaining()
+
+        limitRemaining.enqueue(object : Callback<ResourceModel> {
+            override fun onResponse(call: Call<ResourceModel>, response: Response<ResourceModel>) {
+                loginCallback.onLimitRemaining(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<ResourceModel>, t: Throwable) {
+                loginCallback.onError(R.string.no_internet_text)
+            }
+
         })
     }
 }

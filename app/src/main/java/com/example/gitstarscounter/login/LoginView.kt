@@ -12,11 +12,12 @@ interface LoginView : MvpView {
     fun startLoading()
     fun endLoading()
     fun setupRepositoriesList(repositoriesList: List<RepositoryModel?>?)
-    fun openStars(userName: String, repository: RepositoryModel)
+    fun openStars(userName: String, repository: RepositoryModel, limitResourceCount: Int)
     fun changeVisibilityOfNoInternetView(visible: Boolean)
     fun addPagination(repositoriesList: List<RepositoryModel>)
     fun endPagination()
 
     @StateStrategyType(value = SkipStrategy::class)
     fun showError(textResource: Int) // другая стратегия
+
 }

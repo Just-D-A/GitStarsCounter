@@ -29,6 +29,10 @@ interface GithubApiService {
         @Query("per_page") elementsCount: Int
     ): Call<List<StarModel?>?>
 
+    //https://api.github.com/rate_limit
+    @GET("https://api.github.com/rate_limit")
+    fun getLimitRemaining(): Call<ResourceModel>
+
     /**
      * Companion object to create the GithubApiService
      */

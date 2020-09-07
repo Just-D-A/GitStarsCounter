@@ -2,6 +2,7 @@ package com.example.gitstarscounter.login
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +27,7 @@ import com.example.gitstarscounter.stars.StarsActivity
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
+
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
 class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
@@ -97,13 +99,11 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
         //OMEGA_R PAGGINATION
         repositoryOmegaRecycleView.setPaginationCallback(object : OnPageRequestListener {
             override fun onPageRequest(page: Int) {
-                Log.d("PAGGINATION", "onPageRequest")
                 pageNumber++
                 loginPresenter.loadMoreRepositories(pageNumber)
             }
 
             override fun getPagePreventionForEnd(): Int {
-                Log.d("PAGGINATION", "getPagePreventionForEnd")
                 return 5 // PREVENTION_VALUE - for how many positions until the end you want to be informed
             }
         })
@@ -124,8 +124,8 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
         repositoryOmegaRecycleView.isVisible = true
     }
 
-    override fun openStars(userName: String, repository: RepositoryModel) {
-        StarsActivity.createLauncher(userName, repository).launch(this)
+    override fun openStars(userName: String, repository: RepositoryModel, limitResourceCount: Int) {
+        StarsActivity.createLauncher(userName, repository, limitResourceCount).launchForResult(this, 1)
     }
 
 
@@ -153,27 +153,18 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnPageRequestListener {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-      /*  Log.d("onUserLeaveHint", "IT WORK")
-        val alarmManager =
-            this.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        val pendingIntent =
-            PendingIntent.getService(
-                this, 0, intent,
-                PendingIntent.FLAG_NO_CREATE
-            )
-        if (pendingIntent != null && alarmManager != null) {
-            Log.d("ALARM_CALL", "ERROR")
-            alarmManager.cancel(pendingIntent)
-        }
-
-        alarmManager?.setInexactRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
-            AlarmManager.INTERVAL_HALF_HOUR, pendingIntent
-        )*/
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data == null) {
+            return
+        }
+        val limitResourceCount = data.getIntExtra("limitResourceCount", 0)
+        loginPresenter.setLimitResourceCount(limitResourceCount)
+        //tvName.setText("Your name is $name")
+    }
 
     override fun onBackPressed() {
         super.onBackPressed()

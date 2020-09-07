@@ -16,15 +16,19 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
     private var starsList: MutableList<StarModel> = mutableListOf()
     private var error = false
     private var pageNumber = 1
+    private var limitResourceCount = 0
+
 
     private  lateinit var userName: String
     private  lateinit var repositoryModel: RepositoryModel
     private  lateinit var starsEntityProvider: StarsEntityProvider
 
 
-    fun setParams(userName: String, repositoryModel: RepositoryModel) {
+    fun setParams(userName: String, repositoryModel: RepositoryModel, limitResourceCount: Int) {
         this.userName = userName
         this.repositoryModel = repositoryModel
+        this.limitResourceCount = limitResourceCount
+        Log.d("LIMIT_GETTED", limitResourceCount.toString())
         starsEntityProvider = StarsEntityProvider(this, repositoryModel)
     }
 
@@ -32,11 +36,21 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.startLoading()
 
-        starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
+        if(limitResourceCount > 0) {
+            starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
+            limitResourceCount--
+        } else {
+            Log.d(TAG, MESSAGE)
+        }
     }
 
     fun loadMoreStars(pageNumber: Int) {
-        starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
+        if(limitResourceCount > 0) {
+            starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
+            limitResourceCount--
+        } else {
+            Log.d(TAG, MESSAGE)
+        }
     }
 
     fun loadGrafic() {
@@ -106,7 +120,13 @@ class StarsPresenter() : MvpPresenter<StarsView>(), StarsCallback {
         }
     }
 
+    fun getLimitResourceCount(): Int {
+        return limitResourceCount
+    }
+
     companion object {
         private const val YEAR_IS_NOW = 120 //java date need -1900
+        const val TAG = "StarsPresenter"
+        const val MESSAGE = "limited"
     }
 }

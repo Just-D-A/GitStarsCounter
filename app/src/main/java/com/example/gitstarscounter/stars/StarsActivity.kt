@@ -1,6 +1,7 @@
 package com.example.gitstarscounter.stars
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -41,11 +42,17 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
     companion object {
         private const val KEY_USER_NAME = "userName"
         private const val KEY_REPOSITORY = "repository"
+        private const val KEY_LIMIT_RESOURCE_COUNT = "limitResourceCount"
 
-        fun createLauncher(userName: String, repositoryModel: RepositoryModel) =
+        fun createLauncher(
+            userName: String,
+            repositoryModel: RepositoryModel,
+            limitResourceCount: Int
+        ) =
             createActivityLauncher(
                 KEY_USER_NAME put userName,
-                KEY_REPOSITORY put repositoryModel
+                KEY_REPOSITORY put repositoryModel,
+                KEY_LIMIT_RESOURCE_COUNT put limitResourceCount
             )
     }
 
@@ -54,7 +61,8 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         setContentView(R.layout.activity_stars)
         starsPresenter.setParams(
             intent.getStringExtra(KEY_USER_NAME),
-            intent.getSerializableExtra(KEY_REPOSITORY) as RepositoryModel
+            intent.getSerializableExtra(KEY_REPOSITORY) as RepositoryModel,
+            intent.getIntExtra(KEY_LIMIT_RESOURCE_COUNT, 0)
         )
         starsPresenter.startLoadStars() ///////////^^^^/////////////////////////////////////////////////////ЧТО С ЭТИМ ДЕЛАТЬ
         graphGraphView = findViewById(R.id.graph_view_stars)
@@ -127,12 +135,20 @@ class StarsActivity : MvpAppCompatActivity(), StarsView {
         return when (item.itemId) {
             R.id.home -> {
                 //Log.d("BackButton", "pressed")
+                val limitResourceCount = starsPresenter.getLimitResourceCount()
+                val intent = Intent()
+                intent.putExtra("limitResourceCount", limitResourceCount)
+                setResult(RESULT_OK, intent)
                 this.finish()
                 true
             }
 
             16908332 -> {
                 //Log.d("BackButton", "pressed by num id")
+                val limitResourceCount = starsPresenter.getLimitResourceCount()
+                val intent = Intent()
+                intent.putExtra("limitResourceCount", limitResourceCount)
+                setResult(RESULT_OK, intent)
                 this.finish()
                 true
             }
