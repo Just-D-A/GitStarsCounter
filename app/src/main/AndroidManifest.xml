@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".GitStarsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,21 +13,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".service.TimerReceiver"
+            android:name="com.example.gitstarscounter.service.TimerReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name=".service.StarIntentService"
-            android:exported="false" />
+            android:name="com.example.gitstarscounter.service.StarIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
-        <activity android:name=".user_starred.UserStarredActivity" />
-        <activity android:name=".stars.StarsActivity" />
-        <activity android:name=".login.LoginActivity">
+        <activity android:name="com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity" />
+        <activity android:name="com.example.gitstarscounter.ui.screens.stars.StarsActivity" />
+        <activity android:name="com.example.gitstarscounter.ui.screens.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.StarIntentService" />
+                <category android:name="android.permission.StarIntentService" />
             </intent-filter>
         </activity>
     </application>

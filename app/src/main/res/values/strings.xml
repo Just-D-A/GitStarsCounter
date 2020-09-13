@@ -16,4 +16,6 @@
     <string name="start">Start service</string>
     <string name="stop">Stop service</string>
     <string name="limited_resource_message">Использовано максимальное количество запросов</string>
+    <string name="database_data_message">Сохраненные данные</string>
+    <string name="unknown_database_user">Данного пользователя нет в базе данных</string>
 </resources>

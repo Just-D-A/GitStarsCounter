@@ -4,4 +4,5 @@
     <color name="color_primary_dark">#3700B3</color>
     <color name="color_accent">#03DAC5</color>
     <color name="color_gold">#ffd700</color>
+    <color name="color_surface">#FFFFFF</color>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.github.rahatarmanahmed.cpv.CircularProgressView
-        android:id="@+id/progress_view_login"
+        android:id="@+id/progress_view"
         android:layout_width="@dimen/pagination_loader_size"
         android:layout_height="@dimen/pagination_loader_size"
         android:layout_gravity="center"

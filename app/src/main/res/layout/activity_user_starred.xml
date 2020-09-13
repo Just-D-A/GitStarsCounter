@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".user_starred.UserStarredActivity">
+    tools:context=".ui.screens.user_starred.UserStarredActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="4dp"
                 android:gravity="center"
-                android:text="@string/no_internet_message"
+                android:text="@string/database_data_message"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="16sp"
                 android:visibility="gone"
@@ -45,23 +45,6 @@
             android:singleLine="true"
             android:textStyle="bold"
             tools:ignore="MissingConstraints" />
-
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:id="@+id/progress_view_user_starred"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:cpv_animAutostart="true"
-            app:cpv_color="@color/color_primary"
-            app:cpv_indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:visibility="visible" />
 
         <FrameLayout
             android:layout_width="match_parent"

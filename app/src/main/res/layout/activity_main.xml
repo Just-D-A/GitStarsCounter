@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context=".login.LoginActivity">
+    tools:context=".ui.screens.login.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,19 +86,6 @@
             android:text="@string/button_find_rep"
             android:textColor="@android:color/white" />
 
-
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:id="@+id/progress_view_login"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:cpv_animAutostart="true"
-            app:cpv_color="@color/color_primary"
-            app:cpv_indeterminate="true"
-            tools:visibility="visible" />
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -109,8 +96,8 @@
                 android:layout_height="match_parent"
                 android:divider="#888"
                 android:dividerHeight="1dp"
-                app:paginationLayout="@layout/item_progress"
-                app:paginationErrorLayout="@layout/item_progress"/>
+                app:paginationErrorLayout="@layout/item_progress"
+                app:paginationLayout="@layout/item_progress" />
 
         </FrameLayout>
 
