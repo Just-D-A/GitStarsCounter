@@ -49,6 +49,8 @@ class LoginActivity : BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setNewStarsFinder()
+
         findButton = findViewById(R.id.button_find_rep)!!
         repositoryOmegaRecycleView = findViewById(R.id.recycler_repositories)!!
         noInternetTextView = findViewById(R.id.text_view_no_internet_login)!!
@@ -153,10 +155,10 @@ class LoginActivity : BaseActivity(), LoginView {
     override fun onBackPressed() {
         super.onBackPressed()
         Log.d("LoginActivity", "Start Receiver")
-        startFindStarsReceiver()
+        //startFindStarsReceiver()
     }
 
-    private fun startFindStarsReceiver() {
+    private fun setNewStarsFinder() {
         AlarmUtil().setAlarm(this)
     }
 }

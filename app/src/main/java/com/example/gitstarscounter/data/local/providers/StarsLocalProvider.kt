@@ -2,7 +2,6 @@
 
 package com.example.gitstarscounter.data.local.providers
 
-
 import android.os.Handler
 import android.os.Message
 import android.util.Log

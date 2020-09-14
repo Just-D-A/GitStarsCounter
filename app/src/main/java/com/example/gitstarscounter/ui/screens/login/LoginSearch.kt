@@ -6,11 +6,11 @@ import com.example.gitstarscounter.data.remote.entity.ResourceRemote
 import retrofit2.Call
 
 class LoginSearch(private val apiService: GithubApiService) {
-    fun getUserRepos(userName: String,  pageNumber: Int): Call<List<RepositoryRemote?>?> {
+    fun getUserRepos(userName: String, pageNumber: Int): Call<List<RepositoryRemote?>?> {
         return apiService.getUserRepos(userName, pageNumber)
     }
 
     fun getLimitRemaining(): Call<ResourceRemote> {
-        return  apiService.getLimitRemaining()
+        return apiService.getLimitRemaining()
     }
 }

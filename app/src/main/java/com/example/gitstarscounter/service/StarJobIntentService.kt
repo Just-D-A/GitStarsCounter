@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.service
 
-import android.app.IntentService
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,6 +9,7 @@ import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.gitstarscounter.data.local.providers.ServiceLocalProvider
@@ -22,42 +22,15 @@ import com.example.gitstarscounter.entity.RepositoryModel
 import com.example.gitstarscounter.entity.StarModel
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
 
+
 @RequiresApi(Build.VERSION_CODES.O)
-class StarIntentService : IntentService("StarIntentService") {
+class StarJobIntentService : JobIntentService() {
 
     private val serviceRemoteProvider = ServiceRemoteProvider()
     private var serviceLocalProvider = ServiceLocalProvider()
     private var error = false
 
-    override fun onCreate() {
-        super.onCreate()
-        if (Build.VERSION.SDK_INT >= 26) {
-            val CHANNEL_ID = "my_channel_01"
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Channel human readable title",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-                channel
-            )
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("")
-                .setContentText("").build()
-            startForeground(2, notification)
-        }
-    }
-
-    /*
-    Получить список всех репозиториев
-    Получил все звезды с Api по интресуещим репозиториям  starListFromApi
-    Отправить запрос к БД найти звезды которых не было(те которые вставили)
-    Получить список НОВЫХ звезд которые были добавлены
-    Отправить push уведомление
-    */
-
-    override fun onHandleIntent(intent: Intent?) {
-        //super(onHandleIntent(intent))
+    override fun onHandleWork(intent: Intent) {
         Log.d(TAG, "onHandleIntent")
         getNewStars()
         Log.d(TAG, "I_WILL_STOP")
@@ -94,6 +67,7 @@ class StarIntentService : IntentService("StarIntentService") {
                     )
                 ), 50
             )
+
             val pendingIntent = launcher.getPendingIntent(this, 0, 0)
 
             val builder = NotificationCompat.Builder(
@@ -114,7 +88,6 @@ class StarIntentService : IntentService("StarIntentService") {
 
     private fun startLoadStars(repositoryRemote: RepositoryModel) {
         val pageNumber = 1
-        //  val starList = mutableListOf<StarModel>()
         val remoteStarList = serviceRemoteProvider.loadStars(
             repositoryRemote.user.name,
             repositoryRemote,
@@ -172,6 +145,12 @@ class StarIntentService : IntentService("StarIntentService") {
     }
 
     companion object {
+        private const val JOB_ID = 1
+
+        fun enqueueWork(context: Context, work: Intent) {
+            enqueueWork(context, StarJobIntentService::class.java, JOB_ID, work)
+        }
+
         const val TAG = "StarIntentService"
         const val LOG_TAG = "StarIntentService"
         const val CHANNEL_ID = "com.example.gitstarscounter.service"

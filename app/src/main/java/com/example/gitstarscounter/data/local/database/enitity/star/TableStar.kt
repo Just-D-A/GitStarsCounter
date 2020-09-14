@@ -31,7 +31,7 @@ data class TableStar(
     @ColumnInfo(name = "repository_id") val repositoryId: Long,
 
     @ColumnInfo(name = "user_id") val userId: Long
-    ) {
+) {
     constructor(star: StarLocal) : this(
         starredAt = star.starredAt.toString(),
         repositoryId = star.repository.id,

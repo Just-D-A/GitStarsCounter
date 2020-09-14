@@ -6,7 +6,6 @@ import com.omega_r.base.mvp.strategies.RemoveEndTagStrategy
 import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.omegar.mvp.viewstate.strategy.StateStrategyType
 
-
 interface UserStarredView : BaseView {
     @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun setupUsersList(starRemoteList: MutableList<StarRemote>)

@@ -45,7 +45,7 @@ class LoginPresenter : BasePresenter<LoginView>(), LoginCallback, RepositoryAdap
                 loginProvider.loadMoreRepositories(userName, pageNumber, this)
                 RequestLimit.subtractLimitResourceCount()
                 isLimited = false
-            } else if (!isLimited){
+            } else if (!isLimited) {
                 showLimitedMessage()
             } else {
                 viewState.endPagination()

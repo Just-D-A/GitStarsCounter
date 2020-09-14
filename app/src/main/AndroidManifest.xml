@@ -3,6 +3,7 @@
     package="com.example.gitstarscounter">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".GitStarsApplication"
@@ -12,22 +13,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".service.StarJobIntentService"
+            android:enabled="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"/>
+
         <receiver
-            android:name="com.example.gitstarscounter.service.TimerReceiver"
+            android:name=".service.TimerReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name="com.example.gitstarscounter.service.StarIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:name=".service.StarIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name="com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity" />
-        <activity android:name="com.example.gitstarscounter.ui.screens.stars.StarsActivity" />
-        <activity android:name="com.example.gitstarscounter.ui.screens.login.LoginActivity">
+        <activity android:name=".ui.screens.user_starred.UserStarredActivity" />
+        <activity android:name=".ui.screens.stars.StarsActivity" />
+        <activity android:name=".ui.screens.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.StarIntentService" />
+
                 <category android:name="android.permission.StarIntentService" />
             </intent-filter>
         </activity>

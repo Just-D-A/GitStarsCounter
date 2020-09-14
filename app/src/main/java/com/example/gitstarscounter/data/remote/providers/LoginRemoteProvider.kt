@@ -4,7 +4,6 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.remote.SearchProvider
 import com.example.gitstarscounter.data.remote.entity.RepositoryRemote
 import com.example.gitstarscounter.data.remote.entity.ResourceRemote
-import com.example.gitstarscounter.entity.RepositoryModel
 import com.example.gitstarscounter.ui.screens.login.LoginCallback
 import com.example.gitstarscounter.ui.screens.login.RepositoryAdapter
 import retrofit2.Call

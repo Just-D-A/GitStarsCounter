@@ -1,7 +1,6 @@
 package com.example.gitstarscounter.data.remote.providers
 
 import android.util.Log
-import com.example.gitstarscounter.data.remote.entity.RepositoryRemote
 import com.example.gitstarscounter.data.remote.SearchProvider
 import com.example.gitstarscounter.data.remote.entity.StarRemote
 import com.example.gitstarscounter.entity.RepositoryModel
