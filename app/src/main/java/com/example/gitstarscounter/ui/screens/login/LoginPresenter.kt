@@ -26,6 +26,7 @@ class LoginPresenter : BasePresenter<LoginView>(), LoginCallback, RepositoryAdap
     }
 
     fun responseToLoadRepositories(userName: String, pageNumber: Int) {
+        viewState.endPagination()
         this.userName = userName
         loginProvider.getLimitRemaining(this)
         if (RequestLimit.limitResourceCount > 0) {

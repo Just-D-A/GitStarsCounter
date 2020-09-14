@@ -12,19 +12,14 @@ class TimerReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("TimerReceiver", "onReceive " + intent.action)
-        //val serviceIntent = Intent(context, StarIntentService::class.java)//foreground
-        val serviceIntent = Intent(context, StarJobIntentService::class.java)//job
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //    Log.d("TimerReciver", "StartIntentService")
-            // context.startForegroundService(serviceIntent)
-            /*     JobIntentService.enqueueWork(context,
-                     StarJobIntentService::class.java,
-                     1, serviceIntent    )*/
-            //context.startService(serviceIntent)
-            StarJobIntentService.enqueueWork(context, Intent())
-        } else {
-            Log.d("TimerReciver", "Anouther service")
-        }
+        val serviceIntent = Intent(context, StarIntentService::class.java)//foreground
+
+        //    Log.d("TimerReciver", "StartIntentService")
+        context.startForegroundService(serviceIntent)
+        //checking
+
+//        StarJobIntentService.enqueueWork(context, Intent())
+
         Log.d("TimerReceiverEND", "onReceive " + intent.action)
     }
 }
