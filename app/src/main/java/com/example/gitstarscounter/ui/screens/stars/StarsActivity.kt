@@ -76,11 +76,11 @@ class StarsActivity : BaseActivity(), StarsView {
         actionBar?.setDisplayHomeAsUpEnabled(true);
 
         lessYearButton.setOnClickListener {
-            presenter.changeCurrentYear(false)
+            presenter.responseToChangeCurrentYear(false)
         }
 
         moreYearButton.setOnClickListener {
-            presenter.changeCurrentYear(true)
+            presenter.responseToChangeCurrentYear(true)
         }
     }
 
@@ -110,7 +110,7 @@ class StarsActivity : BaseActivity(), StarsView {
 
         //tap listener
         series.setOnDataPointTapListener { _, dataPoint ->
-            presenter.openUserStarred(dataPoint.x)
+            presenter.responseToOpenUserStarred(dataPoint.x)
         }
         series.isDrawValuesOnTop = true
     }

@@ -64,25 +64,25 @@ class StarIntentService : IntentService("StarIntentService") {
         repository: RepositoryModel
     ) {
         Log.d(LOG_TAG, "FIND ${newStars.size} NEW STARS IN REP: ${repository.name}")
-                 if (newStars.size > 0) {
-                 val channelId = createNotificationChannel(this, CHANNEL_ID, "Channel")
-                 val launcher = StarsActivity.createLauncher(repository.user.name, RepositoryRemote(repository.id, repository.name, repository.allStarsCount, UserRemote( repository.user.id, repository.user.name, repository.user.avatarUrl)), 50)
-                 val pendingIntent = launcher.getPendingIntent(this, 0, 0)
+        if (newStars.size > 0) {
+            val channelId = createNotificationChannel(this, CHANNEL_ID, "Channel")
+            val launcher = StarsActivity.createLauncher(repository.user.name, RepositoryRemote(repository.id, repository.name, repository.allStarsCount, UserRemote( repository.user.id, repository.user.name, repository.user.avatarUrl)), 50)
+            val pendingIntent = launcher.getPendingIntent(this, 0, 0)
 
-                 val builder = NotificationCompat.Builder(
-                     applicationContext, channelId
-                 )
-                     .setContentTitle("Новые звезды")//Звезда
-                     .setContentText("У репозитория ${repository.name} появилось ${newStars.size} новых звезд")// N пользовательей поставили свои звезды репозиторию M
-                     .setSmallIcon(com.example.gitstarscounter.R.drawable.ic_launcher_foreground)
-                     .setContentIntent(pendingIntent)
-                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            val builder = NotificationCompat.Builder(
+                applicationContext, channelId
+            )
+                .setContentTitle("Новые звезды")//Звезда
+                .setContentText("У репозитория ${repository.name} появилось ${newStars.size} новых звезд")// N пользовательей поставили свои звезды репозиторию M
+                .setSmallIcon(com.example.gitstarscounter.R.drawable.ic_launcher_foreground)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-                 val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(
-                     applicationContext
-                 )
-                 notificationManager.notify(0, builder.build())
-             }
+            val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(
+                applicationContext
+            )
+            notificationManager.notify(0, builder.build())
+        }
     }
 
     private fun startLoadStars(repositoryRemote: RepositoryModel) {

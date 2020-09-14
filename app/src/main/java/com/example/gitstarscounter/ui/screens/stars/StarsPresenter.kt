@@ -34,6 +34,8 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
     }
 
     fun responseToStartLoadStars() {
+        starsList.clear()
+
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.setWaiting(true)
 
@@ -42,7 +44,6 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
             RequestLimit.subtractLimitResourceCount()
         } else {
             showDatabaseMessage()
-            getStarsFromDatabase()
         }
     }
 
@@ -65,7 +66,7 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
         viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
     }
 
-    fun changeCurrentYear(more: Boolean) {
+    fun responseToChangeCurrentYear(more: Boolean) {
         if (more && (currYear + 1 <= YEAR_IS_NOW)) {
             currYear++
         } else if (!more) {
@@ -94,7 +95,7 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
 
     override fun onError(textResource: Int) {
         viewState.setWaiting(false)
-        getStarsFromDatabase()
+        showDatabaseMessage()
     }
 
     private fun reloadStars() {
@@ -103,11 +104,11 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
         starsConvector.setStarsMap(starsList as List<StarRemote>, currYear)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
-        viewState.setWaiting(false)
         viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
+        viewState.setWaiting(false)
     }
 
-    fun openUserStarred(x: Double) {
+    fun responseToOpenUserStarred(x: Double) {
         val starsInMonthList = starsConvector.getStarListByMonth(x.toInt())
         viewState.openUsersStared(starsInMonthList)
     }
@@ -116,11 +117,11 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
         if ((responseStarsList.size == SearchStars.MAX_ELEMENTS_FROM_API) && !error) {
             pageNumber++
             loadMoreStars(pageNumber)
-        } else if (!error) {
-            starsEntityProvider.insertToDatabase(starsList as List<StarRemote>)
-            starsEntityProvider.checkUnstars(starsList as List<StarRemote>, repositoryModel)
-            loadGraph()
         } else {
+            if (!error) {
+                starsEntityProvider.insertToDatabase(starsList as List<StarRemote>)
+                starsEntityProvider.checkUnstars(starsList as List<StarRemote>, repositoryModel)
+            }
             loadGraph()
         }
     }

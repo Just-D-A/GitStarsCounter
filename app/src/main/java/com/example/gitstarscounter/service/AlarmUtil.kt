@@ -58,7 +58,7 @@ class AlarmUtil { // перенести в Entity??
     }
 
     companion object {
-        const val PERIOD_IN_MINUTS = 0.1
+        const val PERIOD_IN_MINUTS = 10
         const val SECONDS_IN_MINUT = 60
         const val MILLISECONDS_IN_SECOND = 1000
 

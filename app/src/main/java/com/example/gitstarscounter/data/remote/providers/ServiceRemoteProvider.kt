@@ -23,21 +23,5 @@ class ServiceRemoteProvider() {
             Log.d("SERVICE_PROVIDER", "INTERNET ERROR")
             emptyList()
         }
-        /*(
-            object : Callback<List<StarModel?>?> {//to exequte
-            override fun onResponse(
-                call: Call<List<StarModel?>?>,
-                response: Response<List<StarModel?>?>
-            ) {
-                if (response.body() != null) {
-                    starsList.addAll(response.body() as List<StarModel>)
-                    serviceCallback.onStarsResponse(starsList, repositoryModel, pageNumber)
-                }
-            }
-
-            override fun onFailure(call: Call<List<StarModel?>?>, t: Throwable) {
-                serviceCallback.onError(R.string.no_internet_text)
-            }
-        })*/
     }
 }

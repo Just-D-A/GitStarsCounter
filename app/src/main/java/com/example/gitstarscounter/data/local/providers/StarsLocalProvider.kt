@@ -24,7 +24,6 @@ class StarsLocalProvider(val starsCallback: StarsCallback, val repositoryRemote:
     private val repositoryDao = database.repositoryDao()
     private val starDao = database.starDao()
 
-    private var starsTypeList: MutableList<StarModel> = mutableListOf()
     private val databaseWriteExecutor: ExecutorService =
         Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
@@ -49,6 +48,7 @@ class StarsLocalProvider(val starsCallback: StarsCallback, val repositoryRemote:
                 val starFromDB = starDao?.findByRepositoryUserAndId(star.repository.id, star.user.id)
                 if (starFromDB == null) {
                     starDao?.insertAll(TableStar(star))
+                    Log.d("StarProvider", "add new star to DB")
                 }
             }
             Log.d("DATA_BASE", "ALL ADDED")
@@ -79,7 +79,7 @@ class StarsLocalProvider(val starsCallback: StarsCallback, val repositoryRemote:
     }
 
     fun getRepositoryStars() {
-
+        var starsTypeList: MutableList<StarModel> = mutableListOf()
         val handler: Handler = object : Handler() {
             override fun handleMessage(msg: Message) {
                 if (msg.what == 0) {

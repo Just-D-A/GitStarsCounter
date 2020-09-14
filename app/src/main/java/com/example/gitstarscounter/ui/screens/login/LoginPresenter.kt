@@ -54,12 +54,6 @@ class LoginPresenter : BasePresenter<LoginView>(), LoginCallback, RepositoryAdap
     }
 
     fun responseToOpenStars(context: Context, repository: RepositoryModel?) {
-        if (RequestLimit.limitResourceCount > 0) {
-            viewState.changeVisibilityOfLimitedView(false)
-            isLimited = false
-        } else {
-            showLimitedMessage()
-        }
         StarsActivity.createLauncher(
             userName,
             RepositoryRemote(

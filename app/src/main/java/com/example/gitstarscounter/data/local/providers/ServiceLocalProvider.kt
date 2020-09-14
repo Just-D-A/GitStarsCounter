@@ -35,6 +35,7 @@ class ServiceLocalProvider {
             val starFromDB =
                 starDao?.findByRepositoryUserAndId(repository.id, starFromApi.user.id)
             if (starFromDB == null) {
+                Log.d("ServiceProvider", "add NEW star")
                 newStars.add(starFromApi)
                 starDao?.insertAll(
                     TableStar(StarLocal(starFromApi, repository))
