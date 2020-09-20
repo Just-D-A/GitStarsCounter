@@ -1,15 +1,14 @@
 package com.example.gitstarscounter.ui.screens.stars
 
-import com.example.gitstarscounter.data.remote.GithubApiService
-import com.example.gitstarscounter.data.remote.entity.StarRemote
-import retrofit2.Call
+import com.example.gitstarscounter.data.to_rename_2.remote.GithubApiService
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
 
 class SearchStars(val apiService: GithubApiService) {
-    fun getStars(
+    suspend fun getStars(
         userName: String,
         repositoryName: String,
         pageNumber: Int
-    ): Call<List<StarRemote?>?> {
+    ): List<RemoteStar>? {
         return apiService.getStars(
             userName,
             repositoryName,

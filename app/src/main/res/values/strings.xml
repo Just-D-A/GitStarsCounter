@@ -18,4 +18,7 @@
     <string name="limited_resource_message">Использовано максимальное количество запросов</string>
     <string name="database_data_message">Сохраненные данные</string>
     <string name="unknown_database_user">Данного пользователя нет в базе данных</string>
+    <string name="title_notification_new_stars">Новые звезды</string>
+    <string name="seved_repository_text">Сохраненные репозитории</string>
+    <string name="button_text_delete">удалить</string>
 </resources>

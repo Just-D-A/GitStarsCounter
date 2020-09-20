@@ -10,21 +10,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.remote.entity.StarRemote
-import com.example.gitstarscounter.data.remote.entity.UserRemote
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteUser
+import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserStarredAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var usersList: ArrayList<UserRemote> = ArrayList()
-    private var sourceList: ArrayList<UserRemote> = ArrayList()
+class UserStarredAdapter(val context: Context) :
+    OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var usersList: ArrayList<RemoteUser> = ArrayList()
+    private var sourceList: ArrayList<RemoteUser> = ArrayList()
 
-    fun setupUsers(starRemoteList: MutableList<StarRemote>) {
-        val userRemoteList: ArrayList<UserRemote> = ArrayList()
-        starRemoteList.forEach {
-            userRemoteList.add(it.user)
+    fun setupUsers(remoteStarList: MutableList<RemoteStar>) {
+        val remoteUserList: ArrayList<RemoteUser> = ArrayList()
+        remoteStarList.forEach {
+            remoteUserList.add(it.user)
         }
         sourceList.clear()
-        sourceList.addAll(userRemoteList)
+        sourceList.addAll(remoteUserList)
         filter("")
     }
 
@@ -62,13 +64,13 @@ class UserStarredAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
             itemView.findViewById(R.id.circle_image_view_user_photo)
 
         @SuppressLint("SetTextI18n")
-        fun bind(userRemote: UserRemote) {
+        fun bind(remoteUser: RemoteUser) {
             Glide
                 .with(context)
-                .load(userRemote.avatarUrl)
+                .load(remoteUser.avatarUrl)
                 .centerCrop()
                 .into(userPhotoImageView)
-            userNameTextView.text = userRemote.name
+            userNameTextView.text = remoteUser.name
         }
     }
 }

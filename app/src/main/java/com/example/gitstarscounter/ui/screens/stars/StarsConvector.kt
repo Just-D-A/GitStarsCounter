@@ -3,12 +3,12 @@
 package com.example.gitstarscounter.ui.screens.stars
 
 import android.util.Log
-import com.example.gitstarscounter.data.remote.entity.StarRemote
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("DEPRECATION")
 object StarsConvector {
-    private var starsInMonthMap: MutableMap<Int, MutableList<StarRemote>> = mutableMapOf()
+    private var starsInMonthMap: MutableMap<Int, MutableList<RemoteStar>> = mutableMapOf()
     const val MONTH_IN_YEAR: Int = 12
 
     fun toDataPoint(): ArrayList<DataPoint> {
@@ -19,15 +19,15 @@ object StarsConvector {
         return pointsList
     }
 
-    fun setStarsMap(starsList: List<StarRemote>, currYear: Int) {
+    fun setStarsMap(starsList: List<RemoteStar>, currYear: Int) {
         initMap()
         starsList?.forEach {
             val date = it!!.starredAt
             Log.d("YEAR", date.year.toString())
             if (currYear == date.year) {
-                val starRemoteList: MutableList<StarRemote>? = starsInMonthMap[date.month.plus(1)]
-                starRemoteList?.add(it)
-                starsInMonthMap[date.month.plus(1)] = starRemoteList!!
+                val remoteStarList: MutableList<RemoteStar>? = starsInMonthMap[date.month.plus(1)]
+                remoteStarList?.add(it)
+                starsInMonthMap[date.month.plus(1)] = remoteStarList!!
             }
         }
     }
@@ -38,7 +38,7 @@ object StarsConvector {
         }
     }
 
-    fun getStarListByMonth(monthNumber: Int): MutableList<StarRemote> {
+    fun getStarListByMonth(monthNumber: Int): MutableList<RemoteStar> {
         return starsInMonthMap.get(monthNumber)!!
     }
 

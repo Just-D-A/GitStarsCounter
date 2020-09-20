@@ -3,16 +3,15 @@ package com.example.gitstarscounter.ui.screens.stars
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.remote.entity.RepositoryRemote
-import com.example.gitstarscounter.data.remote.entity.StarRemote
-import com.example.gitstarscounter.entity.RepositoryModel
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteRepository
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
+import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.jjoe64.graphview.GraphView
@@ -24,52 +23,42 @@ import com.omegar.mvp.presenter.InjectPresenter
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : BaseActivity(), StarsView {
+    companion object {
+        const val BACK_BUTTON_ID = 16908332
 
-    private lateinit var graphGraphView: GraphView
-    private lateinit var yearTextView: TextView
-    private lateinit var moreYearButton: Button
-    private lateinit var lessYearButton: Button
-    private lateinit var noInternetTextView: TextView
+        private const val KEY_USER_NAME = "userName"
+        private const val KEY_REPOSITORY = "repository"
+
+        fun createLauncher(
+            userName: String,
+            repositoryRemote: Repository
+        ) =
+            createActivityLauncher(
+                KEY_USER_NAME put userName,
+                KEY_REPOSITORY put repositoryRemote as RemoteRepository
+            )
+    }
+
+    private val graphGraphView: GraphView by bind(R.id.graph_view_stars)
+    private val yearTextView: TextView by bind(R.id.text_view_selected_year)
+    private val moreYearButton: Button by bind(R.id.button_more_year)
+    private val lessYearButton: Button by bind(R.id.button_less_year)
+    private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
 
     private var hasInternet = true
 
     @InjectPresenter
     override lateinit var presenter: StarsPresenter
 
-    companion object {
-        const val BACK_BUTTON_ID = 16908332
-
-        private const val KEY_USER_NAME = "userName"
-        private const val KEY_REPOSITORY = "repository"
-        private const val KEY_LIMIT_RESOURCE_COUNT = "limitResourceCount"
-
-        fun createLauncher(
-            userName: String,
-            repositoryRemote: RepositoryModel,
-            limitResourceCount: Int
-        ) =
-            createActivityLauncher(
-                KEY_USER_NAME put userName,
-                KEY_REPOSITORY put repositoryRemote as RepositoryRemote,
-                KEY_LIMIT_RESOURCE_COUNT put limitResourceCount
-            )
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
         presenter.setParams(
             intent.getStringExtra(KEY_USER_NAME),
-            intent.getSerializableExtra(KEY_REPOSITORY) as RepositoryModel
+            intent.getSerializableExtra(KEY_REPOSITORY) as Repository
         )
 
         presenter.responseToStartLoadStars()
-
-        graphGraphView = findViewById(R.id.graph_view_stars)!!
-        yearTextView = findViewById(R.id.text_view_selected_year)!!
-        lessYearButton = findViewById(R.id.button_less_year)!!
-        moreYearButton = findViewById(R.id.button_more_year)!!
-        noInternetTextView = findViewById(R.id.text_view_database_data_message)!!
 
         val actionBar = supportActionBar
         actionBar?.setHomeButtonEnabled(true);
@@ -94,6 +83,7 @@ class StarsActivity : BaseActivity(), StarsView {
 
         graphGraphView.viewport.isXAxisBoundsManual = true
         graphGraphView.viewport.isYAxisBoundsManual = true
+
         val series = BarGraphSeries(points)
         graphGraphView.addSeries(series)
 
@@ -117,10 +107,10 @@ class StarsActivity : BaseActivity(), StarsView {
 
     override fun changeVisibilityOfDataMessage(visible: Boolean) {
         hasInternet = visible
-        noInternetTextView.isVisible = visible
+        databaseMessageTextView.isVisible = visible
     }
 
-    override fun openUsersStared(starsInMonthList: MutableList<StarRemote>) {
+    override fun openUsersStared(starsInMonthList: MutableList<RemoteStar>) {
         UserStarredActivity.createLauncher(starsInMonthList, hasInternet).launch(this)
     }
 
@@ -151,10 +141,5 @@ class StarsActivity : BaseActivity(), StarsView {
         } else {
             moreYearButton.visibility = View.INVISIBLE
         }
-    }
-
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        Log.d("Stars", "onUserLeaveHint")
     }
 }

@@ -1,6 +1,6 @@
 package com.example.gitstarscounter.ui.screens.stars
 
-import com.example.gitstarscounter.data.remote.entity.StarRemote
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
 import com.example.gitstarscounter.ui.screens.base.BaseView
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -11,7 +11,7 @@ interface StarsView : BaseView {
     fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun openUsersStared(starsInMonthList: MutableList<StarRemote>)
+    fun openUsersStared(starsInMonthList: MutableList<RemoteStar>)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean)

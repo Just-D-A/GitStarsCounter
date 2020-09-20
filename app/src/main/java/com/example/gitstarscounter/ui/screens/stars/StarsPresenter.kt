@@ -1,36 +1,43 @@
 package com.example.gitstarscounter.ui.screens.stars
 
 import android.util.Log
-import com.example.gitstarscounter.data.local.providers.StarsLocalProvider
-import com.example.gitstarscounter.data.remote.RequestLimit
-import com.example.gitstarscounter.data.remote.entity.StarRemote
-import com.example.gitstarscounter.data.remote.entity.UserRemote
-import com.example.gitstarscounter.data.remote.providers.StarsRemoteProvider
-import com.example.gitstarscounter.entity.RepositoryModel
-import com.example.gitstarscounter.entity.StarModel
+import com.example.gitstarscounter.R
+import com.example.gitstarscounter.data.to_rename_2.remote.RequestLimit
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteUser
+import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.data.for_providers.star.StarRepository
+import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
+import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.InjectViewState
+import kotlinx.coroutines.launch
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
-class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
+class StarsPresenter() : BasePresenter<StarsView>() {
+    companion object {
+        private const val YEAR_IS_NOW = 120 //java date need -1900
+        const val TAG = "StarsPresenter"
+        const val MESSAGE = "limited"
+    }
+
     private val starsConvector = StarsConvector
-    private val starsProvider = StarsRemoteProvider()
     private var currYear: Int = YEAR_IS_NOW
-    private var starsList: MutableList<StarRemote> = mutableListOf()
+    private var starsList: MutableList<RemoteStar> =
+        mutableListOf()
     private var error = false
     private var pageNumber = 1
 
+    private val repositoryStarProvider = StarRepository()
+
     private lateinit var userName: String
-    private lateinit var repositoryModel: RepositoryModel
-    private lateinit var starsEntityProvider: StarsLocalProvider
+    private lateinit var repository: Repository
 
 
-    fun setParams(userName: String, repositoryRemote: RepositoryModel) {
+    fun setParams(userName: String, repositoryRemote: Repository) {
         this.userName = userName
-        this.repositoryModel = repositoryRemote
-        starsEntityProvider = StarsLocalProvider(this, repositoryRemote)
+        this.repository = repositoryRemote
     }
 
     fun responseToStartLoadStars() {
@@ -38,27 +45,39 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
 
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.setWaiting(true)
-
-        if (RequestLimit.limitResourceCount > 0) {
-            starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
-            RequestLimit.subtractLimitResourceCount()
-        } else {
-            showDatabaseMessage()
+        launch {
+            if (RequestLimit.hasRequest()) {
+                val responseStarList =
+                    repositoryStarProvider.getRepositoryStars(userName, repository, pageNumber)
+                onStarsResponse(responseStarList!!, false)
+            } else {
+                showDatabaseMessage()
+            }
         }
     }
 
     private fun loadMoreStars(pageNumber: Int) {
-        if (RequestLimit.limitResourceCount > 0) {
-            starsProvider.loadStars(userName, repositoryModel, pageNumber, this)
-            RequestLimit.subtractLimitResourceCount()
-        } else {
-            showDatabaseMessage()
+        launch {
+            if (RequestLimit.hasRequest()) {
+                val responseStarList =
+                    repositoryStarProvider.getRepositoryStars(userName, repository, pageNumber)
+                if (responseStarList != null) {
+                    onStarsResponse(responseStarList, false)
+                } else {
+                    onError(R.string.no_internet_message)
+                }
+            } else {
+                showDatabaseMessage()
+            }
         }
     }
 
     private fun loadGraph() {
         Log.d("CURR_YEAR", currYear.toString())
-        starsConvector.setStarsMap(starsList as List<StarRemote>, currYear)
+        starsConvector.setStarsMap(
+            starsList as List<RemoteStar>,
+            currYear
+        )
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
 
@@ -75,14 +94,17 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
         reloadStars()
     }
 
-    override fun onStarsResponse(responseStarsList: List<StarModel>, noInternetIsVisible: Boolean) {
+    fun onStarsResponse(
+        responseStarsList: List<Star>,
+        noInternetIsVisible: Boolean
+    ) {
         viewState.changeVisibilityOfDataMessage(noInternetIsVisible)
         responseStarsList.forEach {
             Log.d("StarsCallback", it.user.name + " $pageNumber")
             starsList.add(
-                StarRemote(
+                RemoteStar(
                     starredAt = it.starredAt,
-                    user = UserRemote(
+                    user = RemoteUser(
                         id = it.user.id,
                         name = it.user.name,
                         avatarUrl = it.user.avatarUrl
@@ -93,7 +115,7 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
         needMore(responseStarsList)
     }
 
-    override fun onError(textResource: Int) {
+    private fun onError(textResource: Int) {
         viewState.setWaiting(false)
         showDatabaseMessage()
     }
@@ -101,7 +123,10 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
     private fun reloadStars() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.setWaiting(true)
-        starsConvector.setStarsMap(starsList as List<StarRemote>, currYear)
+        starsConvector.setStarsMap(
+            starsList as List<RemoteStar>,
+            currYear
+        )
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
         viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
@@ -113,15 +138,11 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
         viewState.openUsersStared(starsInMonthList)
     }
 
-    private fun needMore(responseStarsList: List<StarModel>) {
+    private fun needMore(responseStarsList: List<Star>) {
         if ((responseStarsList.size == SearchStars.MAX_ELEMENTS_FROM_API) && !error) {
             pageNumber++
             loadMoreStars(pageNumber)
         } else {
-            if (!error) {
-                starsEntityProvider.insertToDatabase(starsList as List<StarRemote>)
-                starsEntityProvider.checkUnstars(starsList as List<StarRemote>, repositoryModel)
-            }
             loadGraph()
         }
     }
@@ -135,12 +156,10 @@ class StarsPresenter() : BasePresenter<StarsView>(), StarsCallback {
 
     private fun getStarsFromDatabase() {
         error = true
-        starsEntityProvider.getRepositoryStars()
-    }
-
-    companion object {
-        private const val YEAR_IS_NOW = 120 //java date need -1900
-        const val TAG = "StarsPresenter"
-        const val MESSAGE = "limited"
+        launch {
+            val responseStarsList =
+                repositoryStarProvider.getRepositoryStars(userName, repository, 0)
+            onStarsResponse(responseStarsList!!, true)
+        }
     }
 }

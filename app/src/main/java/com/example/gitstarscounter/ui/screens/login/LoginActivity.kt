@@ -2,7 +2,6 @@ package com.example.gitstarscounter.ui.screens.login
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,30 +17,35 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.entity.RepositoryModel
-import com.example.gitstarscounter.service.AlarmUtil
+import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
-import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
 import com.omegar.mvp.presenter.InjectPresenter
+import java.util.concurrent.TimeUnit
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
 class LoginActivity : BaseActivity(), LoginView {
-    private lateinit var findButton: Button
-    private lateinit var repositoryOmegaRecycleView: OmegaRecyclerView
-    private lateinit var noInternetTextView: TextView
-    private lateinit var limitedTextView: TextView
-    private lateinit var repositoriesAdapter: RepositoryAdapter
+    companion object {
+        const val LABEL = "user_name"
+        const val TAG = "LoginActivity"
+
+    }
+
+    private val findButton: Button by bind(R.id.button_find_rep)
+    private val repositoryOmegaRecycleView: OmegaRecyclerView by bind(R.id.recycler_repositories)
+    private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
+    private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
+
+    private lateinit var repositoriesAdapter: LoginAdapter
     private var pageNumber = 1
 
     @InjectPresenter
     override lateinit var presenter: LoginPresenter
-
-    companion object {
-        const val LABEL = "user_name"
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("WrongConstant")
@@ -49,20 +53,13 @@ class LoginActivity : BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setNewStarsFinder()
-
-        findButton = findViewById(R.id.button_find_rep)!!
-        repositoryOmegaRecycleView = findViewById(R.id.recycler_repositories)!!
-        noInternetTextView = findViewById(R.id.text_view_no_internet_login)!!
-        limitedTextView = findViewById(R.id.text_view_limited_resource_login)!!
-
-        val onRepositoryClickListener: RepositoryAdapter.OnRepositoryClickListener =
-            object : RepositoryAdapter.OnRepositoryClickListener {
-                override fun onRepositoryClick(repository: RepositoryModel?) {
+        val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener =
+            object : LoginAdapter.OnRepositoryClickListener {
+                override fun onRepositoryClick(repository: Repository?) {
                     presenter.responseToOpenStars(applicationContext, repository)
                 }
             }
-        repositoriesAdapter = RepositoryAdapter(this, onRepositoryClickListener)
+        repositoriesAdapter = LoginAdapter(this, onRepositoryClickListener)
 
         val accountNameEditText: EditText? = findViewById(R.id.text_view_repository_name)
         findButton.setOnClickListener {
@@ -71,6 +68,7 @@ class LoginActivity : BaseActivity(), LoginView {
             presenter.responseToLoadRepositories(userName, pageNumber)
             repositoriesAdapter.setRepositoriesList(mutableListOf())
             repositoryOmegaRecycleView.showProgressPagination()
+     //       setNewStarsFinder()
         }
 
         accountNameEditText?.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER);
@@ -85,8 +83,6 @@ class LoginActivity : BaseActivity(), LoginView {
                 }
                 false
             })
-        //repositoryOmegaRecycleView.setPaginationCallback(this)
-        repositoriesAdapter.setCallback(presenter)
 
         //OMEGA_R PAGGINATION
         repositoryOmegaRecycleView.setPaginationCallback(object : OnPageRequestListener {
@@ -111,7 +107,7 @@ class LoginActivity : BaseActivity(), LoginView {
         repositoryOmegaRecycleView.hasFixedSize()
     }
 
-    override fun setupRepositoriesList(repositoriesList: List<RepositoryModel?>?) {
+    override fun setupRepositoriesList(repositoriesList: List<Repository?>?) {
         repositoriesAdapter.setRepositoriesList(repositoriesList)
         repositoryOmegaRecycleView.isVisible = true
     }
@@ -124,7 +120,7 @@ class LoginActivity : BaseActivity(), LoginView {
         limitedTextView.isVisible = visible
     }
 
-    override fun addPagination(repositoriesList: List<RepositoryModel>) {
+    override fun addPagination(repositoriesList: List<Repository>) {
         repositoriesAdapter.addMoreRepositories(repositoriesList)
     }
 
@@ -143,15 +139,6 @@ class LoginActivity : BaseActivity(), LoginView {
         Log.d("Login", "onUserLeaveHint")
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (data == null) {
-            return
-        }
-        val limitResourceCount = data.getIntExtra("limitResourceCount", 0)
-        presenter.setLimitResourceCount(limitResourceCount)
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
         Log.d("LoginActivity", "Start Receiver")
@@ -159,6 +146,11 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     private fun setNewStarsFinder() {
-        AlarmUtil().setAlarm(this)
+        val work = PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.MINUTES)
+            .build()
+
+        val result = WorkManager
+            .getInstance(this)
+            .enqueue(work)
     }
 }

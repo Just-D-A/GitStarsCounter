@@ -13,7 +13,7 @@
         tools:ignore="MissingConstraints">
 
         <TextView
-            android:id="@+id/text_view_database_data_message"
+            android:id="@+id/text_view_database_data_message_star"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
