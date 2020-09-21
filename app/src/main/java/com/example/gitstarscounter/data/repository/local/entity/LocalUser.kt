@@ -14,8 +14,8 @@ data class LocalUser(
 
     @ColumnInfo(name = "avatar_url")
     override val avatarUrl: String?
-): User {
-    constructor(user: User) : this (
+) : User {
+    constructor(user: User) : this(
         id = user.id,
         name = user.name,
         avatarUrl = user.avatarUrl

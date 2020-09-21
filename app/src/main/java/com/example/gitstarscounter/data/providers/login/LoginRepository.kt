@@ -25,7 +25,7 @@ open class LoginRepository {
     ): List<Repository>? {
         return try {
             Log.d(TAG, "Try GET")
-            if(!RequestLimit.hasRequest()) {
+            if (!RequestLimit.hasRequest()) {
                 throw IOException()
             }
             remoteLoginProvider.getUsersRepositories(userName, pageNumber)
@@ -46,10 +46,4 @@ open class LoginRepository {
     suspend fun loadMoreRepositories(userName: String, pageNumber: Int): List<Repository>? {
         return remoteLoginProvider.loadMoreRepositories(userName, pageNumber)
     }
-
-/*    suspend fun getLocalUsersRepositories(
-        userName: String
-    ): List<Repository>? {
-        return localLoginProvider.getUsersRepositories(userName, 0)
-    }*/
 }

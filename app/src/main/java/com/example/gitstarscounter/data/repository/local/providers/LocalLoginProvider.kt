@@ -21,7 +21,10 @@ class LocalLoginProvider() : LoginProvider {
     private val repositoryTable = database.repositoryDao()
 
 
-    override suspend fun getUsersRepositories(userName: String, pageNumber: Int): List<Repository>? {
+    override suspend fun getUsersRepositories(
+        userName: String,
+        pageNumber: Int
+    ): List<Repository>? {
         val user = userTable.getUserByName(userName) //query to DB
         Log.d(TAG, "${user?.name} getted")
 

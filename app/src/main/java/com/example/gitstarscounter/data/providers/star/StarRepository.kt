@@ -8,7 +8,7 @@ import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import java.io.IOException
 
-open class StarRepository: StarProvider {
+open class StarRepository : StarProvider {
     companion object {
         const val TAG = "StarRepository"
     }
@@ -22,14 +22,15 @@ open class StarRepository: StarProvider {
         pageNumber: Int
     ): List<Star>? {
         return try {
-            if(!RequestLimit.hasRequest()) {
+            if (!RequestLimit.hasRequest()) {
                 throw IOException()
             }
-            val starsList = remoteStarProvider.getRepositoryStars(userName,repositoryRemote,pageNumber)
+            val starsList =
+                remoteStarProvider.getRepositoryStars(userName, repositoryRemote, pageNumber)
             updateDatabase(starsList, repositoryRemote as RemoteRepository)
             starsList
-        } catch(noDataException: IOException) {
-            localStarProvider.getRepositoryStars(userName,repositoryRemote,pageNumber)
+        } catch (e: IOException) {
+            localStarProvider.getRepositoryStars(userName, repositoryRemote, pageNumber)
         }
     }
 

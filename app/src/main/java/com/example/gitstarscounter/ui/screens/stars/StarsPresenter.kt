@@ -12,6 +12,7 @@ import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.InjectViewState
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
@@ -46,29 +47,17 @@ class StarsPresenter() : BasePresenter<StarsView>() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.setWaiting(true)
         launch {
-            if (RequestLimit.hasRequest()) {
                 val responseStarList =
                     repositoryStarProvider.getRepositoryStars(userName, repository, pageNumber)
                 onStarsResponse(responseStarList!!, false)
-            } else {
-                showDatabaseMessage()
-            }
         }
     }
 
     private fun loadMoreStars(pageNumber: Int) {
         launch {
-            if (RequestLimit.hasRequest()) {
                 val responseStarList =
                     repositoryStarProvider.getRepositoryStars(userName, repository, pageNumber)
-                if (responseStarList != null) {
-                    onStarsResponse(responseStarList, false)
-                } else {
-                    onError(R.string.no_internet_message)
-                }
-            } else {
-                showDatabaseMessage()
-            }
+                onStarsResponse(responseStarList!!, false)
         }
     }
 

@@ -25,57 +25,54 @@ class LocalStarProvider(
     private val starTable = database.starDao()
 
     suspend fun insertToDatabase(starList: List<Star>, repositoryRemote: RemoteRepository) {
-            userTable.insertAll(LocalUser(repositoryRemote.user))
-            repositoryTable.insertAll(TableRepository(repositoryRemote))
+        userTable.insertAll(LocalUser(repositoryRemote.user))
+        repositoryTable.insertAll(TableRepository(repositoryRemote))
 
-            val list = repositoryTable.getAll()
-            list.forEach { repositoryFromDatabase ->
-                Log.d(TAG, "REP_NAME ${repositoryFromDatabase.name}")
+        val list = repositoryTable.getAll()
+        list.forEach { repositoryFromDatabase ->
+            Log.d(TAG, "REP_NAME ${repositoryFromDatabase.name}")
+        }
+
+        starList.forEach { remoteStar ->
+            val star = LocalStar(remoteStar, repositoryRemote)
+
+            userTable.insertAll(LocalUser(remoteStar.user))
+
+            val starFromDB =
+                starTable.findByRepositoryUserAndId(star.repository.id, star.user.id)
+            if (starFromDB == null) {
+                starTable.insertAll(TableStar(star))
+                Log.d(TAG, "add new star to DB user_id ${star.user.id} and rep_id ${star.repository.id}")
             }
-
-            starList.forEach { remoteStar ->
-                val star = LocalStar(remoteStar, repositoryRemote)
-
-                userTable.insertAll(LocalUser(remoteStar.user))
-
-                val starFromDB =
-                    starTable.findByRepositoryUserAndId(star.repository.id, star.user.id)
-                if (starFromDB == null) {
-                    starTable.insertAll(TableStar(star))
-                    Log.d(
-                        TAG,
-                        "add new star to DB user_id ${star.user.id} and rep_id ${star.repository.id}"
-                    )
-                }
-            }
+        }
 
     }
 
     suspend fun checkUnstar(starsListFromApi: List<Star>, repositoryRemote: Repository) {
-            //get all stars from db buy rep id
-            val starsListFromDB = starTable.findByRepositoryId(repositoryRemote.id)
+        //get all stars from db buy rep id
+        val starsListFromDB = starTable.findByRepositoryId(repositoryRemote.id)
 
-            //create map by key star.user with second param star-api
-            val starsMap = mutableMapOf<Long, TableStar>()
-            starsListFromApi.forEach {
-                val star = TableStar(LocalStar(it, repositoryRemote))
-                starsMap[star.userId] = star
-            }
+        //create map by key star.user with second param star-api
+        val starsMap = mutableMapOf<Long, TableStar>()
+        starsListFromApi.forEach {
+            val star = TableStar(LocalStar(it, repositoryRemote))
+            starsMap[star.userId] = star
+        }
 
-            /*for each star from db find star from api by id_user
-            if not find -> delete star from db*/
-            var i = 0
-            starsListFromDB.forEach {
-                val starFromApi = starsMap[it.userId]
-                if (starFromApi == null) {
-                    starTable.delete(it)
-                    i++
-                }
+        /*for each star from db find star from api by id_user
+        if not find -> delete star from db*/
+        var i = 0
+        starsListFromDB.forEach {
+            val starFromApi = starsMap[it.userId]
+            if (starFromApi == null) {
+                starTable.delete(it)
+                i++
             }
-            Log.d(TAG, "DELETED $i STARS")
+        }
+        Log.d(TAG, "DELETED $i STARS")
     }
 
-   override suspend fun getRepositoryStars(
+    override suspend fun getRepositoryStars(
         userName: String,
         repositoryRemote: Repository,
         pageNumber: Int

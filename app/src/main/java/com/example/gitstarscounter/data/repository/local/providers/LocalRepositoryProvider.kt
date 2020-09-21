@@ -11,8 +11,8 @@ class LocalRepositoryProvider {
     private val repositoryTable = database.repositoryDao()
 
     suspend fun getAllRepositories(): List<Repository>? {
-        val tableRepositoryList =  repositoryTable.getAll()
-        val repositoryList: MutableList<Repository> =  mutableListOf()
+        val tableRepositoryList = repositoryTable.getAll()
+        val repositoryList: MutableList<Repository> = mutableListOf()
         tableRepositoryList.forEach { tableRepository ->
             val user = userTable.getUserById(tableRepository.userId)
             val repository: Repository = LocalRepository(tableRepository, user)

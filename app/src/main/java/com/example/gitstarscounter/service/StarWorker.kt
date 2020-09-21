@@ -139,9 +139,8 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
             repositoryRemote.user.name,
             repositoryRemote,
             pageNumber
-        ) as List<RemoteStar>
+        )!!
     }
-
 
     private fun createNotificationChannel(
         channelId: String,
