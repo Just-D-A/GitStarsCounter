@@ -3,14 +3,17 @@ package com.example.gitstarscounter.ui.screens.login
 import android.content.Context
 import android.util.Log
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.to_rename_2.remote.RequestLimit
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteRepository
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteUser
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.resource_remote.ResourceRemote
+import com.example.gitstarscounter.data.repository.remote.RequestLimit
+import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
+import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
+import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.data.for_providers.login.LoginRepository
+import com.example.gitstarscounter.data.providers.login.LoginRepository
+import com.example.gitstarscounter.ui.screens.base.BaseActivity.Companion.createLauncher
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
+import com.example.gitstarscounter.ui.screens.repository.RepositoryActivity
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
+import com.example.gitstarscounter.ui.screens.stars.StarsActivity.Companion.createLauncher
 import com.omega_r.base.errors.AppException
 import com.omega_r.libs.omegatypes.Text
 import com.omegar.mvp.InjectViewState
@@ -126,6 +129,10 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
     private fun onLimitedError() {
         isLimited = false
+    }
+
+    fun responseToStartRepositoryActivity(context: Context) {
+        RepositoryActivity.createLauncher().launch(context)
     }
 
     private fun onUnknownUser(textResource: Int, noInternetIsVisible: Boolean) {

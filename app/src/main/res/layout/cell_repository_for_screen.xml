@@ -46,7 +46,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button_find_rep"
+            android:id="@+id/button_delete_repository"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

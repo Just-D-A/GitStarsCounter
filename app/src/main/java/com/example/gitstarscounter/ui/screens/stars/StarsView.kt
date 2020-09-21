@@ -1,6 +1,6 @@
 package com.example.gitstarscounter.ui.screens.stars
 
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
+import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
 import com.example.gitstarscounter.ui.screens.base.BaseView
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy

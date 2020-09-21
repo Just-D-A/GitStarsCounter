@@ -3,7 +3,7 @@ package com.example.gitstarscounter
 import android.app.Application
 import android.util.Log
 import androidx.room.Room
-import com.example.gitstarscounter.data.to_rename_2.local.Database
+import com.example.gitstarscounter.data.repository.local.Database
 import androidx.work.Configuration
 
 class GitStarsApplication : Application(), Configuration.Provider {

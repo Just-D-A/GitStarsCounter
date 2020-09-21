@@ -37,6 +37,7 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     private val findButton: Button by bind(R.id.button_find_rep)
+    private val startRepositoryButton: Button by bind(R.id.button_start_repository_screen)
     private val repositoryOmegaRecycleView: OmegaRecyclerView by bind(R.id.recycler_repositories)
     private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
     private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
@@ -68,7 +69,11 @@ class LoginActivity : BaseActivity(), LoginView {
             presenter.responseToLoadRepositories(userName, pageNumber)
             repositoriesAdapter.setRepositoriesList(mutableListOf())
             repositoryOmegaRecycleView.showProgressPagination()
-     //       setNewStarsFinder()
+            //       setNewStarsFinder()
+        }
+
+        startRepositoryButton.setOnClickListener {
+            presenter.responseToStartRepositoryActivity(this)
         }
 
         accountNameEditText?.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER);

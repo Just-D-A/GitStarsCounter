@@ -2,11 +2,11 @@ package com.example.gitstarscounter.ui.screens.stars
 
 import android.util.Log
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.to_rename_2.remote.RequestLimit
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteUser
+import com.example.gitstarscounter.data.repository.remote.RequestLimit
+import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.data.for_providers.star.StarRepository
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
+import com.example.gitstarscounter.data.providers.star.StarRepository
+import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.jjoe64.graphview.series.DataPoint

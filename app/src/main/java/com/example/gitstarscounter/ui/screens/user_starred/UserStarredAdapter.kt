@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteStar
-import com.example.gitstarscounter.data.to_rename_2.remote.entity.RemoteUser
+import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
+import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
