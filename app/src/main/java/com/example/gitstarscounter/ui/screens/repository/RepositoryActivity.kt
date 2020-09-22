@@ -33,11 +33,11 @@ class RepositoryActivity : BaseActivity(), RepositoryView, RepositoryAdapter.Del
         setContentView(R.layout.activity_repository)
 
         val actionBar = supportActionBar
-        actionBar?.setHomeButtonEnabled(true);
-        actionBar?.setDisplayHomeAsUpEnabled(true);
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener =
-            object : LoginAdapter.OnRepositoryClickListener {
+        val onRepositoryClickListener: RepositoryAdapter.OnRepositoryClickListener =
+            object : RepositoryAdapter.OnRepositoryClickListener {
                 override fun onRepositoryClick(repository: Repository) {
                     presenter.responseToOpenStars(applicationContext, repository)
                 }

@@ -67,7 +67,7 @@ class LoginAdapter(
         init {
             //обработка клика
             itemView.setOnClickListener {
-                val repository: Repository = repositoriesList.get(layoutPosition)
+                val repository: Repository = repositoriesList[layoutPosition]
                 onRepositoryClickListener.onRepositoryClick(repository)
             }
         }
@@ -77,7 +77,7 @@ class LoginAdapter(
                 .with(context)
                 .load(R.drawable.repository_img)
                 .centerCrop()
-                .into(bookCircleImageView);
+                .into(bookCircleImageView)
             nameRepositoryTextView.text = repository.name
         }
     }

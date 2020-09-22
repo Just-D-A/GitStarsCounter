@@ -11,17 +11,17 @@ import com.omegar.mvp.InjectViewState
 import kotlinx.coroutines.launch
 
 @InjectViewState
-class RepositoryPresenter: BasePresenter<RepositoryView>() {
+class RepositoryPresenter : BasePresenter<RepositoryView>() {
     private val localRepositoryProvider = LocalRepositoryProvider()
 
-    init{
+    init {
         setRepositoryList()
     }
 
     private fun setRepositoryList() {
         launch {
             val repositoryList = localRepositoryProvider.getAllRepositories()
-            viewState.setRepositoryList(repositoryList!!)
+            viewState.setRepositoryList(repositoryList)
         }
     }
 
@@ -36,7 +36,7 @@ class RepositoryPresenter: BasePresenter<RepositoryView>() {
         StarsActivity.createLauncher(
             repository.user.name,
             RemoteRepository(
-                id = repository!!.id,
+                id = repository.id,
                 name = repository.name,
                 allStarsCount = repository.allStarsCount,
                 user = RemoteUser(

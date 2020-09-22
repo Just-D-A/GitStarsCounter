@@ -13,18 +13,15 @@ import kotlinx.coroutines.launch
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
-class StarsPresenter() : BasePresenter<StarsView>() {
+class StarsPresenter : BasePresenter<StarsView>() {
     companion object {
         private const val YEAR_IS_NOW = 120 //java date need -1900
         const val TAG = "StarsPresenter"
-        const val MESSAGE = "limited"
     }
 
     private val starsConvector = StarsConvector
     private var currYear: Int = YEAR_IS_NOW
     private var starsList = mutableListOf<Star>()
-    private var error = false
-    private var pageNumber = 1
 
     private val starRepository = StarRepository()
 
@@ -74,7 +71,6 @@ class StarsPresenter() : BasePresenter<StarsView>() {
         responseStarsList: List<Star>
     ) {
         responseStarsList.forEach {
-            //     Log.d("StarsCallback", it.user.name + " $pageNumber")
             starsList.add(
                 RemoteStar(
                     starredAt = it.starredAt,

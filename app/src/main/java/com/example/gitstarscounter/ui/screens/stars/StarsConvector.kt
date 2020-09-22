@@ -8,8 +8,8 @@ import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("DEPRECATION")
 object StarsConvector {
+    private const val MONTH_IN_YEAR: Int = 12
     private var starsInMonthMap: MutableMap<Int, MutableList<Star>> = mutableMapOf()
-    const val MONTH_IN_YEAR: Int = 12
 
     fun toDataPoint(): ArrayList<DataPoint> {
         val pointsList: ArrayList<DataPoint> = ArrayList()
@@ -21,8 +21,8 @@ object StarsConvector {
 
     fun setStarsMap(starsList: List<Star>, currYear: Int) {
         initMap()
-        starsList?.forEach {
-            val date = it!!.starredAt
+        starsList.forEach {
+            val date = it.starredAt
             Log.d("YEAR", date.year.toString())
             if (currYear == date.year) {
                 val StarList: MutableList<Star>? = starsInMonthMap[date.month.plus(1)]

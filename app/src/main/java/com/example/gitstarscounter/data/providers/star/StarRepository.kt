@@ -1,18 +1,17 @@
 package com.example.gitstarscounter.data.providers.star
 
 import android.util.Log
-import com.example.gitstarscounter.LimiteException
+import com.example.gitstarscounter.LimitException
 import com.example.gitstarscounter.data.repository.local.providers.LocalStarProvider
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.providers.RemoteStarProvider
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.stars.SearchStars
-import java.io.IOException
 
 open class StarRepository {
     companion object {
-        const val TAG = "StarRepository"
+        private const val TAG = "StarRepository"
     }
 
     private val remoteStarProvider = RemoteStarProvider()
@@ -25,7 +24,7 @@ open class StarRepository {
         var pageNumber = 1
         return try {
             if (!RequestLimit.hasRequest()) {
-                throw LimiteException()
+                throw LimitException()
             }
             do {
                 val starPackage =

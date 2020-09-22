@@ -1,7 +1,7 @@
 package com.example.gitstarscounter.data.providers.login
 
 import android.util.Log
-import com.example.gitstarscounter.LimiteException
+import com.example.gitstarscounter.LimitException
 import com.example.gitstarscounter.data.repository.local.providers.LocalLoginProvider
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
@@ -12,7 +12,7 @@ import com.omega_r.base.errors.throwNoData
 
 open class LoginRepository {
     companion object {
-        const val TAG = "LoginRepository"
+        private const val TAG = "LoginRepository"
     }
 
     private val remoteLoginProvider = RemoteLoginProvider()
@@ -25,7 +25,7 @@ open class LoginRepository {
         return try {
             Log.d(TAG, "Try GET")
             if (!RequestLimit.hasRequest()) {
-                throw LimiteException() // create new LimitException
+                throw LimitException() // create new LimitException
             }
             remoteLoginProvider.getUsersRepositories(userName, pageNumber)
         } catch (exception: Exception) {
@@ -35,7 +35,7 @@ open class LoginRepository {
                 Log.d(TAG, "catch NoData exception")
                 throwNoData()
             }
-        } catch (e: LimiteException) {
+        } catch (e: LimitException) {
             Log.d(TAG, "catch Limit exception")
             try {
                 localLoginProvider.getUsersRepositories(userName, 0)

@@ -20,9 +20,6 @@ interface StarDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg tableStarLocal: LocalStar)
 
-    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(vararg localUsers: LocalUser)*/
-
     @Delete
     suspend fun delete(tableStarLocal: LocalStar)
 }

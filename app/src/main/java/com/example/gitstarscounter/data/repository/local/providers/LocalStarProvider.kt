@@ -11,11 +11,11 @@ import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.data.providers.star.StarProvider
 import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 
-class LocalStarProvider(
-) : StarProvider {
+class LocalStarProvider : StarProvider {
     companion object {
         private const val TAG = "StarLocalProvider"
     }
+
 
     private val database = GitStarsApplication.instance.appRoomDatabase
     private val userTable = database.userDao()
@@ -42,10 +42,12 @@ class LocalStarProvider(
                 starTable.findByRepositoryUserAndId(star.repository.id, star.user.id)
             if (starFromDB == null) {
                 starTable.insertAll(star)
-                Log.d(TAG, "add new star to DB user_id ${star.user.id} and rep_id ${star.repository.id}")
+                Log.d(
+                    TAG,
+                    "add new star to DB user_id ${star.user.id} and rep_id ${star.repository.id}"
+                )
             }
         }
-
     }
 
     suspend fun checkUnstar(starsListFromApi: List<Star>, repositoryRemote: Repository) {
@@ -82,7 +84,7 @@ class LocalStarProvider(
         val starsList = starTable.findByRepositoryId(repositoryRemote.id)
         starsList.forEach {
             starsTypeList.add(
-                LocalStar(it,  LocalRepository(repositoryRemote) , it.user)
+                LocalStar(it, LocalRepository(repositoryRemote), it.user)
             )
         }
         return starsTypeList

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.omegar.libs.omegalaunchers.createActivityLauncher
@@ -59,8 +58,8 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
         val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<Star>
 
         val actionBar = supportActionBar
-        actionBar?.setHomeButtonEnabled(true);
-        actionBar?.setDisplayHomeAsUpEnabled(true);
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         presenter.loadUserList(starsList!!)
 
@@ -75,11 +74,11 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
             userStarredAdapter.filter(charSequence.toString())
         })
 
-        searchEditText.setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER);
+        searchEditText.setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER)
         searchEditText.setOnEditorActionListener(
             TextView.OnEditorActionListener { v, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
                 // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN
                     && event.keyCode == KeyEvent.KEYCODE_ENTER
                 ) {
                     hideKeyboard()

@@ -30,4 +30,3 @@ data class LocalRepository(
         user = LocalUser(repository.user)
     )
 }
-

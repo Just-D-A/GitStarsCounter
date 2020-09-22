@@ -32,4 +32,3 @@ data class LocalStar(
         repository = LocalRepository(repository)
     )
 }
-

@@ -16,8 +16,8 @@ import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
 class RepositoryAdapter(
-    val deleteCallback: DeleteCallback,
-    private val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener
+    private val deleteCallback: DeleteCallback,
+    private val onRepositoryClickListener: OnRepositoryClickListener
 ) : OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var repositoryList = ArrayList<Repository>()
 
@@ -58,7 +58,7 @@ class RepositoryAdapter(
         val context: Context,
         itemView: View,
         repositoriesList: List<Repository>,
-        onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener,
+        onRepositoryClickListener: OnRepositoryClickListener,
         private val deleteCallback: DeleteCallback
     ) : RecyclerView.ViewHolder(itemView) {
         init {
@@ -86,7 +86,7 @@ class RepositoryAdapter(
                 .with(context)
                 .load(R.drawable.repository_img)
                 .centerCrop()
-                .into(bookCircleImageView);
+                .into(bookCircleImageView)
 
             repositoryNameTextView.text = repository.name
             userNameTextView.text = repository.user.name
@@ -96,9 +96,10 @@ class RepositoryAdapter(
             }
         }
 
-        interface OnRepositoryClickListener {
-            fun onRepositoryClick(repository: Repository?)
-        }
+    }
+
+    interface OnRepositoryClickListener {
+        fun onRepositoryClick(repository: Repository)
     }
 
     interface DeleteCallback {

@@ -27,10 +27,10 @@ import kotlinx.coroutines.launch
 class StarWorker(val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
     companion object {
-        const val TAG = "StarWorker"
-        const val CHANNEL_ID = "com.example.gitstarscounter.service"
-        const val CHANNEL_NAME = "Channel"
-        const val MAX_ANSERS_COUNT_OF_REQUEST = 100
+        private const val TAG = "StarWorker"
+        private const val CHANNEL_ID = "com.example.gitstarscounter.service"
+        private const val CHANNEL_NAME = "Channel"
+        private const val MAX_ANSWERS_COUNT_OF_REQUEST = 100
     }
 
     private val serviceRemoteProvider = RemoteStarWorkerProvider()
@@ -102,7 +102,11 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
             repositoryRemote,
             pageNumber
         )
-        needMore(repositoryRemote, pageNumber, remoteStarList as MutableList<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>)
+        needMore(
+            repositoryRemote,
+            pageNumber,
+            remoteStarList as MutableList<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>
+        )
     }
 
     private fun needMore(
@@ -111,7 +115,7 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
         listRemoteStar: MutableList<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>
     ) {
         GlobalScope.launch {
-            if (listRemoteStar.size == MAX_ANSERS_COUNT_OF_REQUEST) {
+            if (listRemoteStar.size == MAX_ANSWERS_COUNT_OF_REQUEST) {
                 val newPageNumber = pageNumber.plus(1)
                 if (RequestLimit.hasRequest()) {
                     listRemoteStar.addAll(loadMoreStars(newPageNumber, repository))

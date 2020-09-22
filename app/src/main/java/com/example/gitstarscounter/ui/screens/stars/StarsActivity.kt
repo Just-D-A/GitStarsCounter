@@ -25,8 +25,7 @@ import com.omegar.mvp.presenter.InjectPresenter
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : BaseActivity(), StarsView {
     companion object {
-        const val BACK_BUTTON_ID = 16908332
-
+        private const val BACK_BUTTON_ID = 16908332
         private const val KEY_USER_NAME = "userName"
         private const val KEY_REPOSITORY = "repository"
 
@@ -62,8 +61,8 @@ class StarsActivity : BaseActivity(), StarsView {
         presenter.responseToStartLoadStars()
 
         val actionBar = supportActionBar
-        actionBar?.setHomeButtonEnabled(true);
-        actionBar?.setDisplayHomeAsUpEnabled(true);
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         lessYearButton.setOnClickListener {
             presenter.responseToChangeCurrentYear(false)
