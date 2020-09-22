@@ -56,7 +56,7 @@ class LoginActivity : BaseActivity(), LoginView {
 
         val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener =
             object : LoginAdapter.OnRepositoryClickListener {
-                override fun onRepositoryClick(repository: Repository?) {
+                override fun onRepositoryClick(repository: Repository) {
                     presenter.responseToOpenStars(applicationContext, repository)
                 }
             }

@@ -16,11 +16,9 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.repository.local.providers.LocalStarWorkerProvider
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
 import com.example.gitstarscounter.data.repository.remote.providers.RemoteStarWorkerProvider
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -62,7 +60,7 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
     }
 
     private fun makeNotification(
-        newStars: MutableList<Star>,
+        newStars: MutableList<com.example.gitstarscounter.entity.Star>,
         repository: Repository
     ) {
         Log.d(TAG, "FIND ${newStars.size} NEW STARS IN REP: ${repository.name}") // NO MAGIC
@@ -104,13 +102,13 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
             repositoryRemote,
             pageNumber
         )
-        needMore(repositoryRemote, pageNumber, remoteStarList as MutableList<RemoteStar>)
+        needMore(repositoryRemote, pageNumber, remoteStarList as MutableList<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>)
     }
 
     private fun needMore(
         repository: Repository,
         pageNumber: Int,
-        listRemoteStar: MutableList<RemoteStar>
+        listRemoteStar: MutableList<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>
     ) {
         GlobalScope.launch {
             if (listRemoteStar.size == MAX_ANSERS_COUNT_OF_REQUEST) {
@@ -134,7 +132,7 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
     private suspend fun loadMoreStars(
         pageNumber: Int,
         repositoryRemote: Repository
-    ): List<RemoteStar> {
+    ): List<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar> {
         return serviceRemoteProvider.loadStars(
             repositoryRemote.user.name,
             repositoryRemote,

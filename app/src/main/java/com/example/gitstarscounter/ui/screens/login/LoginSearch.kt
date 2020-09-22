@@ -5,7 +5,7 @@ import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepositor
 import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
 
 class LoginSearch(private val apiService: GithubApiService) {
-    suspend fun getUserRepos(userName: String, pageNumber: Int): List<RemoteRepository>? {
+    suspend fun getUserRepos(userName: String, pageNumber: Int): List<RemoteRepository> {
         return apiService.getUserRepos(userName, pageNumber)
     }
 

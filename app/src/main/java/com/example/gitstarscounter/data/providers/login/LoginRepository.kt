@@ -1,6 +1,7 @@
 package com.example.gitstarscounter.data.providers.login
 
 import android.util.Log
+import com.example.gitstarscounter.LimiteException
 import com.example.gitstarscounter.data.repository.local.providers.LocalLoginProvider
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
@@ -8,7 +9,6 @@ import com.example.gitstarscounter.data.repository.remote.providers.RemoteLoginP
 import com.example.gitstarscounter.entity.Repository
 import com.omega_r.base.errors.AppException
 import com.omega_r.base.errors.throwNoData
-import java.io.IOException
 
 open class LoginRepository {
     companion object {
@@ -18,7 +18,6 @@ open class LoginRepository {
     private val remoteLoginProvider = RemoteLoginProvider()
     private val localLoginProvider = LocalLoginProvider()
 
-
     suspend fun getRemoteUsersRepositories(
         userName: String,
         pageNumber: Int
@@ -26,14 +25,22 @@ open class LoginRepository {
         return try {
             Log.d(TAG, "Try GET")
             if (!RequestLimit.hasRequest()) {
-                throw IOException()
+                throw LimiteException() // create new LimitException
             }
             remoteLoginProvider.getUsersRepositories(userName, pageNumber)
-        } catch (exception: IOException) {
-            Log.d(TAG, "CATCH EXC")
+        } catch (exception: Exception) {
             try {
                 localLoginProvider.getUsersRepositories(userName, 0)
             } catch (e: AppException.NoData) {
+                Log.d(TAG, "catch NoData exception")
+                throwNoData()
+            }
+        } catch (e: LimiteException) {
+            Log.d(TAG, "catch Limit exception")
+            try {
+                localLoginProvider.getUsersRepositories(userName, 0)
+            } catch (e: AppException.NoData) {
+                Log.d(TAG, "catch NoData exception")
                 throwNoData()
             }
         }
@@ -43,7 +50,7 @@ open class LoginRepository {
         return remoteLoginProvider.getLimitRemaining()
     }
 
-    suspend fun loadMoreRepositories(userName: String, pageNumber: Int): List<Repository>? {
+    suspend fun loadMoreRepositories(userName: String, pageNumber: Int): List<Repository> {
         return remoteLoginProvider.loadMoreRepositories(userName, pageNumber)
     }
 }

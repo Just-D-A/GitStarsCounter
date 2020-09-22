@@ -14,7 +14,7 @@ class RemoteLoginProvider : LoginProvider {
     override suspend fun getUsersRepositories(
         userName: String,
         pageNumber: Int
-    ): List<Repository>? {
+    ): List<Repository> {
         val repository = SearchProvider.provideSearchRepository()
 
         return repository.getUserRepos(userName, pageNumber)
@@ -23,13 +23,13 @@ class RemoteLoginProvider : LoginProvider {
     suspend fun loadMoreRepositories(
         userName: String,
         pageNumber: Int
-    ): List<Repository>? {
+    ): List<Repository> {
         val repository = SearchProvider.provideSearchRepository()
 
         return repository.getUserRepos(userName, pageNumber)
     }
 
-    suspend fun getLimitRemaining(): ResourceRemote? {
+    suspend fun getLimitRemaining(): ResourceRemote {
         val loginSearch = SearchProvider.provideSearchRepository()
 
         return loginSearch.getLimitRemaining()

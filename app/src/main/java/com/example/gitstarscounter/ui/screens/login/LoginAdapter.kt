@@ -55,7 +55,7 @@ class LoginAdapter(
 
     class RepositoryViewHolder(
         itemView: View,
-        repositoriesList: List<Repository?>?,
+        repositoriesList: List<Repository>,
         onRepositoryClickListener: OnRepositoryClickListener,
         val context: Context
     ) : RecyclerView.ViewHolder(itemView) {
@@ -67,7 +67,7 @@ class LoginAdapter(
         init {
             //обработка клика
             itemView.setOnClickListener {
-                val repository: Repository? = repositoriesList?.get(layoutPosition)
+                val repository: Repository = repositoriesList.get(layoutPosition)
                 onRepositoryClickListener.onRepositoryClick(repository)
             }
         }
@@ -83,6 +83,6 @@ class LoginAdapter(
     }
 
     interface OnRepositoryClickListener {
-        fun onRepositoryClick(repository: Repository?)
+        fun onRepositoryClick(repository: Repository)
     }
 }

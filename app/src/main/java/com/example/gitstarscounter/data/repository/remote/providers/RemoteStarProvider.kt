@@ -13,7 +13,7 @@ class RemoteStarProvider : StarProvider {
         userName: String,
         repositoryRemote: Repository,
         pageNumber: Int
-    ): List<Star>? {
+    ): List<Star> {
         return searchRepository.getStars(userName, repositoryRemote.name, pageNumber)
     }
 }

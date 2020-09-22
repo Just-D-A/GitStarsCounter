@@ -16,15 +16,14 @@ class LocalLoginProvider() : LoginProvider {
         private const val NUMBER_OF_THREADS = 4
     }
 
-    private val database = GitStarsApplication.instance.database
+    private val database = GitStarsApplication.instance.appRoomDatabase
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
-
 
     override suspend fun getUsersRepositories(
         userName: String,
         pageNumber: Int
-    ): List<Repository>? {
+    ): List<Repository> {
         val user = userTable.getUserByName(userName) //query to DB
         Log.d(TAG, "${user?.name} getted")
 

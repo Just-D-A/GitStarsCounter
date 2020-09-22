@@ -91,7 +91,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
     }
 
     fun responseToOpenStars(context: Context, repository: Repository?) {
-        StarsActivity.createLauncher(
+        createLauncher(
             userName,
             RemoteRepository(
                 id = repository!!.id,

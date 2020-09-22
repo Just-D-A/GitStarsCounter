@@ -1,8 +1,6 @@
 package com.example.gitstarscounter.ui.screens.stars
 
 import android.util.Log
-import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.data.providers.star.StarRepository
@@ -12,7 +10,6 @@ import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.InjectViewState
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
@@ -25,16 +22,14 @@ class StarsPresenter() : BasePresenter<StarsView>() {
 
     private val starsConvector = StarsConvector
     private var currYear: Int = YEAR_IS_NOW
-    private var starsList: MutableList<RemoteStar> =
-        mutableListOf()
+    private var starsList = mutableListOf<Star>()
     private var error = false
     private var pageNumber = 1
 
-    private val repositoryStarProvider = StarRepository()
+    private val starRepository = StarRepository()
 
     private lateinit var userName: String
     private lateinit var repository: Repository
-
 
     fun setParams(userName: String, repositoryRemote: Repository) {
         this.userName = userName
@@ -47,24 +42,16 @@ class StarsPresenter() : BasePresenter<StarsView>() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.setWaiting(true)
         launch {
-                val responseStarList =
-                    repositoryStarProvider.getRepositoryStars(userName, repository, pageNumber)
-                onStarsResponse(responseStarList!!, false)
-        }
-    }
-
-    private fun loadMoreStars(pageNumber: Int) {
-        launch {
-                val responseStarList =
-                    repositoryStarProvider.getRepositoryStars(userName, repository, pageNumber)
-                onStarsResponse(responseStarList!!, false)
+            val responseStarList =
+                starRepository.getRepositoryStars(userName, repository)
+            onStarsResponse(responseStarList)
         }
     }
 
     private fun loadGraph() {
         Log.d("CURR_YEAR", currYear.toString())
         starsConvector.setStarsMap(
-            starsList as List<RemoteStar>,
+            starsList,
             currYear
         )
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
@@ -83,13 +70,11 @@ class StarsPresenter() : BasePresenter<StarsView>() {
         reloadStars()
     }
 
-    fun onStarsResponse(
-        responseStarsList: List<Star>,
-        noInternetIsVisible: Boolean
+    private fun onStarsResponse(
+        responseStarsList: List<Star>
     ) {
-        viewState.changeVisibilityOfDataMessage(noInternetIsVisible)
         responseStarsList.forEach {
-            Log.d("StarsCallback", it.user.name + " $pageNumber")
+            //     Log.d("StarsCallback", it.user.name + " $pageNumber")
             starsList.add(
                 RemoteStar(
                     starredAt = it.starredAt,
@@ -101,19 +86,14 @@ class StarsPresenter() : BasePresenter<StarsView>() {
                 )
             )
         }
-        needMore(responseStarsList)
-    }
-
-    private fun onError(textResource: Int) {
-        viewState.setWaiting(false)
-        showDatabaseMessage()
+        loadGraph()
     }
 
     private fun reloadStars() {
         viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
         viewState.setWaiting(true)
         starsConvector.setStarsMap(
-            starsList as List<RemoteStar>,
+            starsList,
             currYear
         )
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
@@ -125,30 +105,5 @@ class StarsPresenter() : BasePresenter<StarsView>() {
     fun responseToOpenUserStarred(x: Double) {
         val starsInMonthList = starsConvector.getStarListByMonth(x.toInt())
         viewState.openUsersStared(starsInMonthList)
-    }
-
-    private fun needMore(responseStarsList: List<Star>) {
-        if ((responseStarsList.size == SearchStars.MAX_ELEMENTS_FROM_API) && !error) {
-            pageNumber++
-            loadMoreStars(pageNumber)
-        } else {
-            loadGraph()
-        }
-    }
-
-    private fun showDatabaseMessage() {
-        viewState.changeVisibilityOfDataMessage(true)
-        Log.d(TAG, MESSAGE)
-        getStarsFromDatabase()
-        viewState.setWaiting(false)
-    }
-
-    private fun getStarsFromDatabase() {
-        error = true
-        launch {
-            val responseStarsList =
-                repositoryStarProvider.getRepositoryStars(userName, repository, 0)
-            onStarsResponse(responseStarsList!!, true)
-        }
     }
 }

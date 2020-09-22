@@ -8,7 +8,7 @@ class SearchStars(val apiService: GithubApiService) {
         userName: String,
         repositoryName: String,
         pageNumber: Int
-    ): List<RemoteStar>? {
+    ): List<RemoteStar> {
         return apiService.getStars(
             userName,
             repositoryName,

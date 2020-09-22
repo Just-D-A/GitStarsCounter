@@ -12,6 +12,7 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
 import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.jjoe64.graphview.GraphView
@@ -110,7 +111,7 @@ class StarsActivity : BaseActivity(), StarsView {
         databaseMessageTextView.isVisible = visible
     }
 
-    override fun openUsersStared(starsInMonthList: MutableList<RemoteStar>) {
+    override fun openUsersStared(starsInMonthList: MutableList<Star>) {
         UserStarredActivity.createLauncher(starsInMonthList, hasInternet).launch(this)
     }
 

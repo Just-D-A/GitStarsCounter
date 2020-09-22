@@ -1,27 +1,35 @@
 package com.example.gitstarscounter.data.repository.local.entity
 
-import com.example.gitstarscounter.data.repository.local.entity.database.star.TableStar
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.entity.User
 import java.util.*
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@Entity(tableName = "Stars")
 data class LocalStar(
+    @PrimaryKey
+    @ColumnInfo(name = "starred_at")
     override val starredAt: Date,
-    override val user: User,
-    val repository: Repository
+    @Embedded(prefix = "user_")
+    override val user: LocalUser,
+    @Embedded(prefix = "repository_")
+    val repository: LocalRepository
 ) : Star {
-    constructor(tableStar: TableStar, repository: Repository, user: User) : this(
+    constructor(tableStar: LocalStar, repository: Repository, user: LocalUser) : this(
         starredAt = tableStar.starredAt,
         user = user,
-        repository = repository
+        repository = LocalRepository(repository)
     )
 
     constructor(star: Star, repository: Repository) : this(
         starredAt = star.starredAt,
-        user = star.user,
-        repository = repository
+        user = LocalUser(star.user),
+        repository = LocalRepository(repository)
     )
 }
 

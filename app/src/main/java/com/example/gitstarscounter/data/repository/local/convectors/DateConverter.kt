@@ -6,6 +6,9 @@ import java.util.*
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DateConverter {
+    private val simpleDateFormate: SimpleDateFormat =
+        SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+
     @TypeConverter
     fun convertDateToTimestamp(date: Date?): String? {
         return date?.toString()
@@ -13,11 +16,6 @@ class DateConverter {
 
     @TypeConverter
     fun convertTimestampToDate(date: String?): Date? {
-        return sdf3.parse(date)
-    }
-
-    companion object {
-        val sdf3: SimpleDateFormat =
-            SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+        return simpleDateFormate.parse(date)
     }
 }

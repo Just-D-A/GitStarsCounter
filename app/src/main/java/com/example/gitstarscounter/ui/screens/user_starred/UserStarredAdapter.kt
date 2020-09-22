@@ -10,23 +10,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
+import com.example.gitstarscounter.entity.Star
+import com.example.gitstarscounter.entity.User
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserStarredAdapter(val context: Context) :
     OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var usersList: ArrayList<RemoteUser> = ArrayList()
-    private var sourceList: ArrayList<RemoteUser> = ArrayList()
+    private var usersList: ArrayList<User> = ArrayList()
+    private var sourceList: ArrayList<User> = ArrayList()
 
-    fun setupUsers(remoteStarList: MutableList<RemoteStar>) {
-        val remoteUserList: ArrayList<RemoteUser> = ArrayList()
+    fun setupUsers(remoteStarList: MutableList<Star>) {
+        val addedUserList: ArrayList<User> = ArrayList()
         remoteStarList.forEach {
-            remoteUserList.add(it.user)
+            addedUserList.add(it.user)
         }
         sourceList.clear()
-        sourceList.addAll(remoteUserList)
+        sourceList.addAll(addedUserList)
         filter("")
     }
 
@@ -64,13 +64,13 @@ class UserStarredAdapter(val context: Context) :
             itemView.findViewById(R.id.circle_image_view_user_photo)
 
         @SuppressLint("SetTextI18n")
-        fun bind(remoteUser: RemoteUser) {
+        fun bind(user: User) {
             Glide
                 .with(context)
-                .load(remoteUser.avatarUrl)
+                .load(user.avatarUrl)
                 .centerCrop()
                 .into(userPhotoImageView)
-            userNameTextView.text = remoteUser.name
+            userNameTextView.text = user.name
         }
     }
 }

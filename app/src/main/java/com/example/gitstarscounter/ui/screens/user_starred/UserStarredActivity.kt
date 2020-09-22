@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
+import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.libs.omegalaunchers.tools.put
@@ -41,7 +42,7 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
         private const val KEY_HAS_INTERNET = "hasInternet"
 
         fun createLauncher(
-            starsList: MutableList<RemoteStar>,
+            starsList: MutableList<Star>,
             noInternetVisible: Boolean
         ) =
             createActivityLauncher(
@@ -55,9 +56,7 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_starred)
 
-        noInternetTextView.isVisible = intent.getBooleanExtra(KEY_HAS_INTERNET, false)
-
-        val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<RemoteStar>
+        val starsList = intent.getSerializableExtra(KEY_STAR_LIST) as? MutableList<Star>
 
         val actionBar = supportActionBar
         actionBar?.setHomeButtonEnabled(true);
@@ -90,7 +89,7 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
             })
     }
 
-    override fun setupUsersList(remoteStarList: MutableList<RemoteStar>) {
+    override fun setupUsersList(remoteStarList: MutableList<Star>) {
         userStarredAdapter.setupUsers(remoteStarList)
         usersRecycleView.isVisible = true
     }

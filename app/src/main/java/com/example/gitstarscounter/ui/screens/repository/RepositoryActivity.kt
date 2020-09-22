@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.OrientationHelper
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
+import com.example.gitstarscounter.ui.screens.login.LoginAdapter
 import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omegar.libs.omegalaunchers.createActivityLauncher
@@ -35,19 +36,19 @@ class RepositoryActivity : BaseActivity(), RepositoryView, RepositoryAdapter.Del
         actionBar?.setHomeButtonEnabled(true);
         actionBar?.setDisplayHomeAsUpEnabled(true);
 
-        repositoryAdapter = RepositoryAdapter(this)
+        val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener =
+            object : LoginAdapter.OnRepositoryClickListener {
+                override fun onRepositoryClick(repository: Repository) {
+                    presenter.responseToOpenStars(applicationContext, repository)
+                }
+            }
+
+        repositoryAdapter = RepositoryAdapter(this, onRepositoryClickListener)
 
         repositoryRecyclerView.adapter = repositoryAdapter
         repositoryRecyclerView.layoutManager =
             LinearLayoutManager(applicationContext, OrientationHelper.VERTICAL, false)
         repositoryRecyclerView.hasFixedSize()
-
-            /*.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeAt(i)//i is your adapter position
-            }
-        });*/
     }
 
     override fun setRepositoryList(repositoryList: List<Repository>) {

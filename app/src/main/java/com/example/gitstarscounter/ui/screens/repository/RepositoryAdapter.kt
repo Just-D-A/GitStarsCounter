@@ -11,10 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.ui.screens.login.LoginAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
-class RepositoryAdapter(val deleteCallback: DeleteCallback) : OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RepositoryAdapter(
+    val deleteCallback: DeleteCallback,
+    private val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener
+) : OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var repositoryList = ArrayList<Repository>()
 
     fun setRepositoriesList(repositoriesListInput: List<Repository?>?) {
@@ -30,7 +34,13 @@ class RepositoryAdapter(val deleteCallback: DeleteCallback) : OmegaRecyclerView.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(R.layout.cell_repository_for_screen, parent, false)
-        return RepositoryViewHolder(parent.context, itemView, deleteCallback)
+        return RepositoryViewHolder(
+            parent.context,
+            itemView,
+            repositoryList,
+            onRepositoryClickListener,
+            deleteCallback
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -47,8 +57,18 @@ class RepositoryAdapter(val deleteCallback: DeleteCallback) : OmegaRecyclerView.
     class RepositoryViewHolder(
         val context: Context,
         itemView: View,
+        repositoriesList: List<Repository>,
+        onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener,
         private val deleteCallback: DeleteCallback
     ) : RecyclerView.ViewHolder(itemView) {
+        init {
+            //обработка клика
+            itemView.setOnClickListener {
+                val repository: Repository = repositoriesList[layoutPosition]
+                onRepositoryClickListener.onRepositoryClick(repository)
+            }
+        }
+
         private var bookCircleImageView: CircleImageView =
             itemView.findViewById(R.id.circle_image_view_rep_image)
 
@@ -74,6 +94,10 @@ class RepositoryAdapter(val deleteCallback: DeleteCallback) : OmegaRecyclerView.
             deleteButton.setOnClickListener {
                 deleteCallback.onPressedDeleteButton(repository)
             }
+        }
+
+        interface OnRepositoryClickListener {
+            fun onRepositoryClick(repository: Repository?)
         }
     }
 

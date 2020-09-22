@@ -36,7 +36,7 @@ interface GithubApiService {
     suspend fun getUserRepos(
         @Path("name") userName: String,
         @Query("page") pageNumber: Int
-    ): List<RemoteRepository>?
+    ): List<RemoteRepository>
 
     //https://api.github.com/repos/Just-D-A/GitStarsCounter/stargazers
     @GET("repos/{userName}/{repositoryName}/stargazers")
@@ -46,7 +46,7 @@ interface GithubApiService {
         @Header("Accept") param: String,
         @Query("page") pageNumber: Int,
         @Query("per_page") elementsCount: Int
-    ): List<RemoteStar>?
+    ): List<RemoteStar>
 
     //https://api.github.com/rate_limit
     @GET("https://api.github.com/rate_limit")
