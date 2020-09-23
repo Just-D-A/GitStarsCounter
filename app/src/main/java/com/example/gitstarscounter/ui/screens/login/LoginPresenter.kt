@@ -24,6 +24,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
     companion object {
         const val TAG = "LoginPresenter"
         const val MESSAGE = "limited"
+        const val MAX_PACKAGE_ELEMENTS_COUNT = 30
     }
 
     private val repositoryLoginProvider = LoginRepository()
@@ -111,11 +112,9 @@ class LoginPresenter : BasePresenter<LoginView>() {
         repositoryRemoteList: List<Repository>,
         noInternetIsVisible: Boolean
     ) {
-        /* viewState.changeVisibilityOfNoInternetView(noInternetIsVisible && !isLimited)
-         viewState.changeVisibilityOfLimitedView(isLimited)*/
         viewState.setupRepositoriesList(repositoryRemoteList)
 
-        if (repositoryRemoteList.size < 30) {
+        if (repositoryRemoteList.size < MAX_PACKAGE_ELEMENTS_COUNT) {
             viewState.endPagination()
         }
     }

@@ -1,9 +1,9 @@
-package com.example.gitstarscounter.ui.screens.stars
+package com.example.gitstarscounter.data.providers.star
 
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
 
-class SearchStars(val apiService: GithubApiService) {
+class StarsSearch(private val apiService: GithubApiService) {
     suspend fun getStars(
         userName: String,
         repositoryName: String,

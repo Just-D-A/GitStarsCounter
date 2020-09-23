@@ -51,6 +51,7 @@ object StarsConvector {
                 result = starsCount
             }
         }
+
         return result
     }
 }

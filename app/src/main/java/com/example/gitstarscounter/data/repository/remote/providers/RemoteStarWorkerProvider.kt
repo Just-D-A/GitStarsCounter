@@ -7,11 +7,8 @@ import com.example.gitstarscounter.entity.Repository
 class RemoteStarWorkerProvider {
     private val searchRepository = SearchProvider.provideSearchStars()
 
-    suspend fun loadStars(
-        userName: String,
-        repositoryRemote: Repository,
-        pageNumber: Int
-    ): List<RemoteStar>? {
+    suspend fun loadStars(userName: String, repositoryRemote: Repository, pageNumber: Int)
+            : List<RemoteStar>? {
         return searchRepository.getStars(userName, repositoryRemote.name, pageNumber)
     }
 }

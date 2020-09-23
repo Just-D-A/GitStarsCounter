@@ -1,14 +1,20 @@
 package com.example.gitstarscounter.data.repository.remote
 
-import com.example.gitstarscounter.ui.screens.login.LoginSearch
-import com.example.gitstarscounter.ui.screens.stars.SearchStars
+import com.example.gitstarscounter.GitStarsApplication
+import com.example.gitstarscounter.data.providers.login.LoginSearch
+import com.example.gitstarscounter.data.providers.star.StarsSearch
 
 object SearchProvider {
+    private val gitApiService = GitStarsApplication.instance.gitApi
+/*  maybe this is right??
+    @Inject
+    lateinit var gitApiService2: GithubApiService
+*/
     fun provideSearchRepository(): LoginSearch {
-        return LoginSearch(GithubApiService.create())
+        return LoginSearch(gitApiService)
     }
 
-    fun provideSearchStars(): SearchStars {
-        return SearchStars(GithubApiService.create())
+    fun provideSearchStars(): StarsSearch {
+        return StarsSearch(gitApiService)
     }
 }

@@ -6,7 +6,7 @@ import com.omega_r.base.components.OmegaActivity
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.libs.omegalaunchers.tools.put
 
-@OmegaContentView(R.layout.activity_main)
+@OmegaContentView(R.layout.activity_login)
 abstract class BaseActivity : OmegaActivity(), BaseView {
 
     companion object {

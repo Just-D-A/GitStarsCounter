@@ -33,7 +33,6 @@ class LoginActivity : BaseActivity(), LoginView {
     companion object {
         const val LABEL = "user_name"
         const val TAG = "LoginActivity"
-
     }
 
     private val findButton: Button by bind(R.id.button_find_rep)
@@ -52,7 +51,7 @@ class LoginActivity : BaseActivity(), LoginView {
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
 
         val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener =
             object : LoginAdapter.OnRepositoryClickListener {
@@ -62,25 +61,25 @@ class LoginActivity : BaseActivity(), LoginView {
             }
         repositoriesAdapter = LoginAdapter(this, onRepositoryClickListener)
 
-        val accountNameEditText: EditText? = findViewById(R.id.text_view_repository_name)
+        val accountNameEditText: EditText? = findViewById(R.id.text_view_login_repository_name)
         findButton.setOnClickListener {
             val userName = accountNameEditText?.text.toString().trim()
             pageNumber = 1
             presenter.responseToLoadRepositories(userName, pageNumber)
             repositoriesAdapter.setRepositoriesList(mutableListOf())
             repositoryOmegaRecycleView.showProgressPagination()
-            //       setNewStarsFinder()
+            setNewStarsFinder()
         }
 
         startRepositoryButton.setOnClickListener {
             presenter.responseToStartRepositoryActivity(this)
         }
 
-        accountNameEditText?.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER);
+        accountNameEditText?.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER)
         accountNameEditText?.setOnEditorActionListener(
             OnEditorActionListener { v, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
                 // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN
                     && event.keyCode == KeyEvent.KEYCODE_ENTER
                 ) {
                     hideKeyboard()
@@ -130,7 +129,7 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     override fun endPagination() {
-        repositoryOmegaRecycleView.hidePagination();
+        repositoryOmegaRecycleView.hidePagination()
     }
 
     private fun hideKeyboard() {
@@ -147,15 +146,12 @@ class LoginActivity : BaseActivity(), LoginView {
     override fun onBackPressed() {
         super.onBackPressed()
         Log.d("LoginActivity", "Start Receiver")
-        //startFindStarsReceiver()
     }
 
     private fun setNewStarsFinder() {
         val work = PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.MINUTES)
             .build()
 
-        val result = WorkManager
-            .getInstance(this)
-            .enqueue(work)
+        WorkManager.getInstance(this).enqueue(work)
     }
 }

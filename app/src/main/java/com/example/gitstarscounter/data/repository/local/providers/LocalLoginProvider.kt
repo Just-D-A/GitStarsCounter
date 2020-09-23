@@ -10,10 +10,9 @@ import com.example.gitstarscounter.data.providers.login.LoginProvider
 import com.omega_r.base.errors.throwNoData
 
 @Suppress("NAME_SHADOWING")
-class LocalLoginProvider() : LoginProvider {
+class LocalLoginProvider : LoginProvider {
     companion object {
         private const val TAG = "LoginLocalProvider"
-        private const val NUMBER_OF_THREADS = 4
     }
 
     private val database = GitStarsApplication.instance.appRoomDatabase

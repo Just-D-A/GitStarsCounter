@@ -17,6 +17,10 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class UserStarredAdapter(val context: Context) :
     OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    companion object {
+        private const val EMPTY_STRING = ""
+    }
+
     private var usersList: ArrayList<User> = ArrayList()
     private var sourceList: ArrayList<User> = ArrayList()
 
@@ -27,7 +31,7 @@ class UserStarredAdapter(val context: Context) :
         }
         sourceList.clear()
         sourceList.addAll(addedUserList)
-        filter("")
+        filter(EMPTY_STRING)
     }
 
     fun filter(query: String) {
@@ -59,7 +63,8 @@ class UserStarredAdapter(val context: Context) :
 
     class UsersViewHolder(itemView: View, val context: Context) :
         RecyclerView.ViewHolder(itemView) {
-        private var userNameTextView: TextView = itemView.findViewById(R.id.text_view_user_name)
+        private var userNameTextView: TextView =
+            itemView.findViewById(R.id.text_view_user_name)
         private var userPhotoImageView: CircleImageView =
             itemView.findViewById(R.id.circle_image_view_user_photo)
 

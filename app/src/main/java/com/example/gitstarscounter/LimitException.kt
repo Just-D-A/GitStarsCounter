@@ -1,3 +1,3 @@
 package com.example.gitstarscounter
 
-class LimitException : Throwable()
+class LimitException : Throwable()//where should be

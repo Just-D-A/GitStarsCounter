@@ -1,4 +1,4 @@
-package com.example.gitstarscounter.ui.screens.login
+package com.example.gitstarscounter.data.providers.login
 
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository

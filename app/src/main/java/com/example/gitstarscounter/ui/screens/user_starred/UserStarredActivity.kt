@@ -35,8 +35,7 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
     override lateinit var presenter: UserStarredPresenter
 
     companion object {
-        const val BACK_BUTTON_ID = 16908332
-
+        private const val BACK_BUTTON_ID = 16908332
         private const val KEY_STAR_LIST = "starsList"
         private const val KEY_HAS_INTERNET = "hasInternet"
 

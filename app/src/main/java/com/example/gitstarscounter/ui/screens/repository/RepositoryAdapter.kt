@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.ui.screens.login.LoginAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -33,7 +32,7 @@ class RepositoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val itemView = layoutInflater.inflate(R.layout.cell_repository_for_screen, parent, false)
+        val itemView = layoutInflater.inflate(R.layout.cell_repository, parent, false)
         return RepositoryViewHolder(
             parent.context,
             itemView,
@@ -70,13 +69,13 @@ class RepositoryAdapter(
         }
 
         private var bookCircleImageView: CircleImageView =
-            itemView.findViewById(R.id.circle_image_view_rep_image)
+            itemView.findViewById(R.id.circle_image_view_repository_image)
 
         private var repositoryNameTextView: TextView =
-            itemView.findViewById(R.id.text_view_rep_name)
+            itemView.findViewById(R.id.text_view_repository_name)
 
         private var userNameTextView: TextView =
-            itemView.findViewById(R.id.text_view_owner_name)
+            itemView.findViewById(R.id.text_view_repository_owner_name)
 
         private val deleteButton: Button =
             itemView.findViewById(R.id.button_delete_repository)

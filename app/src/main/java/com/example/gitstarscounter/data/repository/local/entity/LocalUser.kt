@@ -9,9 +9,7 @@ import com.example.gitstarscounter.entity.User
 data class LocalUser(
     @PrimaryKey
     override val id: Long,
-
     override val name: String,
-
     @ColumnInfo(name = "avatar_url")
     override val avatarUrl: String?
 ) : User {

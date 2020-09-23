@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
-import com.example.gitstarscounter.entity.User
 import java.util.*
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")

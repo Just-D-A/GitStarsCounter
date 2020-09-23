@@ -76,7 +76,7 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
                 )
             )
 
-            val pendingIntent = launcher.getPendingIntent(context, 0, 0) //?? can i use 0 without pr
+            val pendingIntent = launcher.getPendingIntent(context, 0, 0) //?? can I use 0 without pr
 
             val builder = NotificationCompat.Builder(
                 applicationContext, channelId

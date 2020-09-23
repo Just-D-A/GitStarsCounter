@@ -16,7 +16,6 @@ class LocalStarProvider : StarProvider {
         private const val TAG = "StarLocalProvider"
     }
 
-
     private val database = GitStarsApplication.instance.appRoomDatabase
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
@@ -42,25 +41,24 @@ class LocalStarProvider : StarProvider {
                 starTable.findByRepositoryUserAndId(star.repository.id, star.user.id)
             if (starFromDB == null) {
                 starTable.insertAll(star)
-                Log.d(
-                    TAG,
-                    "add new star to DB user_id ${star.user.id} and rep_id ${star.repository.id}"
-                )
+                Log.d(TAG, "add star ${star.user.id} and rep_id ${star.repository.id}")
             }
         }
     }
 
-    suspend fun checkUnstar(starsListFromApi: List<Star>, repositoryRemote: Repository) {
+    suspend fun checkUnstar(starsListFromApi: List<Star>, repository: Repository) {
+        Log.d(TAG, "START DELETED STARS")
         //get all stars from db buy rep id
-        val starsListFromDB = starTable.findByRepositoryId(repositoryRemote.id)
+        val starsListFromDB = starTable.findByRepositoryId(repository.id)
 
         //create map by key star.user with second param star-api
         val starsMap = mutableMapOf<Long, LocalStar>()
         starsListFromApi.forEach {
-            val star = LocalStar(it, repositoryRemote as LocalRepository)
+            val star = LocalStar(it, LocalRepository(repository))
             starsMap[star.user.id] = star
         }
 
+        Log.d(TAG, "CONT DELETED STARS")
         /*for each star from db find star from api by id_user
         if not find -> delete star from db*/
         var i = 0

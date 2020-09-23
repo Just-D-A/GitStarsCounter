@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseActivity

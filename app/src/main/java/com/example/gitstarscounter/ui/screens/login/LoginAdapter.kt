@@ -39,7 +39,7 @@ class LoginAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val itemView = layoutInflater.inflate(R.layout.cell_repository, parent, false)
+        val itemView = layoutInflater.inflate(R.layout.cell_login, parent, false)
         return RepositoryViewHolder(itemView, repositoriesList, onRepositoryClickListener, context)
     }
 
@@ -60,9 +60,9 @@ class LoginAdapter(
         val context: Context
     ) : RecyclerView.ViewHolder(itemView) {
         private var bookCircleImageView: CircleImageView =
-            itemView.findViewById(R.id.circle_image_view_book)
+            itemView.findViewById(R.id.circle_image_view_login_book)
         private var nameRepositoryTextView: TextView =
-            itemView.findViewById(R.id.text_view_repository_name)
+            itemView.findViewById(R.id.text_view_login_repository_name)
 
         init {
             //обработка клика

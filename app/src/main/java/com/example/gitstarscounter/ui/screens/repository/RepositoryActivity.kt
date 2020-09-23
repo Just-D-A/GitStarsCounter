@@ -3,13 +3,11 @@ package com.example.gitstarscounter.ui.screens.repository
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
-import com.example.gitstarscounter.ui.screens.login.LoginAdapter
 import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omegar.libs.omegalaunchers.createActivityLauncher
@@ -17,15 +15,16 @@ import com.omegar.mvp.presenter.InjectPresenter
 
 class RepositoryActivity : BaseActivity(), RepositoryView, RepositoryAdapter.DeleteCallback {
     companion object {
+        private const val BACK_BUTTON_ID = 16908332
         fun createLauncher() = createActivityLauncher()
     }
 
     private val repositoryRecyclerView: OmegaRecyclerView by bind(R.id.recycler_view_repositories)
 
-    private lateinit var repositoryAdapter: RepositoryAdapter
-
     @InjectPresenter
     override lateinit var presenter: RepositoryPresenter
+
+    private lateinit var repositoryAdapter: RepositoryAdapter
 
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +62,7 @@ class RepositoryActivity : BaseActivity(), RepositoryView, RepositoryAdapter.Del
                 true
             }
 
-            UserStarredActivity.BACK_BUTTON_ID -> {
+            BACK_BUTTON_ID -> {
                 this.finish()
                 true
             }
