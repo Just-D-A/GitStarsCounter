@@ -1,7 +1,7 @@
 package com.example.gitstarscounter.data.providers.star
 
 import android.util.Log
-import com.example.gitstarscounter.LimitException
+import com.example.gitstarscounter.data.repository.remote.exception.LimitException
 import com.example.gitstarscounter.data.repository.local.providers.LocalStarProvider
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.providers.RemoteStarProvider
@@ -19,10 +19,11 @@ open class StarRepository {
         val starsList = mutableListOf<Star>()
         var pageNumber = 1
         return try {
-            if (!RequestLimit.hasRequest()) {
-                throw LimitException()
-            }
             do {
+                if (!RequestLimit.hasRequest()) {
+                    throw LimitException()
+                }
+
                 val starPackage =
                     remoteStarProvider.getRepositoryStars(userName, repositoryRemote, pageNumber)
                 starsList.addAll(starPackage)

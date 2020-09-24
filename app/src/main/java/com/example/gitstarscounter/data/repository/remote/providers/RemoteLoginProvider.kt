@@ -11,7 +11,7 @@ class RemoteLoginProvider : LoginProvider {
         private const val TAG = "REMOTE_LOGIN_PROVIDER"
     }
 
-    private val repository = SearchProvider.provideSearchRepository()
+    private val repository = SearchProvider().provideSearchRepository()
 
     override suspend fun getUsersRepositories(userName: String, pageNumber: Int): List<Repository> {
         return repository.getUserRepos(userName, pageNumber)

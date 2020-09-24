@@ -27,7 +27,6 @@ import java.io.Serializable
 class UserStarredActivity : BaseActivity(), UserStarredView {
     private val searchEditText: EditText by bind(R.id.edit_text_user_name)
     private val usersRecycleView: RecyclerView by bind(R.id.recycler_view_users)
-    private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_user_starred)
 
     private lateinit var userStarredAdapter: UserStarredAdapter
 

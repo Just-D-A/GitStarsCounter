@@ -8,7 +8,7 @@ import com.example.gitstarscounter.data.providers.star.StarProvider
 
 @Suppress("DEPRECATION", "UNCHECKED_CAST")
 class RemoteStarProvider : StarProvider {
-    private val searchRepository = SearchProvider.provideSearchStars()
+    private val searchRepository = SearchProvider().provideSearchStars()
     private val gitApiService = GitStarsApplication.instance.gitStarsCounterComponent.getGitApi()
 
     override suspend fun getRepositoryStars(

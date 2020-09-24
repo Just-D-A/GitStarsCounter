@@ -14,7 +14,6 @@ import com.example.gitstarscounter.di.module.RoomModule
 
 class GitStarsApplication : Application(), Configuration.Provider {
     companion object {
-        private const val DATABASE_NAME = "database"
         lateinit var instance: GitStarsApplication
     }
 
@@ -32,7 +31,6 @@ class GitStarsApplication : Application(), Configuration.Provider {
             .build()
 
         appRoomDatabase = gitStarsCounterComponent.getRoomDatabase()
-        gitApi = gitStarsCounterComponent.getGitApi()
     }
 
     override fun getWorkManagerConfiguration() =

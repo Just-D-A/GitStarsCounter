@@ -3,13 +3,16 @@ package com.example.gitstarscounter.data.repository.remote
 import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.data.providers.login.LoginSearch
 import com.example.gitstarscounter.data.providers.star.StarsSearch
+import javax.inject.Inject
 
-object SearchProvider {
-    private val gitApiService = GitStarsApplication.instance.gitApi
-/*  maybe this is right??
+class SearchProvider {
     @Inject
-    lateinit var gitApiService2: GithubApiService
-*/
+    lateinit var gitApiService: GithubApiService
+
+    init {
+        GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
+    }
+
     fun provideSearchRepository(): LoginSearch {
         return LoginSearch(gitApiService)
     }

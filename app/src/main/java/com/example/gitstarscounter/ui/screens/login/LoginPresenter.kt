@@ -2,22 +2,23 @@ package com.example.gitstarscounter.ui.screens.login
 
 import android.content.Context
 import android.util.Log
+import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.R
+import com.example.gitstarscounter.data.providers.login.LoginRepository
+import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
 import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.data.providers.login.LoginRepository
-import com.example.gitstarscounter.ui.screens.base.BaseActivity.Companion.createLauncher
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.repository.RepositoryActivity
-import com.example.gitstarscounter.ui.screens.stars.StarsActivity
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity.Companion.createLauncher
 import com.omega_r.base.errors.AppException
 import com.omega_r.libs.omegatypes.Text
 import com.omegar.mvp.InjectViewState
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @InjectViewState
 class LoginPresenter : BasePresenter<LoginView>() {
@@ -31,24 +32,21 @@ class LoginPresenter : BasePresenter<LoginView>() {
     private var userName = ""
     private var isLimited = false
 
+    @Inject
+    lateinit var git: GithubApiService
+
     init {
-        launch {
-            val resourceRemote = repositoryLoginProvider.getLimitRemaining()
-            if (resourceRemote != null) {
-                onLimitRemaining(resourceRemote)
-            } else {
-                onLimitedError()
-            }
-        }
+        GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
     }
 
     fun responseToLoadRepositories(userName: String, pageNumber: Int) {
         viewState.endPagination()
         this.userName = userName
+        RequestLimit.writeLog()
         Log.d(TAG, userName)
         launch {
             if (userName != "") {
-                updateResourceLimit()
+                //  updateResourceLimit()
                 isLimited = false
                 try {
                     Log.d(TAG, "todo")
@@ -58,17 +56,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 } catch (e: AppException.NoData) {
                     onUnknownUser(R.string.unknown_user_text, false)
                 }
-            }
-        }
-    }
-
-    private fun updateResourceLimit() {
-        launch {
-            val resourceRemote = repositoryLoginProvider.getLimitRemaining()
-            if (resourceRemote != null) {
-                onLimitRemaining(resourceRemote)
-            } else {
-                onLimitedError()
             }
         }
     }
@@ -140,14 +127,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
         viewState.changeVisibilityOfNoInternetView(noInternetIsVisible && !isLimited)
         viewState.changeVisibilityOfLimitedView(isLimited)
         viewState.showMessage(Text.from(textResource))
-    }
-
-    private fun onLimitRemaining(resourceRemote: ResourceRemote) {
-        RequestLimit.setLimitResourceCount(resourceRemote.resources.core.remaining)
-        RequestLimit.writeLog()
-        if (!RequestLimit.hasRequest()) {
-            isLimited = true
-        }
     }
 
     private fun onGetMoreRepositories(repositoriesRemote: List<Repository>?) {

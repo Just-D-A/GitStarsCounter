@@ -39,7 +39,7 @@ object StarsConvector {
     }
 
     fun getStarListByMonth(monthNumber: Int): MutableList<Star> {
-        return starsInMonthMap.get(monthNumber)!!
+        return starsInMonthMap[monthNumber]!!
     }
 
     fun getMaxCountValue(): Double {

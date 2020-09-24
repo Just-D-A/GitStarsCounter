@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.OrientationHelper
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
-import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.mvp.presenter.InjectPresenter
@@ -24,7 +23,7 @@ class RepositoryActivity : BaseActivity(), RepositoryView, RepositoryAdapter.Del
     @InjectPresenter
     override lateinit var presenter: RepositoryPresenter
 
-    private lateinit var repositoryAdapter: RepositoryAdapter
+    lateinit var repositoryAdapter: RepositoryAdapter
 
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +42,11 @@ class RepositoryActivity : BaseActivity(), RepositoryView, RepositoryAdapter.Del
             }
 
         repositoryAdapter = RepositoryAdapter(this, onRepositoryClickListener)
+        //repositoryAdapter = OmegaAutoAdapter.create(R.layout.cell_repository, R.layout.item_right_menu, AutoBindModel<Repository>(), this)
 
         repositoryRecyclerView.adapter = repositoryAdapter
+
+
         repositoryRecyclerView.layoutManager =
             LinearLayoutManager(applicationContext, OrientationHelper.VERTICAL, false)
         repositoryRecyclerView.hasFixedSize()

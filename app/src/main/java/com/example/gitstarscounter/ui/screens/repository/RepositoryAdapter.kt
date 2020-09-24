@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.ui.screens.repository
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
+import com.omega_r.libs.omegarecyclerview.swipe_menu.SwipeViewHolder
 import de.hdodenhof.circleimageview.CircleImageView
 
 class RepositoryAdapter(
@@ -33,9 +33,10 @@ class RepositoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(R.layout.cell_repository, parent, false)
+        val itemMenuView = layoutInflater.inflate(R.layout.item_right_menu, parent, false)
         return RepositoryViewHolder(
-            parent.context,
             itemView,
+            itemMenuView,
             repositoryList,
             onRepositoryClickListener,
             deleteCallback
@@ -54,15 +55,15 @@ class RepositoryAdapter(
     }
 
     class RepositoryViewHolder(
-        val context: Context,
         itemView: View,
+        itemMenuView: View,
         repositoriesList: List<Repository>,
         onRepositoryClickListener: OnRepositoryClickListener,
         private val deleteCallback: DeleteCallback
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : SwipeViewHolder(itemView, itemMenuView) {
         init {
             //обработка клика
-            itemView.setOnClickListener {
+            itemMenuView.setOnClickListener {
                 val repository: Repository = repositoriesList[layoutPosition]
                 onRepositoryClickListener.onRepositoryClick(repository)
             }
@@ -78,7 +79,7 @@ class RepositoryAdapter(
             itemView.findViewById(R.id.text_view_repository_owner_name)
 
         private val deleteButton: Button =
-            itemView.findViewById(R.id.button_delete_repository)
+            itemMenuView.findViewById(R.id.button_delete_repository)
 
         fun bind(repository: Repository) {
             Glide
@@ -94,7 +95,6 @@ class RepositoryAdapter(
                 deleteCallback.onPressedDeleteButton(repository)
             }
         }
-
     }
 
     interface OnRepositoryClickListener {

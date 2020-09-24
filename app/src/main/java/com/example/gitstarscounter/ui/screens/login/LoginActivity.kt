@@ -21,6 +21,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.service.RateLimitWorker
 import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
@@ -68,7 +69,6 @@ class LoginActivity : BaseActivity(), LoginView {
             presenter.responseToLoadRepositories(userName, pageNumber)
             repositoriesAdapter.setRepositoriesList(mutableListOf())
             repositoryOmegaRecycleView.showProgressPagination()
-            setNewStarsFinder()
         }
 
         startRepositoryButton.setOnClickListener {
@@ -109,6 +109,8 @@ class LoginActivity : BaseActivity(), LoginView {
             false
         )
         repositoryOmegaRecycleView.hasFixedSize()
+
+        setNewStarsFinder()
     }
 
     override fun setupRepositoriesList(repositoriesList: List<Repository?>?) {
@@ -149,9 +151,13 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     private fun setNewStarsFinder() {
-        val work = PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.MINUTES)
+        val workStars = PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.HOURS)
             .build()
 
-        WorkManager.getInstance(this).enqueue(work)
+        val workLimit = PeriodicWorkRequestBuilder<RateLimitWorker>(1, TimeUnit.HOURS)
+            .build()
+
+        WorkManager.getInstance(this).enqueue(workLimit)
+        WorkManager.getInstance(this).enqueue(workStars)
     }
 }

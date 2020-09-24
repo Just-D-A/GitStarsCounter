@@ -1,7 +1,7 @@
 package com.example.gitstarscounter.data.providers.login
 
 import android.util.Log
-import com.example.gitstarscounter.LimitException
+import com.example.gitstarscounter.data.repository.remote.exception.LimitException
 import com.example.gitstarscounter.data.repository.local.providers.LocalLoginProvider
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
@@ -43,7 +43,7 @@ open class LoginRepository {
         }
     }
 
-    suspend fun getLimitRemaining(): ResourceRemote? {
+    suspend fun getLimitRemaining(): ResourceRemote {
         return remoteLoginProvider.getLimitRemaining()
     }
 
