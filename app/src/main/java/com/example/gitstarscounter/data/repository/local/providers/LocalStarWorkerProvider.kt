@@ -48,7 +48,6 @@ class LocalStarWorkerProvider {
                 )
             }
         }
-
         return newStars
     }
 }

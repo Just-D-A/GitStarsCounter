@@ -9,7 +9,6 @@ import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
 import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
-import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.repository.RepositoryActivity

@@ -24,6 +24,7 @@ import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.service.RateLimitWorker
 import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
+import com.omega_r.base.adapters.OmegaAutoAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
 import com.omegar.mvp.presenter.InjectPresenter
@@ -42,7 +43,7 @@ class LoginActivity : BaseActivity(), LoginView {
     private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
     private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
 
-    private lateinit var repositoriesAdapter: LoginAdapter
+    lateinit var loginAdapter: OmegaAutoAdapter<Repository, OmegaAutoAdapter.ViewHolder<Repository>>
     private var pageNumber = 1
 
     @InjectPresenter
@@ -54,20 +55,19 @@ class LoginActivity : BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener =
-            object : LoginAdapter.OnRepositoryClickListener {
-                override fun onRepositoryClick(repository: Repository) {
-                    presenter.responseToOpenStars(applicationContext, repository)
-                }
-            }
-        repositoriesAdapter = LoginAdapter(this, onRepositoryClickListener)
+        loginAdapter = OmegaAutoAdapter.create(
+            R.layout.cell_login,
+            { item -> presenter.responseToOpenStars(applicationContext, item) }
+        ) {
+            bind(R.id.text_view_login_repository_name, Repository::name)
+        }
 
         val accountNameEditText: EditText? = findViewById(R.id.text_view_login_repository_name)
         findButton.setOnClickListener {
             val userName = accountNameEditText?.text.toString().trim()
             pageNumber = 1
             presenter.responseToLoadRepositories(userName, pageNumber)
-            repositoriesAdapter.setRepositoriesList(mutableListOf())
+            loginAdapter.list = mutableListOf()
             repositoryOmegaRecycleView.showProgressPagination()
         }
 
@@ -101,7 +101,7 @@ class LoginActivity : BaseActivity(), LoginView {
                 return 5
             }
         })
-        repositoryOmegaRecycleView.adapter = repositoriesAdapter
+        repositoryOmegaRecycleView.adapter = loginAdapter
 
         repositoryOmegaRecycleView.layoutManager = LinearLayoutManager(
             applicationContext,
@@ -110,11 +110,11 @@ class LoginActivity : BaseActivity(), LoginView {
         )
         repositoryOmegaRecycleView.hasFixedSize()
 
-        setNewStarsFinder()
+        setNewStarsFinder()//start worker
     }
 
-    override fun setupRepositoriesList(repositoriesList: List<Repository?>?) {
-        repositoriesAdapter.setRepositoriesList(repositoriesList)
+    override fun setupRepositoriesList(repositoriesList: List<Repository>) {
+        loginAdapter.list = repositoriesList
         repositoryOmegaRecycleView.isVisible = true
     }
 
@@ -127,7 +127,7 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     override fun addPagination(repositoriesList: List<Repository>) {
-        repositoriesAdapter.addMoreRepositories(repositoriesList)
+        loginAdapter.list += repositoriesList
     }
 
     override fun endPagination() {
@@ -138,16 +138,6 @@ class LoginActivity : BaseActivity(), LoginView {
         findButton.performClick()
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content)?.windowToken, 0)
-    }
-
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        Log.d("Login", "onUserLeaveHint")
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        Log.d("LoginActivity", "Start Receiver")
     }
 
     private fun setNewStarsFinder() {

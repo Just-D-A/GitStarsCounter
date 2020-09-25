@@ -50,7 +50,11 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
             repositoryModelList.forEach {
                 Log.d(TAG, it.name)
                 if (RequestLimit.hasRequest()) {
-                    startLoadStars(it)
+                    try{
+                        startLoadStars(it)
+                    } catch (e: Exception) {
+                        error = true
+                    }
                 } else {
                     error = true
                 }

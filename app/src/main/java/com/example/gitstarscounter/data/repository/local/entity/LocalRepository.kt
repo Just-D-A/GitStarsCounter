@@ -10,9 +10,12 @@ import com.example.gitstarscounter.entity.Repository
 data class LocalRepository(
     @PrimaryKey
     override val id: Long,
+
     override val name: String,
+
     @ColumnInfo(name = "all_stars_counter")
     override val allStarsCount: Int?,
+
     @Embedded(prefix = "user_")
     override val user: LocalUser
 ) : Repository {

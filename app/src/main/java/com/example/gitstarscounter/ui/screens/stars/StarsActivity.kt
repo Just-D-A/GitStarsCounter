@@ -37,12 +37,12 @@ class StarsActivity : BaseActivity(), StarsView {
                 KEY_REPOSITORY put repositoryRemote as RemoteRepository
             )
     }
-
-    private val graphGraphView: GraphView by bind(R.id.graph_view_stars)
+    
+    private val graphGraphView: GraphView by bind(R.id.graph_view_stars)// need "by" under "by" formatting??
+    private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
     private val yearTextView: TextView by bind(R.id.text_view_selected_year)
     private val moreYearButton: Button by bind(R.id.button_more_year)
     private val lessYearButton: Button by bind(R.id.button_less_year)
-    private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
 
     private var hasInternet = true
 

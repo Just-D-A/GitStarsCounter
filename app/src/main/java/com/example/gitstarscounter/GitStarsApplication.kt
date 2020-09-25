@@ -2,14 +2,12 @@ package com.example.gitstarscounter
 
 import android.app.Application
 import android.util.Log
-import androidx.room.Room
 import androidx.work.Configuration
 import com.example.gitstarscounter.data.repository.local.AppRoomDatabase
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.di.DaggerGitStarsCounterComponent
 import com.example.gitstarscounter.di.GitStarsCounterComponent
 import com.example.gitstarscounter.di.module.AppModule
-import com.example.gitstarscounter.di.module.GitApiModule
 import com.example.gitstarscounter.di.module.RoomModule
 
 class GitStarsApplication : Application(), Configuration.Provider {

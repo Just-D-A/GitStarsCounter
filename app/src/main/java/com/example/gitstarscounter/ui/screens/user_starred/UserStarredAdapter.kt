@@ -65,6 +65,7 @@ class UserStarredAdapter(val context: Context) :
         RecyclerView.ViewHolder(itemView) {
         private var userNameTextView: TextView =
             itemView.findViewById(R.id.text_view_user_name)
+
         private var userPhotoImageView: CircleImageView =
             itemView.findViewById(R.id.circle_image_view_user_photo)
 

@@ -6,9 +6,9 @@ import androidx.room.TypeConverters
 import com.example.gitstarscounter.data.repository.local.convectors.DateConverter
 import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 import com.example.gitstarscounter.data.repository.local.entity.LocalStar
-import com.example.gitstarscounter.data.repository.local.entity.database.RepositoryDao
-import com.example.gitstarscounter.data.repository.local.entity.database.StarDao
-import com.example.gitstarscounter.data.repository.local.entity.database.UserDao
+import com.example.gitstarscounter.data.repository.local.dao.RepositoryDao
+import com.example.gitstarscounter.data.repository.local.dao.StarDao
+import com.example.gitstarscounter.data.repository.local.dao.UserDao
 import com.example.gitstarscounter.data.repository.local.entity.LocalUser
 
 @TypeConverters(DateConverter::class)

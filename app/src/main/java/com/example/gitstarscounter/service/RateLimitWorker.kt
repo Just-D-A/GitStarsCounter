@@ -28,7 +28,12 @@ class RateLimitWorker(val context: Context, workerParams: WorkerParameters) :
 
     private fun updateRateLimit() {
         GlobalScope.launch {
-            RequestLimit.setLimitResourceCount(LoginRepository().getLimitRemaining().resources.core.remaining)
+            try {
+                val limit = LoginRepository().getLimitRemaining().resources.core.remaining
+                RequestLimit.setLimitResourceCount(limit)
+            } catch (e: Exception) {
+                Log.d(TAG, "NO_INTERNET")
+            }
         }
     }
 }

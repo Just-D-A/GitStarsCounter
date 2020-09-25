@@ -14,8 +14,10 @@ data class LocalStar(
     @PrimaryKey
     @ColumnInfo(name = "starred_at")
     override val starredAt: Date,
+
     @Embedded(prefix = "user_")
     override val user: LocalUser,
+
     @Embedded(prefix = "repository_")
     val repository: LocalRepository
 ) : Star {
