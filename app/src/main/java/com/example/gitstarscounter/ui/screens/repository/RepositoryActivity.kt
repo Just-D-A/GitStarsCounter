@@ -11,8 +11,11 @@ import com.example.gitstarscounter.entity.User
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.omega_r.base.adapters.OmegaAutoAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
+import com.omega_r.libs.omegatypes.image.Image
+import com.omega_r.libs.omegatypes.image.from
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.mvp.presenter.InjectPresenter
+import org.w3c.dom.Text
 
 class RepositoryActivity : BaseActivity(), RepositoryView {
     companion object {
@@ -42,6 +45,7 @@ class RepositoryActivity : BaseActivity(), RepositoryView {
             callback = { item -> presenter.responseToOpenStars(applicationContext, item) }
         ) {
             bind(R.id.text_view_repository_name, Repository::name)
+            bindString(R.id.text_view_repository_owner_name, Repository::user, User::name)
             bindImage(R.id.circle_image_view_repository_image, Repository::user, User::avatar)
 
             bindClick(
@@ -57,6 +61,9 @@ class RepositoryActivity : BaseActivity(), RepositoryView {
     }
 
     override fun setRepositoryList(repositoryList: List<Repository>) {
+        repositoryList.forEach {
+            it.user.avatar?.getDrawable(applicationContext)
+        }
         repositoryAdapter.list = repositoryList
     }
 

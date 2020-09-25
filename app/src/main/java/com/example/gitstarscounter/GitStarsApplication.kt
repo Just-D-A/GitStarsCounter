@@ -9,6 +9,8 @@ import com.example.gitstarscounter.di.DaggerGitStarsCounterComponent
 import com.example.gitstarscounter.di.GitStarsCounterComponent
 import com.example.gitstarscounter.di.module.AppModule
 import com.example.gitstarscounter.di.module.RoomModule
+import com.omega_r.libs.omegatypes.image.GlideImagesProcessor
+import com.omega_r.libs.omegatypes.image.ImageProcessors
 
 class GitStarsApplication : Application(), Configuration.Provider {
     companion object {
@@ -22,6 +24,8 @@ class GitStarsApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        GlideImagesProcessor.setAsCurrentImagesProcessor()
 
         gitStarsCounterComponent = DaggerGitStarsCounterComponent.builder()
             .appModule(AppModule(this))
