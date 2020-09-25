@@ -1,7 +1,7 @@
 package com.example.gitstarscounter.data.providers.login
 
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
 import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
 
 class LoginSearch(private val apiService: GithubApiService) {

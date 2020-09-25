@@ -35,6 +35,8 @@ class LoginActivity : BaseActivity(), LoginView {
     companion object {
         const val LABEL = "user_name"
         const val TAG = "LoginActivity"
+        const val PAGINATION_TAG = "PAGINATION"
+        const val REPEAT_TIME: Long = 1
     }
 
     private val findButton: Button by bind(R.id.button_find_rep)
@@ -43,7 +45,7 @@ class LoginActivity : BaseActivity(), LoginView {
     private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
     private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
 
-    lateinit var loginAdapter: OmegaAutoAdapter<Repository, OmegaAutoAdapter.ViewHolder<Repository>>
+    private lateinit var loginAdapter: OmegaAutoAdapter<Repository, OmegaAutoAdapter.ViewHolder<Repository>>
     private var pageNumber = 1
 
     @InjectPresenter
@@ -91,13 +93,13 @@ class LoginActivity : BaseActivity(), LoginView {
         //OMEGA_R PAGGINATION
         repositoryOmegaRecycleView.setPaginationCallback(object : OnPageRequestListener {
             override fun onPageRequest(page: Int) {
-                Log.d("PAGGINATION", "onPageRequest()")// You can load data inside this callback
+                Log.d(PAGINATION_TAG, "onPageRequest()")// You can load data inside this callback
                 pageNumber++
                 presenter.responseToLoadMoreRepositories(pageNumber)
             }
 
             override fun getPagePreventionForEnd(): Int {
-                Log.d("PAGGINATION", "getPagePreventionForEnd()")
+                Log.d(PAGINATION_TAG, "getPagePreventionForEnd()")
                 return 5
             }
         })
@@ -137,14 +139,17 @@ class LoginActivity : BaseActivity(), LoginView {
     private fun hideKeyboard() {
         findButton.performClick()
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content)?.windowToken, 0)
+        imm.hideSoftInputFromWindow(
+            findViewById<View>(android.R.id.content)?.windowToken,
+            0
+        )//is MAGIC??
     }
 
     private fun setNewStarsFinder() {
-        val workStars = PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.HOURS)
+        val workStars = PeriodicWorkRequestBuilder<StarWorker>(REPEAT_TIME, TimeUnit.HOURS)
             .build()
 
-        val workLimit = PeriodicWorkRequestBuilder<RateLimitWorker>(1, TimeUnit.HOURS)
+        val workLimit = PeriodicWorkRequestBuilder<RateLimitWorker>(REPEAT_TIME, TimeUnit.HOURS)
             .build()
 
         WorkManager.getInstance(this).enqueue(workLimit)

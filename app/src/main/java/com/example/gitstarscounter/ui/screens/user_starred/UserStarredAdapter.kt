@@ -71,11 +71,11 @@ class UserStarredAdapter(val context: Context) :
 
         @SuppressLint("SetTextI18n")
         fun bind(user: User) {
-            Glide
-                .with(context)
-                .load(user.avatarUrl)
-                .centerCrop()
-                .into(userPhotoImageView)
+            /*     Glide
+                     .with(context)
+                     .load(user.avatarUrl)
+                     .centerCrop()
+                     .into(userPhotoImageView)*/
             userNameTextView.text = user.name
         }
     }

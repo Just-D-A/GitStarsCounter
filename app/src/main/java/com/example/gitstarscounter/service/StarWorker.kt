@@ -15,8 +15,9 @@ import androidx.work.WorkerParameters
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.repository.local.providers.LocalStarWorkerProvider
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteUser
 import com.example.gitstarscounter.data.repository.remote.providers.RemoteStarWorkerProvider
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
@@ -31,6 +32,8 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
         private const val CHANNEL_ID = "com.example.gitstarscounter.service"
         private const val CHANNEL_NAME = "Channel"
         private const val MAX_ANSWERS_COUNT_OF_REQUEST = 100
+        private const val FIRST_PART_OF_NOTIFICATION_MESSAGE = "Find "
+        private const val SECOND_PART_OF_NOTIFICATION_MESSAGE = " NEW stars in repository: "
     }
 
     private val serviceRemoteProvider = RemoteStarWorkerProvider()
@@ -50,7 +53,7 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
             repositoryModelList.forEach {
                 Log.d(TAG, it.name)
                 if (RequestLimit.hasRequest()) {
-                    try{
+                    try {
                         startLoadStars(it)
                     } catch (e: Exception) {
                         error = true
@@ -67,15 +70,18 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
         newStars: MutableList<com.example.gitstarscounter.entity.Star>,
         repository: Repository
     ) {
-        Log.d(TAG, "FIND ${newStars.size} NEW STARS IN REP: ${repository.name}") // NO MAGIC
+        Log.d(
+            TAG,
+            FIRST_PART_OF_NOTIFICATION_MESSAGE + newStars.size.toString() + SECOND_PART_OF_NOTIFICATION_MESSAGE + repository.name
+        )
         if (newStars.size > 0) {
-            val channelId = createNotificationChannel(CHANNEL_ID, CHANNEL_NAME)
+            val channelId = createNotificationChannel()
             val launcher = StarsActivity.createLauncher(
                 repository.user.name, RemoteRepository(
                     repository.id, repository.name, repository.allStarsCount, RemoteUser(
                         repository.user.id,
                         repository.user.name,
-                        repository.user.avatarUrl
+                        repository.user.avatar
                     )
                 )
             )
@@ -86,7 +92,8 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
                 applicationContext, channelId
             )
                 .setContentTitle(R.string.title_notification_new_stars.toString())//Star
-                .setContentText("У репозитория ${repository.name} появилось ${newStars.size} новых звезд") // MAGIC ENDS HERE
+                //can create fun getNotificationString(size, repositoryName)
+                .setContentText(FIRST_PART_OF_NOTIFICATION_MESSAGE + newStars.size.toString() + SECOND_PART_OF_NOTIFICATION_MESSAGE + repository.name)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -99,7 +106,6 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
     }
 
     private suspend fun startLoadStars(repositoryRemote: Repository) {
-        Log.d(TAG, repositoryRemote.name + "start load")
         val pageNumber = 1
         val remoteStarList = serviceRemoteProvider.loadStars(
             repositoryRemote.user.name,
@@ -109,14 +115,14 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
         needMore(
             repositoryRemote,
             pageNumber,
-            remoteStarList as MutableList<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>
+            remoteStarList as MutableList<RemoteStar>
         )
     }
 
     private fun needMore(
         repository: Repository,
         pageNumber: Int,
-        listRemoteStar: MutableList<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>
+        listRemoteStar: MutableList<RemoteStar>
     ) {
         GlobalScope.launch {
             if (listRemoteStar.size == MAX_ANSWERS_COUNT_OF_REQUEST) {
@@ -140,7 +146,7 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
     private suspend fun loadMoreStars(
         pageNumber: Int,
         repositoryRemote: Repository
-    ): List<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar> {
+    ): List<RemoteStar> {
         return serviceRemoteProvider.loadStars(
             repositoryRemote.user.name,
             repositoryRemote,
@@ -148,15 +154,13 @@ class StarWorker(val context: Context, workerParams: WorkerParameters) :
         )!!
     }
 
-    private fun createNotificationChannel(
-        channelId: String,
-        channelName: String
-    ): String {
-        val chan = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+    private fun createNotificationChannel(): String {
+        val chan =
+            NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
         chan.lightColor = Color.BLUE
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         val service = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         service.createNotificationChannel(chan)
-        return channelId
+        return CHANNEL_ID
     }
 }

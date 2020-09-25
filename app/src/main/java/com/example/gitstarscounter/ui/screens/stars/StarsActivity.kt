@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
@@ -37,7 +37,7 @@ class StarsActivity : BaseActivity(), StarsView {
                 KEY_REPOSITORY put repositoryRemote as RemoteRepository
             )
     }
-    
+
     private val graphGraphView: GraphView by bind(R.id.graph_view_stars)// need "by" under "by" formatting??
     private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
     private val yearTextView: TextView by bind(R.id.text_view_selected_year)

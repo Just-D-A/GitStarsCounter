@@ -14,7 +14,6 @@ object RequestLimit {
         if (limitResourceCount > 0) {
             limitResourceCount--
         }
-
         return limitResourceCount > 0
     }
 

@@ -1,4 +1,4 @@
-package com.example.gitstarscounter.data.repository.remote.entity
+package com.example.gitstarscounter.data.repository.remote.entity.remote
 
 import com.example.gitstarscounter.entity.Repository
 import com.squareup.moshi.Json

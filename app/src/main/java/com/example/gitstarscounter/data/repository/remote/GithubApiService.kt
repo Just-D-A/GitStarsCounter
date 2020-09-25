@@ -1,7 +1,7 @@
 package com.example.gitstarscounter.data.repository.remote
 
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
 import com.example.gitstarscounter.data.repository.remote.entity.resource_remote.ResourceRemote
 import retrofit2.http.GET
 import retrofit2.http.Header

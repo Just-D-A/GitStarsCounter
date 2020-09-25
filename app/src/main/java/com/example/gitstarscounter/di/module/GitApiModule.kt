@@ -1,6 +1,8 @@
 package com.example.gitstarscounter.di.module
 
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
+import com.omega_r.base.remote.adapters.ImageAdapter
+import com.omega_r.libs.omegatypes.image.Image
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -28,8 +30,9 @@ class GitApiModule {
     @Provides
     fun moshi(): Moshi {
         return Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
             .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())//etc
+            .add(Image::class.java, ImageAdapter().nullSafe())
+            .add(KotlinJsonAdapterFactory())
             .build()
     }
 

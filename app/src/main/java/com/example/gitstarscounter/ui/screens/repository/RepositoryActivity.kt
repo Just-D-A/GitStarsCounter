@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
-import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.entity.User
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.omega_r.base.adapters.OmegaAutoAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
@@ -42,12 +42,7 @@ class RepositoryActivity : BaseActivity(), RepositoryView {
             callback = { item -> presenter.responseToOpenStars(applicationContext, item) }
         ) {
             bind(R.id.text_view_repository_name, Repository::name)
-            //bind(R.id.text_view_repository_owner_name, Repository::user::name)
-            val image = Glide
-                .with(applicationContext)
-                .load(R.drawable.repository_img)
-                .centerCrop()
-            //bindImage(R.id.circle_image_view_repository_image, )
+            bindImage(R.id.circle_image_view_repository_image, Repository::user, User::avatar)
 
             bindClick(
                 R.id.button_delete_repository,

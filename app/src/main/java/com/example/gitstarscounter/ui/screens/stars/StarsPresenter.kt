@@ -1,10 +1,10 @@
 package com.example.gitstarscounter.ui.screens.stars
 
 import android.util.Log
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteUser
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.data.providers.star.StarRepository
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.jjoe64.graphview.series.DataPoint
@@ -77,7 +77,7 @@ class StarsPresenter : BasePresenter<StarsView>() {
                     user = RemoteUser(
                         id = it.user.id,
                         name = it.user.name,
-                        avatarUrl = it.user.avatarUrl
+                        avatar = it.user.avatar
                     )
                 )
             )

@@ -7,8 +7,8 @@ import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.providers.login.LoginRepository
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteUser
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteUser
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.repository.RepositoryActivity
@@ -87,7 +87,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 user = RemoteUser(
                     repository.user.id,
                     repository.user.name,
-                    repository.user.avatarUrl
+                    repository.user.avatar
                 )
             )
         )
@@ -103,17 +103,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
         if (repositoryRemoteList.size < MAX_PACKAGE_ELEMENTS_COUNT) {
             viewState.endPagination()
         }
-    }
-
-    private fun onError() {
-        Log.d(TAG, "onError complite")
-        viewState.setWaiting(false)
-        viewState.endPagination()
-        isLimited = false
-    }
-
-    private fun onLimitedError() {
-        isLimited = false
     }
 
     fun responseToStartRepositoryActivity(context: Context) {

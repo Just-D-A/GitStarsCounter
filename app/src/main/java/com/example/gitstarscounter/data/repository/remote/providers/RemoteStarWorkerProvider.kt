@@ -1,7 +1,7 @@
 package com.example.gitstarscounter.data.repository.remote.providers
 
 import com.example.gitstarscounter.data.repository.remote.SearchProvider
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteStar
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
 import com.example.gitstarscounter.entity.Repository
 
 class RemoteStarWorkerProvider {

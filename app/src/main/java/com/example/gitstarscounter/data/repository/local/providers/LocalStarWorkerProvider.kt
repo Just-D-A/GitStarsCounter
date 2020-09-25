@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 import com.example.gitstarscounter.data.repository.local.entity.LocalStar
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
 import com.example.gitstarscounter.entity.Repository
 
 class LocalStarWorkerProvider {
@@ -30,7 +31,7 @@ class LocalStarWorkerProvider {
     }
 
     suspend fun findNewStars(
-        listFromApiRemoteStar: List<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>,
+        listFromApiRemoteStar: List<RemoteStar>,
         repository: Repository
     ): MutableList<com.example.gitstarscounter.entity.Star> {
         val newStars = mutableListOf<com.example.gitstarscounter.entity.Star>()
