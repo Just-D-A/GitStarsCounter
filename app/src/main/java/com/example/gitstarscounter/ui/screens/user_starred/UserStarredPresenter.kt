@@ -5,7 +5,7 @@ import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.omegar.mvp.InjectViewState
 
 @InjectViewState
-class UserStarredPresenter() : BasePresenter<UserStarredView>() {
+class UserStarredPresenter : BasePresenter<UserStarredView>() {
     fun loadUserList(remoteStarList: MutableList<Star>) {
         viewState.setWaiting(true)
         viewState.setupUsersList(remoteStarList)

@@ -15,8 +15,6 @@ import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.OrientationHelper
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.gitstarscounter.R
@@ -33,10 +31,10 @@ import java.util.concurrent.TimeUnit
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
 class LoginActivity : BaseActivity(), LoginView {
     companion object {
-        const val LABEL = "user_name"
-        const val TAG = "LoginActivity"
-        const val PAGINATION_TAG = "PAGINATION"
-        const val REPEAT_TIME: Long = 1
+        private const val LABEL = "user_name"
+        private const val TAG = "LoginActivity"
+        private const val PAGINATION_TAG = "PAGINATION"
+        private const val REPEAT_TIME: Long = 1
     }
 
     private val findButton: Button by bind(R.id.button_find_rep)
@@ -44,6 +42,7 @@ class LoginActivity : BaseActivity(), LoginView {
     private val repositoryOmegaRecycleView: OmegaRecyclerView by bind(R.id.recycler_repositories)
     private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
     private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
+    private val accountNameEditText: EditText by bind(R.id.edit_text_view_login_repository_name)
 
     private lateinit var loginAdapter: OmegaAutoAdapter<Repository, OmegaAutoAdapter.ViewHolder<Repository>>
     private var pageNumber = 1
@@ -61,34 +60,29 @@ class LoginActivity : BaseActivity(), LoginView {
             R.layout.cell_login,
             { item -> presenter.responseToOpenStars(applicationContext, item) }
         ) {
-            bind(R.id.text_view_login_repository_name, Repository::name)
+            bind(R.id.text_view_cell_login_repository_name, Repository::name)
         }
 
-        val accountNameEditText: EditText? = findViewById(R.id.text_view_login_repository_name)
         findButton.setOnClickListener {
-            val userName = accountNameEditText?.text.toString().trim()
-            pageNumber = 1
-            presenter.responseToLoadRepositories(userName, pageNumber)
-            loginAdapter.list = mutableListOf()
-            repositoryOmegaRecycleView.showProgressPagination()
+            loadRepositories()
         }
 
         startRepositoryButton.setOnClickListener {
-            presenter.responseToStartRepositoryActivity(this)
+            presenter.responseToStartRepositoryActivity()
         }
 
-        accountNameEditText?.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER)
-        accountNameEditText?.setOnEditorActionListener(
-            OnEditorActionListener { v, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
+        //accountNameEditText.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER)
+     /*   accountNameEditText.setOnEditorActionListener(
+            OnEditorActionListener { _, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
                 // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
                 if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN
                     && event.keyCode == KeyEvent.KEYCODE_ENTER
                 ) {
-                    hideKeyboard()
+                    loadRepositories()
                     return@OnEditorActionListener true
                 }
                 false
-            })
+            })*/
 
         //OMEGA_R PAGGINATION
         repositoryOmegaRecycleView.setPaginationCallback(object : OnPageRequestListener {
@@ -105,14 +99,15 @@ class LoginActivity : BaseActivity(), LoginView {
         })
         repositoryOmegaRecycleView.adapter = loginAdapter
 
-        repositoryOmegaRecycleView.layoutManager = LinearLayoutManager(
-            applicationContext,
-            OrientationHelper.VERTICAL,
-            false
-        )
-        repositoryOmegaRecycleView.hasFixedSize()
-
         setNewStarsFinder()//start worker
+    }
+
+    private fun loadRepositories() {
+        val userName = accountNameEditText.text.toString().trim()
+        pageNumber = 1
+        presenter.responseToLoadRepositories(userName, pageNumber)
+        loginAdapter.list = mutableListOf()
+        repositoryOmegaRecycleView.showProgressPagination()
     }
 
     override fun setupRepositoriesList(repositoriesList: List<Repository>) {
@@ -142,7 +137,7 @@ class LoginActivity : BaseActivity(), LoginView {
         imm.hideSoftInputFromWindow(
             findViewById<View>(android.R.id.content)?.windowToken,
             0
-        )//is MAGIC??
+        )
     }
 
     private fun setNewStarsFinder() {

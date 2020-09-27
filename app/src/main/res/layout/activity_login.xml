@@ -68,11 +68,10 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/text_view_login_repository_name"
+            android:id="@+id/edit_text_view_login_repository_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-
             android:hint="@string/hint_user_name"
             android:imeOptions="actionSearch"
             android:singleLine="true"

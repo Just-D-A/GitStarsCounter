@@ -24,7 +24,6 @@ import com.omegar.mvp.presenter.InjectPresenter
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : BaseActivity(), StarsView {
     companion object {
-        private const val BACK_BUTTON_ID = 16908332
         private const val KEY_USER_NAME = "userName"
         private const val KEY_REPOSITORY = "repository"
 
@@ -113,23 +112,9 @@ class StarsActivity : BaseActivity(), StarsView {
         UserStarredActivity.createLauncher(starsInMonthList, hasInternet).launch(this)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when (item.itemId) {
-            R.id.home -> {
-                this.finish()
-                true
-            }
-
-            BACK_BUTTON_ID -> {
-                this.finish()
-                true
-            }
-
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     @SuppressLint("SetTextI18n")

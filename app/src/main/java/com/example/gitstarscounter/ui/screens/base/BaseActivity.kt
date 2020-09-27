@@ -8,7 +8,6 @@ import com.omegar.libs.omegalaunchers.tools.put
 
 @OmegaContentView(R.layout.activity_login)
 abstract class BaseActivity : OmegaActivity(), BaseView {
-
     companion object {
         private const val EXTRA_TITLE = "title"
 

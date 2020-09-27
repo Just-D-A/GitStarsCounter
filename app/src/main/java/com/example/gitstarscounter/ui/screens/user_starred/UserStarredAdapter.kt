@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.entity.User
@@ -17,9 +16,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class UserStarredAdapter(val context: Context) :
     OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    companion object {
-        private const val EMPTY_STRING = ""
-    }
 
     private var usersList: ArrayList<User> = ArrayList()
     private var sourceList: ArrayList<User> = ArrayList()
@@ -31,7 +27,7 @@ class UserStarredAdapter(val context: Context) :
         }
         sourceList.clear()
         sourceList.addAll(addedUserList)
-        filter(EMPTY_STRING)
+        usersList.addAll(sourceList)
     }
 
     fun filter(query: String) {
@@ -47,7 +43,7 @@ class UserStarredAdapter(val context: Context) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(R.layout.cell_user, parent, false)
-        return UsersViewHolder(itemView, context)
+        return UsersViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -61,7 +57,7 @@ class UserStarredAdapter(val context: Context) :
         return usersList.count()
     }
 
-    class UsersViewHolder(itemView: View, val context: Context) :
+    class UsersViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         private var userNameTextView: TextView =
             itemView.findViewById(R.id.text_view_user_name)

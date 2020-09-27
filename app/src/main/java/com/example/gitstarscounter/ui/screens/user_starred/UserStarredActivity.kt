@@ -25,6 +25,21 @@ import java.io.Serializable
 
 @Suppress("DEPRECATED_IDENTITY_EQUALS")
 class UserStarredActivity : BaseActivity(), UserStarredView {
+    companion object {
+        private const val KEY_STAR_LIST = "starsList"
+        private const val KEY_HAS_INTERNET = "hasInternet"
+
+        fun createLauncher(
+            starsList: List<Star>,
+            noInternetVisible: Boolean
+        ) =
+            createActivityLauncher(
+                KEY_STAR_LIST put ArrayList(starsList),
+                KEY_HAS_INTERNET put noInternetVisible
+            )
+
+    }
+
     private val searchEditText: EditText by bind(R.id.edit_text_user_name)
     private val usersRecycleView: RecyclerView by bind(R.id.recycler_view_users)
 
@@ -32,21 +47,6 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
 
     @InjectPresenter
     override lateinit var presenter: UserStarredPresenter
-
-    companion object {
-        private const val BACK_BUTTON_ID = 16908332
-        private const val KEY_STAR_LIST = "starsList"
-        private const val KEY_HAS_INTERNET = "hasInternet"
-
-        fun createLauncher(
-            starsList: MutableList<Star>,
-            noInternetVisible: Boolean
-        ) =
-            createActivityLauncher(
-                KEY_STAR_LIST put starsList as Serializable,
-                KEY_HAS_INTERNET put noInternetVisible
-            )
-    }
 
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,18 +72,12 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
             userStarredAdapter.filter(charSequence.toString())
         })
 
-        searchEditText.setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER)
-        searchEditText.setOnEditorActionListener(
-            TextView.OnEditorActionListener { v, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
-                // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN
-                    && event.keyCode == KeyEvent.KEYCODE_ENTER
-                ) {
-                    hideKeyboard()
-                    return@OnEditorActionListener true
-                }
-                false
-            })
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun setupUsersList(remoteStarList: MutableList<Star>) {
@@ -94,24 +88,5 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
     private fun hideKeyboard() {
         val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content)?.windowToken, 0)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when (item.itemId) {
-            R.id.home -> {
-                this.finish()
-                true
-            }
-
-            BACK_BUTTON_ID -> {
-                this.finish()
-                true
-            }
-
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
     }
 }

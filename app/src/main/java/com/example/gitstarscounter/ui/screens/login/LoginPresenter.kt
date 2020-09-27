@@ -105,8 +105,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
         }
     }
 
-    fun responseToStartRepositoryActivity(context: Context) {
-        RepositoryActivity.createLauncher().launch(context)
+    fun responseToStartRepositoryActivity() {
+        RepositoryActivity.createLauncher().launch()
     }
 
     private fun onUnknownUser(textResource: Int, noInternetIsVisible: Boolean) {

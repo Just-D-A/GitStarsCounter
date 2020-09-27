@@ -19,7 +19,6 @@ import org.w3c.dom.Text
 
 class RepositoryActivity : BaseActivity(), RepositoryView {
     companion object {
-        private const val BACK_BUTTON_ID = 16908332
         fun createLauncher() = createActivityLauncher()
     }
 
@@ -67,22 +66,8 @@ class RepositoryActivity : BaseActivity(), RepositoryView {
         repositoryAdapter.list = repositoryList
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when (item.itemId) {
-            R.id.home -> {
-                this.finish()
-                true
-            }
-
-            BACK_BUTTON_ID -> {
-                this.finish()
-                true
-            }
-
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
