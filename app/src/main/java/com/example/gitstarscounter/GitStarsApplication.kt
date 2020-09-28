@@ -17,8 +17,6 @@ class GitStarsApplication : Application(), Configuration.Provider {
         lateinit var instance: GitStarsApplication
     }
 
-    lateinit var appRoomDatabase: AppRoomDatabase // to injecting
-    lateinit var gitApi: GithubApiService // to injecting
     lateinit var gitStarsCounterComponent: GitStarsCounterComponent
 
     override fun onCreate() {
@@ -31,8 +29,6 @@ class GitStarsApplication : Application(), Configuration.Provider {
             .appModule(AppModule(this))
             .roomModule(RoomModule(this))
             .build()
-
-        appRoomDatabase = gitStarsCounterComponent.getRoomDatabase()
     }
 
     override fun getWorkManagerConfiguration() =

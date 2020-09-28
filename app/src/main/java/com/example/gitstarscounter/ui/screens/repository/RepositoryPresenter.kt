@@ -1,9 +1,6 @@
 package com.example.gitstarscounter.ui.screens.repository
 
-import android.content.Context
 import com.example.gitstarscounter.data.repository.local.providers.LocalRepositoryProvider
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteUser
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
@@ -19,7 +16,7 @@ class RepositoryPresenter : BasePresenter<RepositoryView>() {
     }
 
     private fun setRepositoryList() {
-        launch {
+        launchWithWaiting {
             val repositoryList = localRepositoryProvider.getAllRepositories()
             viewState.setRepositoryList(repositoryList)
         }
@@ -32,20 +29,7 @@ class RepositoryPresenter : BasePresenter<RepositoryView>() {
         }
     }
 
-    fun responseToOpenStars(context: Context, repository: Repository) {
-        StarsActivity.createLauncher(
-            repository.user.name,
-            RemoteRepository(
-                id = repository.id,
-                name = repository.name,
-                allStarsCount = repository.allStarsCount,
-                user = RemoteUser(
-                    repository.user.id,
-                    repository.user.name,
-                    repository.user.avatar
-                )
-            )
-        )
-            .launch(context)
+    fun responseToOpenStars(repository: Repository) {
+        StarsActivity.createLauncher(repository.user.name, repository).launch()
     }
 }

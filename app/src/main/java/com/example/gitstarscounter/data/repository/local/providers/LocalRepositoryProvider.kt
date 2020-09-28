@@ -5,7 +5,7 @@ import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 import com.example.gitstarscounter.entity.Repository
 
 class LocalRepositoryProvider {
-    private val database = GitStarsApplication.instance.appRoomDatabase
+    private val database = GitStarsApplication.instance.gitStarsCounterComponent.getRoomDatabase()
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
 

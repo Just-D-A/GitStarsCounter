@@ -8,13 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.entity.User
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
+import com.omega_r.libs.omegatypes.image.UrlImage
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserStarredAdapter(val context: Context) :
+class UserStarredAdapter :
     OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var usersList: ArrayList<User> = ArrayList()
@@ -67,11 +69,12 @@ class UserStarredAdapter(val context: Context) :
 
         @SuppressLint("SetTextI18n")
         fun bind(user: User) {
-            /*     Glide
-                     .with(context)
-                     .load(user.avatarUrl)
+                 Glide
+                     .with(itemView.context)
+                     .load((user.avatar as UrlImage).url)
                      .centerCrop()
-                     .into(userPhotoImageView)*/
+                     .into(userPhotoImageView)
+
             userNameTextView.text = user.name
         }
     }

@@ -10,10 +10,10 @@
         tools:ignore="MissingConstraints">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circle_image_view_login_book"
             android:layout_width="@dimen/image_size"
             android:layout_height="@dimen/image_size"
             android:layout_gravity="center_vertical"
+            android:src="@drawable/repository_img"
             android:layout_margin="16dp" />
 
         <TextView

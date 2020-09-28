@@ -16,7 +16,7 @@ interface LoginView : BaseView {
     fun changeVisibilityOfLimitedView(visible: Boolean)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun addPagination(repositoriesList: List<Repository>)
+    fun addRepositoriesToList(repositoriesList: List<Repository>)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun endPagination()

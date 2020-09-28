@@ -15,7 +15,7 @@ class LocalLoginProvider : LoginProvider {
         private const val TAG = "LoginLocalProvider"
     }
 
-    private val database = GitStarsApplication.instance.appRoomDatabase
+    private val database = GitStarsApplication.instance.gitStarsCounterComponent.getRoomDatabase()
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
 

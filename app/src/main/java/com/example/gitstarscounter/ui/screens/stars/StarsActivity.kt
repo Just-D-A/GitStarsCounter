@@ -3,37 +3,46 @@ package com.example.gitstarscounter.ui.screens.stars
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
-import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.libs.omegalaunchers.tools.put
 import com.omegar.mvp.presenter.InjectPresenter
+import com.omegar.mvp.presenter.ProvidePresenter
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : BaseActivity(), StarsView {
     companion object {
-        private const val KEY_USER_NAME = "userName"
-        private const val KEY_REPOSITORY = "repository"
+        private const val USER_NAME_EXTRA = "userName"
+        private const val REPOSITORY_EXTRA = "repository"
+
+        //values for graph coordinates
+        private const val MAX_X_VALUE = 12.5 //as month count + 0.5
+        private const val MIN_X_VALUE = 0.0
+        private const val MIN_Y_VALUE = 0.0
+        private const val SERIES_SPACING = 50
+
+        //values for colorful graph
+        private const val MAX_COLOR_VALUE = 255
+        private const val BLUE_VALUE = 100
+        private const val FIRST_DIVIDER = 4
+        private const val SECOND_DIVIDER = 6
 
         fun createLauncher(
             userName: String,
-            repositoryRemote: Repository
+            repository: Repository
         ) =
             createActivityLauncher(
-                KEY_USER_NAME put userName,
-                KEY_REPOSITORY put repositoryRemote as RemoteRepository
+                USER_NAME_EXTRA put userName,
+                REPOSITORY_EXTRA put repository
             )
     }
 
@@ -48,15 +57,17 @@ class StarsActivity : BaseActivity(), StarsView {
     @InjectPresenter
     override lateinit var presenter: StarsPresenter
 
+    @ProvidePresenter
+    fun provideDetailsPresenter(): StarsPresenter {
+        return StarsPresenter(
+            intent.getStringExtra(USER_NAME_EXTRA),
+            intent.getSerializableExtra(REPOSITORY_EXTRA) as Repository
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
-        presenter.setParams(
-            intent.getStringExtra(KEY_USER_NAME),
-            intent.getSerializableExtra(KEY_REPOSITORY) as Repository
-        )
-
-        presenter.responseToStartLoadStars()
 
         val actionBar = supportActionBar
         actionBar?.setHomeButtonEnabled(true)
@@ -71,12 +82,12 @@ class StarsActivity : BaseActivity(), StarsView {
         }
     }
 
-    override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double) {
+    override fun setupStarsGraph(pointsList: ArrayList<DataPoint>, maxValueOfY: Double) {
         val points = pointsList.toTypedArray()
         graphGraphView.removeAllSeries() // clear graph
-        graphGraphView.viewport.setMinX(0.0)
-        graphGraphView.viewport.setMaxX(12.5)
-        graphGraphView.viewport.setMinY(0.0)
+        graphGraphView.viewport.setMinX(MIN_X_VALUE)
+        graphGraphView.viewport.setMaxX(MAX_X_VALUE)
+        graphGraphView.viewport.setMinY(MIN_Y_VALUE)
         graphGraphView.viewport.setMaxY(maxValueOfY)
 
         graphGraphView.viewport.isXAxisBoundsManual = true
@@ -88,12 +99,12 @@ class StarsActivity : BaseActivity(), StarsView {
         // styling
         series.setValueDependentColor { data ->
             Color.rgb(
-                data.x.toInt() * 255 / 4,
-                Math.abs(data.y * 255 / 6).toInt(), 100
+                data.x.toInt() * MAX_COLOR_VALUE / FIRST_DIVIDER,
+                Math.abs(data.y * MAX_COLOR_VALUE / SECOND_DIVIDER).toInt(), BLUE_VALUE
             )
         }
 
-        series.spacing = 50
+        series.spacing = SERIES_SPACING
         series.valuesOnTopColor = Color.RED
 
         //tap listener
@@ -106,10 +117,6 @@ class StarsActivity : BaseActivity(), StarsView {
     override fun changeVisibilityOfDataMessage(visible: Boolean) {
         hasInternet = visible
         databaseMessageTextView.isVisible = visible
-    }
-
-    override fun openUsersStared(starsInMonthList: MutableList<Star>) {
-        UserStarredActivity.createLauncher(starsInMonthList, hasInternet).launch(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {

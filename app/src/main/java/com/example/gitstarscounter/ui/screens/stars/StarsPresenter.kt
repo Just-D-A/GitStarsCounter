@@ -1,52 +1,51 @@
 package com.example.gitstarscounter.ui.screens.stars
 
-import android.util.Log
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteUser
-import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.data.providers.star.StarRepository
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
+import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
+import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.InjectViewState
 import kotlinx.coroutines.launch
+import java.util.*
+import javax.inject.Inject
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
-class StarsPresenter : BasePresenter<StarsView>() {
+class StarsPresenter(val userName: String, val repository: Repository) :
+    BasePresenter<StarsView>() {
     companion object {
-        private const val YEAR_IS_NOW = 120 //java date need -1900
-        const val TAG = "StarsPresenter"
+        private val YEAR_IS_NOW = Calendar.getInstance().get(Calendar.YEAR)
     }
 
     private val starsConvector = StarsConvector
-    private var currYear: Int = YEAR_IS_NOW
+    private var currYear = YEAR_IS_NOW
     private var starsList = mutableListOf<Star>()
 
-    private val starRepository = StarRepository()
+    @Inject
+    lateinit var starRepository: StarRepository
 
-    private lateinit var userName: String
-    private lateinit var repository: Repository
-
-    fun setParams(userName: String, repositoryRemote: Repository) {
-        this.userName = userName
-        this.repository = repositoryRemote
+    init {
+        GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
+        startLoadStars()
     }
 
-    fun responseToStartLoadStars() {
+    private fun startLoadStars() {
         starsList.clear()
 
-        viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
-        viewState.setWaiting(true)
-        launch {
+        viewState.showSelectedYear(currYear, currYear < YEAR_IS_NOW)
+
+        launchWithWaiting {
             val responseStarList =
                 starRepository.getRepositoryStars(userName, repository)
-            onStarsResponse(responseStarList)
+            starsList.addAll(responseStarList)
+            loadGraph()
         }
     }
 
     private fun loadGraph() {
-        Log.d("CURR_YEAR", currYear.toString())
         starsConvector.setStarsMap(
             starsList,
             currYear
@@ -54,8 +53,7 @@ class StarsPresenter : BasePresenter<StarsView>() {
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
 
-        viewState.setWaiting(false)
-        viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
+        viewState.setupStarsGraph(pointsList, maxValueOfY + 1)
     }
 
     fun responseToChangeCurrentYear(more: Boolean) {
@@ -67,39 +65,19 @@ class StarsPresenter : BasePresenter<StarsView>() {
         reloadStars()
     }
 
-    private fun onStarsResponse(
-        responseStarsList: List<Star>
-    ) {
-        responseStarsList.forEach {
-            starsList.add(
-                RemoteStar(
-                    starredAt = it.starredAt,
-                    user = RemoteUser(
-                        id = it.user.id,
-                        name = it.user.name,
-                        avatar = it.user.avatar
-                    )
-                )
-            )
-        }
-        loadGraph()
-    }
-
     private fun reloadStars() {
-        viewState.showSelectedYear(currYear.plus(1900), currYear < YEAR_IS_NOW)
-        viewState.setWaiting(true)
+        viewState.showSelectedYear(currYear, currYear < YEAR_IS_NOW)
         starsConvector.setStarsMap(
             starsList,
             currYear
         )
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
-        viewState.setupStarsGrafic(pointsList, maxValueOfY.plus(1))
-        viewState.setWaiting(false)
+        viewState.setupStarsGraph(pointsList, maxValueOfY + 1)
     }
 
     fun responseToOpenUserStarred(x: Double) {
         val starsInMonthList = starsConvector.getStarListByMonth(x.toInt())
-        viewState.openUsersStared(starsInMonthList)
+        UserStarredActivity.createLauncher(starsInMonthList).launch()
     }
 }

@@ -12,7 +12,7 @@ class LocalStarWorkerProvider {
         private const val TAG = "ServiceProvider"
     }
 
-    private val database = GitStarsApplication.instance.appRoomDatabase
+    private val database = GitStarsApplication.instance.gitStarsCounterComponent.getRoomDatabase()
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
     private val starTable = database.starDao()

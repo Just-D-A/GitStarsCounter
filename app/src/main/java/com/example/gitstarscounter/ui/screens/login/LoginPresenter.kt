@@ -1,14 +1,10 @@
 package com.example.gitstarscounter.ui.screens.login
 
-import android.content.Context
 import android.util.Log
 import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.providers.login.LoginRepository
-import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteUser
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.repository.RepositoryActivity
@@ -22,17 +18,16 @@ import javax.inject.Inject
 @InjectViewState
 class LoginPresenter : BasePresenter<LoginView>() {
     companion object {
-        const val TAG = "LoginPresenter"
-        const val MESSAGE = "limited"
-        const val MAX_PACKAGE_ELEMENTS_COUNT = 30
+        private const val TAG = "LoginPresenter"
+        private const val MESSAGE = "limited"
+        private const val MAX_PACKAGE_ELEMENTS_COUNT = 30
     }
 
-    private val repositoryLoginProvider = LoginRepository()
+    @Inject
+    lateinit var repositoryLoginProvider: LoginRepository
+
     private var userName = ""
     private var isLimited = false
-
-    @Inject
-    lateinit var git: GithubApiService
 
     init {
         GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
@@ -42,18 +37,20 @@ class LoginPresenter : BasePresenter<LoginView>() {
         viewState.endPagination()
         this.userName = userName
         RequestLimit.writeLog()
-        Log.d(TAG, userName)
-        launch {
+        launchWithWaiting {
             if (userName != "") {
-                //  updateResourceLimit()
                 isLimited = false
                 try {
                     Log.d(TAG, "todo")
-                    val remoteRepositoryList =
+                    val repositoryList =
                         repositoryLoginProvider.getRemoteUsersRepositories(userName, pageNumber)
-                    onLoginResponse(remoteRepositoryList!!, false)
+                    viewState.setupRepositoriesList(repositoryList)
+                    if (repositoryList.size < MAX_PACKAGE_ELEMENTS_COUNT) {
+                        viewState.endPagination()
+                    }
                 } catch (e: AppException.NoData) {
-                    onUnknownUser(R.string.unknown_user_text, false)
+                    viewState.endPagination()
+                    viewState.showMessage(Text.from(R.string.unknown_user_text))
                 }
             }
         }
@@ -61,77 +58,26 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
     fun responseToLoadMoreRepositories(pageNumber: Int) {
         if (userName.isNotEmpty()) {
-            Log.d("PAGINATION", "LOAD")
-            if (RequestLimit.hasRequest()) {
-                launch {
+            launch {
+                try {
                     val moreRepositories =
-                        repositoryLoginProvider.loadMoreRepositories(userName, pageNumber)
-                    onGetMoreRepositories(moreRepositories)
-                    isLimited = false
+                        repositoryLoginProvider.getRemoteUsersRepositories(userName, pageNumber)
+                    viewState.addRepositoriesToList(moreRepositories)
+                    if (moreRepositories.size < MAX_PACKAGE_ELEMENTS_COUNT) {
+                        viewState.endPagination()
+                    }
+                } catch (e: AppException.NoData) {
+                    viewState.endPagination()
                 }
-            } else if (!isLimited) {
-                showLimitedMessage()
-            } else {
-                viewState.endPagination()
             }
         }
     }
 
-    fun responseToOpenStars(context: Context, repository: Repository?) {
-        createLauncher(
-            userName,
-            RemoteRepository(
-                id = repository!!.id,
-                name = repository.name,
-                allStarsCount = repository.allStarsCount,
-                user = RemoteUser(
-                    repository.user.id,
-                    repository.user.name,
-                    repository.user.avatar
-                )
-            )
-        )
-            .launch(context)
-    }
-
-    private fun onLoginResponse(
-        repositoryRemoteList: List<Repository>,
-        noInternetIsVisible: Boolean
-    ) {
-        viewState.setupRepositoriesList(repositoryRemoteList)
-
-        if (repositoryRemoteList.size < MAX_PACKAGE_ELEMENTS_COUNT) {
-            viewState.endPagination()
-        }
+    fun responseToOpenStars(repository: Repository) {
+        createLauncher(userName, repository).launch()
     }
 
     fun responseToStartRepositoryActivity() {
         RepositoryActivity.createLauncher().launch()
-    }
-
-    private fun onUnknownUser(textResource: Int, noInternetIsVisible: Boolean) {
-        viewState.endPagination()
-        viewState.setWaiting(false)
-        viewState.changeVisibilityOfNoInternetView(noInternetIsVisible && !isLimited)
-        viewState.changeVisibilityOfLimitedView(isLimited)
-        viewState.showMessage(Text.from(textResource))
-    }
-
-    private fun onGetMoreRepositories(repositoriesRemote: List<Repository>?) {
-        Log.d("PAGINATION", "GETTED")
-        if (repositoriesRemote != null) {
-            viewState.addPagination(repositoriesRemote)
-            if (repositoriesRemote.size < 30) {
-                viewState.endPagination()
-            }
-        } else {
-            viewState.endPagination()
-        }
-    }
-
-    private fun showLimitedMessage() {
-        isLimited = true
-        Log.d(TAG, MESSAGE)
-        viewState.endPagination()
     }
 }
