@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
@@ -33,8 +32,6 @@ class LoginActivity : BaseActivity(), LoginView {
         private const val PAGE_NUMBER_PREVENTION_FOR_END = 5
     }
 
-    private val findButton: Button by bind(R.id.button_find_rep)
-    private val startRepositoryButton: Button by bind(R.id.button_start_repository_screen)
     private val repositoryOmegaRecycleView: OmegaRecyclerView by bind(R.id.recycler_repositories)
     private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
     private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
@@ -42,7 +39,7 @@ class LoginActivity : BaseActivity(), LoginView {
 
     private val loginAdapter = OmegaAutoAdapter.create<Repository>(
         R.layout.cell_login,
-        { item -> presenter.responseToOpenStars(item) }
+        { item -> presenter.requestToOpenStars(item) }
     ) {
         bind(R.id.text_view_cell_login_repository_name, Repository::name)
     }
@@ -70,31 +67,24 @@ class LoginActivity : BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        findButton.setOnClickListener {
-            loadRepositories()
-        }
+        setOnClickListener(R.id.button_find_rep) { loadRepositories() }
 
-        startRepositoryButton.setOnClickListener {
-            presenter.responseToStartRepositoryActivity()
-        }
+        setOnClickListener(R.id.button_start_repository_screen) { presenter.requestToStartRepositoryActivity() }
 
-        //accountNameEditText.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER)
-        accountNameEditText.setOnEditorActionListener(
-            OnEditorActionListener { _, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
-                // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || event.action == KeyEvent.ACTION_DOWN) {
-                    loadRepositories()
-                    return@OnEditorActionListener true
-                }
-                false
-            })
+        accountNameEditText.setOnEditorActionListener { _, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
+            // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || event.action == KeyEvent.ACTION_DOWN) {
+                loadRepositories()
+            }
+            true
+        }
 
         //OMEGA_R PAGGINATION
         repositoryOmegaRecycleView.setPaginationCallback(object : OnPageRequestListener {
             override fun onPageRequest(page: Int) {
                 Log.d(PAGINATION_TAG, "onPageRequest()")// You can load data inside this callback
                 pageNumber++
-                presenter.responseToLoadMoreRepositories(pageNumber)
+                presenter.requestToLoadMoreRepositories(pageNumber)
             }
 
             override fun getPagePreventionForEnd(): Int {
@@ -110,7 +100,7 @@ class LoginActivity : BaseActivity(), LoginView {
     private fun loadRepositories() {
         val userName = accountNameEditText.text.toString().trim()
         pageNumber = 1 // init to first page
-        presenter.responseToLoadRepositories(userName, pageNumber)
+        presenter.requestToLoadRepositories(userName, pageNumber)
         loginAdapter.list = mutableListOf()
         repositoryOmegaRecycleView.showProgressPagination()
     }

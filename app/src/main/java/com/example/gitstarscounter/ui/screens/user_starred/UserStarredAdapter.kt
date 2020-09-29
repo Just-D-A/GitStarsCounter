@@ -1,66 +1,48 @@
 package com.example.gitstarscounter.ui.screens.user_starred
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.entity.User
-import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
+import com.omega_r.base.adapters.OmegaListAdapter
 import com.omega_r.libs.omegatypes.image.UrlImage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserStarredAdapter :
-    OmegaRecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    OmegaListAdapter<User, UserStarredAdapter.UsersViewHolder>() {
+    override var list: List<User> = emptyList()
+    private var sourceList: List<User> = emptyList()
 
-    private var usersList: ArrayList<User> = ArrayList()
-    private var sourceList: ArrayList<User> = ArrayList()
-
-    fun setupUsers(remoteStarList: MutableList<Star>) {
-        val addedUserList: ArrayList<User> = ArrayList()
-        remoteStarList.forEach {
-            addedUserList.add(it.user)
-        }
-        sourceList.clear()
-        sourceList.addAll(addedUserList)
-        usersList.addAll(sourceList)
-    }
-
-    fun filter(query: String) {
-        usersList.clear()
-        sourceList.forEach {
-            if (it.name.contains(query, true)) {
-                usersList.add(it)
-            }
-        }
-        notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(R.layout.cell_user, parent, false)
         return UsersViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is UsersViewHolder) {
-            Log.d("BIND ", usersList[position].name)
-            holder.bind(usersList[position])
+    fun setupUsers(remoteStarList: MutableList<Star>) {
+        val addedUserList: ArrayList<User> = ArrayList()
+        remoteStarList.map {
+            addedUserList.add(it.user)
         }
+        sourceList = addedUserList
+        list = sourceList
     }
 
-    override fun getItemCount(): Int {
-        return usersList.count()
+    fun filter(query: String) {
+        list = sourceList
+        list = list.filter {
+            (it.name.contains(query, true))
+        }
+        notifyDataSetChanged()//need of this!!
     }
 
     class UsersViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
+        OmegaListAdapter.ViewHolder<User>(itemView) {
         private var userNameTextView: TextView =
             itemView.findViewById(R.id.text_view_user_name)
 
@@ -68,14 +50,14 @@ class UserStarredAdapter :
             itemView.findViewById(R.id.circle_image_view_user_photo)
 
         @SuppressLint("SetTextI18n")
-        fun bind(user: User) {
-                 Glide
-                     .with(itemView.context)
-                     .load((user.avatar as UrlImage).url)
-                     .centerCrop()
-                     .into(userPhotoImageView)
+        override fun bind(item: User) {
+            Glide
+                .with(itemView.context)
+                .load((item.avatar as UrlImage).url)
+                .centerCrop()
+                .into(userPhotoImageView)
 
-            userNameTextView.text = user.name
+            userNameTextView.text = item.name
         }
     }
 }

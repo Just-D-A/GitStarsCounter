@@ -6,17 +6,26 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.data.providers.login.LoginRepository
+import com.example.gitstarscounter.data.providers.worker.WorkerRepository
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class RateLimitWorker(val context: Context, workerParams: WorkerParameters) :
+class RateLimitWorker(context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
     companion object {
         private const val TAG = "RateLimitWorker"
+    }
 
+    @Inject
+    lateinit var workerRepository: WorkerRepository
+
+    init {
+        GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
     }
 
     override fun doWork(): Result {
@@ -29,8 +38,9 @@ class RateLimitWorker(val context: Context, workerParams: WorkerParameters) :
     private fun updateRateLimit() {
         GlobalScope.launch {
             try {
-                val limit = LoginRepository().getLimitRemaining().resources.core.remaining
+                val limit = workerRepository.getLimitRemaining().resources.core.remaining
                 RequestLimit.setLimitResourceCount(limit)
+                RequestLimit.writeLog()
             } catch (e: Exception) {
                 Log.d(TAG, "NO_INTERNET")
             }

@@ -10,18 +10,15 @@ import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.InjectViewState
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.Collections.min
 import javax.inject.Inject
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
 class StarsPresenter(val userName: String, val repository: Repository) :
     BasePresenter<StarsView>() {
-    companion object {
-        private val YEAR_IS_NOW = Calendar.getInstance().get(Calendar.YEAR)
-    }
 
-    private val starsConvector = StarsConvector
-    private var currYear = YEAR_IS_NOW
+    private var currYear = Calendar.getInstance().get(Calendar.YEAR)
     private var starsList = mutableListOf<Star>()
 
     @Inject
@@ -35,7 +32,7 @@ class StarsPresenter(val userName: String, val repository: Repository) :
     private fun startLoadStars() {
         starsList.clear()
 
-        viewState.showSelectedYear(currYear, currYear < YEAR_IS_NOW)
+        viewState.showSelectedYear(currYear, currYear < Calendar.getInstance().get(Calendar.YEAR))
 
         launchWithWaiting {
             val responseStarList =
@@ -46,38 +43,32 @@ class StarsPresenter(val userName: String, val repository: Repository) :
     }
 
     private fun loadGraph() {
-        starsConvector.setStarsMap(
-            starsList,
-            currYear
-        )
+        val starsConvector = StarsConvector(starsList, currYear)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
 
         viewState.setupStarsGraph(pointsList, maxValueOfY + 1)
     }
 
-    fun responseToChangeCurrentYear(more: Boolean) {
-        if (more && (currYear + 1 <= YEAR_IS_NOW)) {
-            currYear++
-        } else if (!more) {
+    fun requestToChangeCurrentYear(more: Boolean) {
+        if (more) {
+            currYear = kotlin.math.min(currYear + 1, Calendar.getInstance().get(Calendar.YEAR))
+        } else {
             currYear--
         }
         reloadStars()
     }
 
     private fun reloadStars() {
-        viewState.showSelectedYear(currYear, currYear < YEAR_IS_NOW)
-        starsConvector.setStarsMap(
-            starsList,
-            currYear
-        )
+        viewState.showSelectedYear(currYear, currYear < Calendar.getInstance().get(Calendar.YEAR))
+        val starsConvector = StarsConvector(starsList, currYear)
         val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
         viewState.setupStarsGraph(pointsList, maxValueOfY + 1)
     }
 
-    fun responseToOpenUserStarred(x: Double) {
-        val starsInMonthList = starsConvector.getStarListByMonth(x.toInt())
+    fun requestToOpenUserStarred(x: Double) {
+        val starsInMonthList = StarsConvector(starsList, currYear).getStarListByMonth(x.toInt())
         UserStarredActivity.createLauncher(starsInMonthList).launch()
     }
 }

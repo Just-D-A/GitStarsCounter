@@ -7,25 +7,33 @@ import com.example.gitstarscounter.entity.Star
 import com.jjoe64.graphview.series.DataPoint
 
 @Suppress("DEPRECATION")
-object StarsConvector {
-    private const val MONTH_IN_YEAR: Int = 12
+class StarsConvector(private val starsList: List<Star>, private val currYear: Int) {
+    companion object {
+        private const val MONTH_IN_YEAR: Int = 12
+        private const val JAVA_DIF_YEAR = 1900
+    }
+
     private var starsInMonthMap: MutableMap<Int, MutableList<Star>> = mutableMapOf()
+
+    init {
+        initMap()
+        setStarsMap()
+    }
 
     fun toDataPoint(): ArrayList<DataPoint> {
         val pointsList: ArrayList<DataPoint> = ArrayList()
-        starsInMonthMap.forEach {
+        starsInMonthMap.map {
             pointsList.add(DataPoint(it.key.toDouble(), it.value.size.toDouble()))
         }
         return pointsList
     }
 
-    fun setStarsMap(starsList: List<Star>, currYear: Int) {
-        initMap()
-        starsList.forEach {
+    private fun setStarsMap() {
+        starsList.map {
             val date = it.starredAt
-            val year = date.year + 1900
+            val year = date.year + JAVA_DIF_YEAR
             if (currYear == year) {
-                val starList: MutableList<Star>? = starsInMonthMap[date.month + 1]
+                val starList = starsInMonthMap[date.month + 1]
                 starList?.add(it)
                 starsInMonthMap[date.month + 1] = starList!!
             }
@@ -44,7 +52,7 @@ object StarsConvector {
 
     fun getMaxCountValue(): Double {
         var result: Double = starsInMonthMap[1]!!.size.toDouble()
-        starsInMonthMap.forEach {
+        starsInMonthMap.map {
             val starsInMonthList = it.value
             val starsCount = starsInMonthList.size.toDouble()
             if (result < starsCount) {

@@ -11,7 +11,7 @@ class UserStarredPresenter(private val remoteStarList: MutableList<Star>) :
         loadUserList()
     }
 
-    fun loadUserList() {
-        viewState.setupUsersList(remoteStarList)
+    private fun loadUserList() {
+        viewState.setUsersList(remoteStarList)
     }
 }

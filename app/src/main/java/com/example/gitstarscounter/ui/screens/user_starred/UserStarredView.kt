@@ -7,5 +7,5 @@ import com.omegar.mvp.viewstate.strategy.StateStrategyType
 
 interface UserStarredView : BaseView {
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun setupUsersList(remoteStarList: MutableList<Star>)
+    fun setUsersList(remoteStarList: MutableList<Star>)
 }

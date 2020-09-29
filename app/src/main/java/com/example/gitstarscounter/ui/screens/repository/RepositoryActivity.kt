@@ -24,7 +24,7 @@ class RepositoryActivity : BaseActivity(), RepositoryView {
     private var repositoryAdapter = OmegaAutoAdapter.create<Repository>(
         R.layout.cell_repository,
         R.layout.item_right_menu,
-        callback = { item -> presenter.responseToOpenStars(item) }
+        callback = { item -> presenter.requestToOpenStars(item) }
     ) {
         bind(R.id.text_view_repository_name, Repository::name)
         bindString(R.id.text_view_repository_owner_name, Repository::user, User::name)
@@ -32,7 +32,7 @@ class RepositoryActivity : BaseActivity(), RepositoryView {
 
         bindClick(
             R.id.button_delete_repository,
-            block = { item -> presenter.responseToDeleteRepository(item) })
+            block = { item -> presenter.requestToDeleteRepository(item) })
     }
 
     @SuppressLint("WrongConstant")
@@ -40,9 +40,10 @@ class RepositoryActivity : BaseActivity(), RepositoryView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_repository)
 
-        val actionBar = supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar.apply {
+            this?.setHomeButtonEnabled(true)
+            this?.setDisplayHomeAsUpEnabled(true)
+        }
 
         repositoryRecyclerView.adapter = repositoryAdapter
     }

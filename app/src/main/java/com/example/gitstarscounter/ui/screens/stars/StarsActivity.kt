@@ -3,9 +3,9 @@ package com.example.gitstarscounter.ui.screens.stars
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
@@ -21,8 +21,8 @@ import com.omegar.mvp.presenter.ProvidePresenter
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : BaseActivity(), StarsView {
     companion object {
-        private const val USER_NAME_EXTRA = "userName"
-        private const val REPOSITORY_EXTRA = "repository"
+        private const val EXTRA_USER_NAME = "userName"
+        private const val EXTRA_REPOSITORY = "repository"
 
         //values for graph coordinates
         private const val MAX_X_VALUE = 12.5 //as month count + 0.5
@@ -41,8 +41,8 @@ class StarsActivity : BaseActivity(), StarsView {
             repository: Repository
         ) =
             createActivityLauncher(
-                USER_NAME_EXTRA put userName,
-                REPOSITORY_EXTRA put repository
+                EXTRA_USER_NAME put userName,
+                EXTRA_REPOSITORY put repository
             )
     }
 
@@ -50,7 +50,6 @@ class StarsActivity : BaseActivity(), StarsView {
     private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
     private val yearTextView: TextView by bind(R.id.text_view_selected_year)
     private val moreYearButton: Button by bind(R.id.button_more_year)
-    private val lessYearButton: Button by bind(R.id.button_less_year)
 
     private var hasInternet = true
 
@@ -60,8 +59,8 @@ class StarsActivity : BaseActivity(), StarsView {
     @ProvidePresenter
     fun provideDetailsPresenter(): StarsPresenter {
         return StarsPresenter(
-            intent.getStringExtra(USER_NAME_EXTRA),
-            intent.getSerializableExtra(REPOSITORY_EXTRA) as Repository
+            intent.getStringExtra(EXTRA_USER_NAME),
+            intent.getSerializableExtra(EXTRA_REPOSITORY) as Repository
         )
     }
 
@@ -69,16 +68,15 @@ class StarsActivity : BaseActivity(), StarsView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
 
-        val actionBar = supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-
-        lessYearButton.setOnClickListener {
-            presenter.responseToChangeCurrentYear(false)
+        supportActionBar.apply {
+            this?.setHomeButtonEnabled(true)
+            this?.setDisplayHomeAsUpEnabled(true)
         }
 
+        setOnClickListener(R.id.button_less_year) { presenter.requestToChangeCurrentYear(false) }
+
         moreYearButton.setOnClickListener {
-            presenter.responseToChangeCurrentYear(true)
+            presenter.requestToChangeCurrentYear(true)
         }
     }
 
@@ -109,7 +107,7 @@ class StarsActivity : BaseActivity(), StarsView {
 
         //tap listener
         series.setOnDataPointTapListener { _, dataPoint ->
-            presenter.responseToOpenUserStarred(dataPoint.x)
+            presenter.requestToOpenUserStarred(dataPoint.x)
         }
         series.isDrawValuesOnTop = true
     }
@@ -127,10 +125,6 @@ class StarsActivity : BaseActivity(), StarsView {
     @SuppressLint("SetTextI18n")
     override fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean) {
         yearTextView.text = selectedYear.toString()
-        if (showMoreButton) {
-            moreYearButton.isVisible = true
-        } else {
-            moreYearButton.visibility = View.INVISIBLE
-        }
+        moreYearButton.isInvisible = !showMoreButton
     }
 }

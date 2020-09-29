@@ -19,7 +19,6 @@ import javax.inject.Inject
 class LoginPresenter : BasePresenter<LoginView>() {
     companion object {
         private const val TAG = "LoginPresenter"
-        private const val MESSAGE = "limited"
         private const val MAX_PACKAGE_ELEMENTS_COUNT = 30
     }
 
@@ -33,7 +32,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
         GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
     }
 
-    fun responseToLoadRepositories(userName: String, pageNumber: Int) {
+    fun requestToLoadRepositories(userName: String, pageNumber: Int) {
         viewState.endPagination()
         this.userName = userName
         RequestLimit.writeLog()
@@ -56,7 +55,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
         }
     }
 
-    fun responseToLoadMoreRepositories(pageNumber: Int) {
+    fun requestToLoadMoreRepositories(pageNumber: Int) {
         if (userName.isNotEmpty()) {
             launch {
                 try {
@@ -73,11 +72,11 @@ class LoginPresenter : BasePresenter<LoginView>() {
         }
     }
 
-    fun responseToOpenStars(repository: Repository) {
+    fun requestToOpenStars(repository: Repository) {
         createLauncher(userName, repository).launch()
     }
 
-    fun responseToStartRepositoryActivity() {
+    fun requestToStartRepositoryActivity() {
         RepositoryActivity.createLauncher().launch()
     }
 }

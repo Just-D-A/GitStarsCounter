@@ -42,8 +42,4 @@ open class LoginRepository {
             }
         }
     }
-
-    suspend fun getLimitRemaining(): ResourceRemote {
-        return remoteLoginProvider.getLimitRemaining()
-    }
 }

@@ -6,6 +6,7 @@ import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 import com.example.gitstarscounter.data.repository.local.entity.LocalStar
 import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
 import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.entity.Star
 
 class LocalStarWorkerProvider {
     companion object {
@@ -24,17 +25,16 @@ class LocalStarWorkerProvider {
         val repositoryEntityList = repositoryTable.getAll()
         Log.d(TAG, repositoryEntityList.size.toString())
         repositoryEntityList.forEach {
-            val user = userTable.getUserById(it.user.id)
-            repositoryModelList.add(LocalRepository(it, user))
+            repositoryModelList.add(it)
         }
         return repositoryModelList
     }
 
     suspend fun findNewStars(
-        listFromApiRemoteStar: List<RemoteStar>,
+        listFromApiRemoteStar: List<Star>,
         repository: Repository
-    ): MutableList<com.example.gitstarscounter.entity.Star> {
-        val newStars = mutableListOf<com.example.gitstarscounter.entity.Star>()
+    ): List<Star> {
+        val newStars = mutableListOf<Star>()
 
         Log.d(TAG, repository.name + " " + listFromApiRemoteStar.size.toString())
 

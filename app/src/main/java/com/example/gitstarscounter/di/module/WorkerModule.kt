@@ -16,7 +16,7 @@ class WorkerModule {
     @Singleton
     @Named("LimitWorker")
     fun limitWorker(): PeriodicWorkRequest {
-        return PeriodicWorkRequestBuilder<RateLimitWorker>(1, TimeUnit.HOURS)
+        return PeriodicWorkRequestBuilder<RateLimitWorker>(1, TimeUnit.HOURS, 30, TimeUnit.HOURS)
             .build()
     }
 
@@ -24,7 +24,7 @@ class WorkerModule {
     @Singleton
     @Named("StarWorker")
     fun starWorker(): PeriodicWorkRequest {
-        return PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.HOURS)
+        return PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.HOURS, 30, TimeUnit.HOURS)
             .build()
     }
 }

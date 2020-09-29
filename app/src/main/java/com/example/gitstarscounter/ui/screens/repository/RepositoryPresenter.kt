@@ -1,35 +1,40 @@
 package com.example.gitstarscounter.ui.screens.repository
 
+import com.example.gitstarscounter.GitStarsApplication
+import com.example.gitstarscounter.data.providers.git_repository.GitRepositoryRepository
 import com.example.gitstarscounter.data.repository.local.providers.LocalRepositoryProvider
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
 import com.omegar.mvp.InjectViewState
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @InjectViewState
 class RepositoryPresenter : BasePresenter<RepositoryView>() {
-    private val localRepositoryProvider = LocalRepositoryProvider()
+    @Inject
+    lateinit var gitRepositoryRepository: GitRepositoryRepository
 
     init {
         setRepositoryList()
+        GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
     }
 
     private fun setRepositoryList() {
         launchWithWaiting {
-            val repositoryList = localRepositoryProvider.getAllRepositories()
+            val repositoryList = gitRepositoryRepository.getAllRepositories()
             viewState.setRepositoryList(repositoryList)
         }
     }
 
-    fun responseToDeleteRepository(repository: Repository) {
+    fun requestToDeleteRepository(repository: Repository) {
         launch {
-            localRepositoryProvider.deleteRepository(repository)
+            gitRepositoryRepository.deleteRepository(repository)
             setRepositoryList()
         }
     }
 
-    fun responseToOpenStars(repository: Repository) {
+    fun requestToOpenStars(repository: Repository) {
         StarsActivity.createLauncher(repository.user.name, repository).launch()
     }
 }
