@@ -4,10 +4,9 @@ import androidx.room.TypeConverter
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 object DateConverter {
-    private val simpleDateFormate: SimpleDateFormat =
+    private val simpleDateFormat: SimpleDateFormat =
         SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
 
     @JvmStatic
@@ -19,6 +18,6 @@ object DateConverter {
     @JvmStatic
     @TypeConverter
     fun convertTimestampToDate(date: String?): Date? {
-        return simpleDateFormate.parse(date)
+        return simpleDateFormat.parse(date)
     }
 }

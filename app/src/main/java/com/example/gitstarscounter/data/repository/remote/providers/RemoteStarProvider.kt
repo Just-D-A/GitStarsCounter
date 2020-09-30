@@ -1,15 +1,13 @@
 package com.example.gitstarscounter.data.repository.remote.providers
 
-import com.example.gitstarscounter.GitStarsApplication
+import com.example.gitstarscounter.data.providers.star.StarProvider
 import com.example.gitstarscounter.data.repository.remote.SearchProvider
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
-import com.example.gitstarscounter.data.providers.star.StarProvider
 
 @Suppress("DEPRECATION", "UNCHECKED_CAST")
 class RemoteStarProvider : StarProvider {
     private val searchRepository = SearchProvider().provideSearchStars()
-    private val gitApiService = GitStarsApplication.instance.gitStarsCounterComponent.getGitApi()
 
     override suspend fun getRepositoryStars(
         userName: String,

@@ -16,7 +16,7 @@ class LocalStarProvider : StarProvider {
         private const val TAG = "StarLocalProvider"
     }
 
-    private val database = GitStarsApplication.instance.appRoomDatabase
+    private val database = GitStarsApplication.instance.gitStarsCounterComponent.getRoomDatabase()
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
     private val starTable = database.starDao()
@@ -77,14 +77,6 @@ class LocalStarProvider : StarProvider {
         repositoryRemote: Repository,
         pageNumber: Int
     ): List<Star> {
-        val starsTypeList: MutableList<Star> = mutableListOf()
-
-        val starsList = starTable.findByRepositoryId(repositoryRemote.id)
-        starsList.forEach {
-            starsTypeList.add(
-                LocalStar(it, LocalRepository(repositoryRemote), it.user)
-            )
-        }
-        return starsTypeList
+        return starTable.findByRepositoryId(repositoryRemote.id)
     }
 }

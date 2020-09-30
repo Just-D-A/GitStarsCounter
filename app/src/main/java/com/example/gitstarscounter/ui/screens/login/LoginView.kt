@@ -7,7 +7,7 @@ import com.omegar.mvp.viewstate.strategy.StateStrategyType
 
 interface LoginView : BaseView {
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun setupRepositoriesList(repositoriesList: List<Repository?>?)
+    fun setupRepositoriesList(repositoriesList: List<Repository>)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun changeVisibilityOfNoInternetView(visible: Boolean)
@@ -16,7 +16,7 @@ interface LoginView : BaseView {
     fun changeVisibilityOfLimitedView(visible: Boolean)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun addPagination(repositoriesList: List<Repository>)
+    fun addRepositoriesToList(repositoriesList: List<Repository>)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun endPagination()

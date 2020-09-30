@@ -1,4 +1,4 @@
-package com.example.gitstarscounter.data.repository.local.entity.database
+package com.example.gitstarscounter.data.repository.local.dao
 
 import androidx.room.*
 import com.example.gitstarscounter.data.repository.local.entity.LocalUser

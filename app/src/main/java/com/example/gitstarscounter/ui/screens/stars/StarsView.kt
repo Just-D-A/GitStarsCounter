@@ -8,10 +8,7 @@ import com.omegar.mvp.viewstate.strategy.StateStrategyType
 
 interface StarsView : BaseView {
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double)
-
-    @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun openUsersStared(starsInMonthList: MutableList<Star>)
+    fun setupStarsGraph(pointsList: ArrayList<DataPoint>, maxValueOfY: Double)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean)

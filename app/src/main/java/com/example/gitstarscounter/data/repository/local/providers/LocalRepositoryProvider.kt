@@ -5,17 +5,15 @@ import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 import com.example.gitstarscounter.entity.Repository
 
 class LocalRepositoryProvider {
-    private val database = GitStarsApplication.instance.appRoomDatabase
+    private val database = GitStarsApplication.instance.gitStarsCounterComponent.getRoomDatabase()
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
 
     suspend fun getAllRepositories(): List<Repository> {
         val tableRepositoryList = repositoryTable.getAll()
         val repositoryList: MutableList<Repository> = mutableListOf()
-        tableRepositoryList.forEach { tableRepository ->
-            val user = userTable.getUserById(tableRepository.user.id)
-            val repository: Repository = LocalRepository(tableRepository, user)
-            repositoryList.add(repository)
+        tableRepositoryList.forEach { localRepository ->
+            repositoryList.add(localRepository)
         }
         return repositoryList
     }

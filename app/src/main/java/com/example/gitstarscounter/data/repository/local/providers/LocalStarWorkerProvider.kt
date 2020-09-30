@@ -4,36 +4,35 @@ import android.util.Log
 import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 import com.example.gitstarscounter.data.repository.local.entity.LocalStar
+import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
 import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.entity.Star
 
 class LocalStarWorkerProvider {
     companion object {
         private const val TAG = "ServiceProvider"
     }
 
-    private val database = GitStarsApplication.instance.appRoomDatabase
+    private val database = GitStarsApplication.instance.gitStarsCounterComponent.getRoomDatabase()
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
     private val starTable = database.starDao()
-
-    private val repositoryModelList =
-        mutableListOf<Repository>()
+    private val repositoryModelList = mutableListOf<Repository>()
 
     suspend fun getAllDatabaseRepositories(): List<Repository> {
         val repositoryEntityList = repositoryTable.getAll()
         Log.d(TAG, repositoryEntityList.size.toString())
         repositoryEntityList.forEach {
-            val user = userTable.getUserById(it.user.id)
-            repositoryModelList.add(LocalRepository(it, user))
+            repositoryModelList.add(it)
         }
         return repositoryModelList
     }
 
     suspend fun findNewStars(
-        listFromApiRemoteStar: List<com.example.gitstarscounter.data.repository.remote.entity.RemoteStar>,
+        listFromApiRemoteStar: List<Star>,
         repository: Repository
-    ): MutableList<com.example.gitstarscounter.entity.Star> {
-        val newStars = mutableListOf<com.example.gitstarscounter.entity.Star>()
+    ): List<Star> {
+        val newStars = mutableListOf<Star>()
 
         Log.d(TAG, repository.name + " " + listFromApiRemoteStar.size.toString())
 
@@ -48,7 +47,6 @@ class LocalStarWorkerProvider {
                 )
             }
         }
-
         return newStars
     }
 }

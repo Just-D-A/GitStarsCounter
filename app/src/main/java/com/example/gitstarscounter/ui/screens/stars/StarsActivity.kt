@@ -3,81 +3,89 @@ package com.example.gitstarscounter.ui.screens.stars
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.example.gitstarscounter.R
-import com.example.gitstarscounter.data.repository.remote.entity.RemoteRepository
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
-import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.libs.omegalaunchers.tools.put
 import com.omegar.mvp.presenter.InjectPresenter
+import com.omegar.mvp.presenter.ProvidePresenter
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : BaseActivity(), StarsView {
     companion object {
-        private const val BACK_BUTTON_ID = 16908332
-        private const val KEY_USER_NAME = "userName"
-        private const val KEY_REPOSITORY = "repository"
+        private const val EXTRA_USER_NAME = "userName"
+        private const val EXTRA_REPOSITORY = "repository"
+
+        //values for graph coordinates
+        private const val MAX_X_VALUE = 12.5 //as month count + 0.5
+        private const val MIN_X_VALUE = 0.0
+        private const val MIN_Y_VALUE = 0.0
+        private const val SERIES_SPACING = 50
+
+        //values for colorful graph
+        private const val MAX_COLOR_VALUE = 255
+        private const val BLUE_VALUE = 100
+        private const val FIRST_DIVIDER = 4
+        private const val SECOND_DIVIDER = 6
 
         fun createLauncher(
             userName: String,
-            repositoryRemote: Repository
+            repository: Repository
         ) =
             createActivityLauncher(
-                KEY_USER_NAME put userName,
-                KEY_REPOSITORY put repositoryRemote as RemoteRepository
+                EXTRA_USER_NAME put userName,
+                EXTRA_REPOSITORY put repository
             )
     }
 
-    private val graphGraphView: GraphView by bind(R.id.graph_view_stars)
+    private val graphGraphView: GraphView by bind(R.id.graph_view_stars)// need "by" under "by" formatting??
+    private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
     private val yearTextView: TextView by bind(R.id.text_view_selected_year)
     private val moreYearButton: Button by bind(R.id.button_more_year)
-    private val lessYearButton: Button by bind(R.id.button_less_year)
-    private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
 
     private var hasInternet = true
 
     @InjectPresenter
     override lateinit var presenter: StarsPresenter
 
+    @ProvidePresenter
+    fun provideDetailsPresenter(): StarsPresenter {
+        return StarsPresenter(
+            intent.getStringExtra(EXTRA_USER_NAME),
+            intent.getSerializableExtra(EXTRA_REPOSITORY) as Repository
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stars)
-        presenter.setParams(
-            intent.getStringExtra(KEY_USER_NAME),
-            intent.getSerializableExtra(KEY_REPOSITORY) as Repository
-        )
 
-        presenter.responseToStartLoadStars()
-
-        val actionBar = supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-
-        lessYearButton.setOnClickListener {
-            presenter.responseToChangeCurrentYear(false)
+        supportActionBar.apply {
+            this?.setHomeButtonEnabled(true)
+            this?.setDisplayHomeAsUpEnabled(true)
         }
 
+        setOnClickListener(R.id.button_less_year) { presenter.requestToChangeCurrentYear(false) }
+
         moreYearButton.setOnClickListener {
-            presenter.responseToChangeCurrentYear(true)
+            presenter.requestToChangeCurrentYear(true)
         }
     }
 
-    override fun setupStarsGrafic(pointsList: ArrayList<DataPoint>, maxValueOfY: Double) {
+    override fun setupStarsGraph(pointsList: ArrayList<DataPoint>, maxValueOfY: Double) {
         val points = pointsList.toTypedArray()
         graphGraphView.removeAllSeries() // clear graph
-        graphGraphView.viewport.setMinX(0.0)
-        graphGraphView.viewport.setMaxX(12.5)
-        graphGraphView.viewport.setMinY(0.0)
+        graphGraphView.viewport.setMinX(MIN_X_VALUE)
+        graphGraphView.viewport.setMaxX(MAX_X_VALUE)
+        graphGraphView.viewport.setMinY(MIN_Y_VALUE)
         graphGraphView.viewport.setMaxY(maxValueOfY)
 
         graphGraphView.viewport.isXAxisBoundsManual = true
@@ -89,17 +97,17 @@ class StarsActivity : BaseActivity(), StarsView {
         // styling
         series.setValueDependentColor { data ->
             Color.rgb(
-                data.x.toInt() * 255 / 4,
-                Math.abs(data.y * 255 / 6).toInt(), 100
+                data.x.toInt() * MAX_COLOR_VALUE / FIRST_DIVIDER,
+                Math.abs(data.y * MAX_COLOR_VALUE / SECOND_DIVIDER).toInt(), BLUE_VALUE
             )
         }
 
-        series.spacing = 50
+        series.spacing = SERIES_SPACING
         series.valuesOnTopColor = Color.RED
 
         //tap listener
         series.setOnDataPointTapListener { _, dataPoint ->
-            presenter.responseToOpenUserStarred(dataPoint.x)
+            presenter.requestToOpenUserStarred(dataPoint.x)
         }
         series.isDrawValuesOnTop = true
     }
@@ -109,36 +117,14 @@ class StarsActivity : BaseActivity(), StarsView {
         databaseMessageTextView.isVisible = visible
     }
 
-    override fun openUsersStared(starsInMonthList: MutableList<Star>) {
-        UserStarredActivity.createLauncher(starsInMonthList, hasInternet).launch(this)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when (item.itemId) {
-            R.id.home -> {
-                this.finish()
-                true
-            }
-
-            BACK_BUTTON_ID -> {
-                this.finish()
-                true
-            }
-
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     @SuppressLint("SetTextI18n")
     override fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean) {
         yearTextView.text = selectedYear.toString()
-        if (showMoreButton) {
-            moreYearButton.isVisible = true
-        } else {
-            moreYearButton.visibility = View.INVISIBLE
-        }
+        moreYearButton.isInvisible = !showMoreButton
     }
 }

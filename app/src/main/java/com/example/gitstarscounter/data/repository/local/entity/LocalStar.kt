@@ -14,17 +14,13 @@ data class LocalStar(
     @PrimaryKey
     @ColumnInfo(name = "starred_at")
     override val starredAt: Date,
+
     @Embedded(prefix = "user_")
     override val user: LocalUser,
+
     @Embedded(prefix = "repository_")
     val repository: LocalRepository
 ) : Star {
-    constructor(tableStar: LocalStar, repository: Repository, user: LocalUser) : this(
-        starredAt = tableStar.starredAt,
-        user = user,
-        repository = LocalRepository(repository)
-    )
-
     constructor(star: Star, repository: Repository) : this(
         starredAt = star.starredAt,
         user = LocalUser(star.user),

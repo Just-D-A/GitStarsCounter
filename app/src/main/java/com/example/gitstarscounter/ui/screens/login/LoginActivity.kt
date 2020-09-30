@@ -1,52 +1,64 @@
 package com.example.gitstarscounter.ui.screens.login
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.net.wifi.p2p.WifiP2pDevice.CONNECTED
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.OrientationHelper
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.service.RateLimitWorker
 import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
+import com.omega_r.base.adapters.OmegaAutoAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
 import com.omega_r.libs.omegarecyclerview.pagination.OnPageRequestListener
 import com.omegar.mvp.presenter.InjectPresenter
-import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATED_IDENTITY_EQUALS")
 class LoginActivity : BaseActivity(), LoginView {
     companion object {
-        const val LABEL = "user_name"
-        const val TAG = "LoginActivity"
+        private const val TAG = "LoginActivity"
+        private const val PAGINATION_TAG = "PAGINATION"
+        private const val PAGE_NUMBER_PREVENTION_FOR_END = 5
     }
 
-    private val findButton: Button by bind(R.id.button_find_rep)
-    private val startRepositoryButton: Button by bind(R.id.button_start_repository_screen)
     private val repositoryOmegaRecycleView: OmegaRecyclerView by bind(R.id.recycler_repositories)
     private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
     private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
+    private val accountNameEditText: EditText by bind(R.id.edit_text_view_login_repository_name)
 
-    private lateinit var repositoriesAdapter: LoginAdapter
+    private val loginAdapter = OmegaAutoAdapter.create<Repository>(
+        R.layout.cell_login,
+        { item -> presenter.requestToOpenStars(item) }
+    ) {
+        bind(R.id.text_view_cell_login_repository_name, Repository::name)
+    }
+
     private var pageNumber = 1
 
     @InjectPresenter
     override lateinit var presenter: LoginPresenter
+
+    @Inject
+    lateinit var starWorker: PeriodicWorkRequest
+
+    init {
+        GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("WrongConstant")
@@ -54,67 +66,46 @@ class LoginActivity : BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val onRepositoryClickListener: LoginAdapter.OnRepositoryClickListener =
-            object : LoginAdapter.OnRepositoryClickListener {
-                override fun onRepositoryClick(repository: Repository) {
-                    presenter.responseToOpenStars(applicationContext, repository)
-                }
+        setOnClickListener(R.id.button_find_rep) { loadRepositories() }
+
+        setOnClickListener(R.id.button_start_repository_screen) { presenter.requestToStartRepositoryActivity() }
+
+        accountNameEditText.setOnEditorActionListener { _, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
+            // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || event.action == KeyEvent.ACTION_DOWN) {
+                loadRepositories()
             }
-        repositoriesAdapter = LoginAdapter(this, onRepositoryClickListener)
-
-        val accountNameEditText: EditText? = findViewById(R.id.text_view_login_repository_name)
-        findButton.setOnClickListener {
-            val userName = accountNameEditText?.text.toString().trim()
-            pageNumber = 1
-            presenter.responseToLoadRepositories(userName, pageNumber)
-            repositoriesAdapter.setRepositoriesList(mutableListOf())
-            repositoryOmegaRecycleView.showProgressPagination()
+            true
         }
-
-        startRepositoryButton.setOnClickListener {
-            presenter.responseToStartRepositoryActivity(this)
-        }
-
-        accountNameEditText?.setImeActionLabel(LABEL, KeyEvent.KEYCODE_ENTER)
-        accountNameEditText?.setOnEditorActionListener(
-            OnEditorActionListener { v, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
-                // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN
-                    && event.keyCode == KeyEvent.KEYCODE_ENTER
-                ) {
-                    hideKeyboard()
-                    return@OnEditorActionListener true
-                }
-                false
-            })
 
         //OMEGA_R PAGGINATION
         repositoryOmegaRecycleView.setPaginationCallback(object : OnPageRequestListener {
             override fun onPageRequest(page: Int) {
-                Log.d("PAGGINATION", "onPageRequest()")// You can load data inside this callback
+                Log.d(PAGINATION_TAG, "onPageRequest()")// You can load data inside this callback
                 pageNumber++
-                presenter.responseToLoadMoreRepositories(pageNumber)
+                presenter.requestToLoadMoreRepositories(pageNumber)
             }
 
             override fun getPagePreventionForEnd(): Int {
-                Log.d("PAGGINATION", "getPagePreventionForEnd()")
-                return 5
+                Log.d(PAGINATION_TAG, "getPagePreventionForEnd()")
+                return PAGE_NUMBER_PREVENTION_FOR_END
             }
         })
-        repositoryOmegaRecycleView.adapter = repositoriesAdapter
+        repositoryOmegaRecycleView.adapter = loginAdapter
 
-        repositoryOmegaRecycleView.layoutManager = LinearLayoutManager(
-            applicationContext,
-            OrientationHelper.VERTICAL,
-            false
-        )
-        repositoryOmegaRecycleView.hasFixedSize()
-
-        setNewStarsFinder()
+        setNewStarsFinder()//start worker
     }
 
-    override fun setupRepositoriesList(repositoriesList: List<Repository?>?) {
-        repositoriesAdapter.setRepositoriesList(repositoriesList)
+    private fun loadRepositories() {
+        val userName = accountNameEditText.text.toString().trim()
+        pageNumber = 1 // init to first page
+        presenter.requestToLoadRepositories(userName, pageNumber)
+        loginAdapter.list = mutableListOf()
+        repositoryOmegaRecycleView.showProgressPagination()
+    }
+
+    override fun setupRepositoriesList(repositoriesList: List<Repository>) {
+        loginAdapter.list = repositoriesList
         repositoryOmegaRecycleView.isVisible = true
     }
 
@@ -126,38 +117,16 @@ class LoginActivity : BaseActivity(), LoginView {
         limitedTextView.isVisible = visible
     }
 
-    override fun addPagination(repositoriesList: List<Repository>) {
-        repositoriesAdapter.addMoreRepositories(repositoriesList)
+    override fun addRepositoriesToList(repositoriesList: List<Repository>) {
+        loginAdapter.list += repositoriesList
     }
 
     override fun endPagination() {
         repositoryOmegaRecycleView.hidePagination()
     }
 
-    private fun hideKeyboard() {
-        findButton.performClick()
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content)?.windowToken, 0)
-    }
-
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        Log.d("Login", "onUserLeaveHint")
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        Log.d("LoginActivity", "Start Receiver")
-    }
-
     private fun setNewStarsFinder() {
-        val workStars = PeriodicWorkRequestBuilder<StarWorker>(1, TimeUnit.HOURS)
-            .build()
-
-        val workLimit = PeriodicWorkRequestBuilder<RateLimitWorker>(1, TimeUnit.HOURS)
-            .build()
-
-        WorkManager.getInstance(this).enqueue(workLimit)
-        WorkManager.getInstance(this).enqueue(workStars)
+        Log.d(TAG, "START")
+        WorkManager.getInstance(this).enqueue(starWorker)
     }
 }

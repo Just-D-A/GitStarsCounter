@@ -18,9 +18,8 @@ open class LoginRepository {
     private val remoteLoginProvider = RemoteLoginProvider()
     private val localLoginProvider = LocalLoginProvider()
 
-    suspend fun getRemoteUsersRepositories(userName: String, pageNumber: Int): List<Repository>? {
+    suspend fun getUsersRepositories(userName: String, pageNumber: Int): List<Repository> {
         return try {
-            Log.d(TAG, "Try GET")
             if (!RequestLimit.hasRequest()) {
                 throw LimitException() // create new LimitException
             }
@@ -43,11 +42,16 @@ open class LoginRepository {
         }
     }
 
-    suspend fun getLimitRemaining(): ResourceRemote {
-        return remoteLoginProvider.getLimitRemaining()
-    }
-
-    suspend fun loadMoreRepositories(userName: String, pageNumber: Int): List<Repository> {
-        return remoteLoginProvider.loadMoreRepositories(userName, pageNumber)
+    suspend fun getMoreUsersRepositories(userName: String, pageNumber: Int): List<Repository> {
+        return try {
+            if (!RequestLimit.hasRequest()) {
+                throw LimitException() // create new LimitException
+            }
+            remoteLoginProvider.getUsersRepositories(userName, pageNumber)
+        } catch (e: Exception) {
+            throwNoData()
+        } catch (e: LimitException) {
+            throwNoData()
+        }
     }
 }
