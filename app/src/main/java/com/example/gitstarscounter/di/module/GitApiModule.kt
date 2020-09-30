@@ -11,14 +11,17 @@ import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.*
+import javax.inject.Singleton
 
 @Module
 class GitApiModule {
+    @Singleton
     @Provides
     fun gitApiService(retrofit: Retrofit): GithubApiService {
         return retrofit.create(GithubApiService::class.java)
     }
 
+    @Singleton
     @Provides
     fun retrofit(moshiConvectorFactory: MoshiConverterFactory): Retrofit {
         return Retrofit.Builder()
@@ -27,6 +30,7 @@ class GitApiModule {
             .build()
     }
 
+    @Singleton
     @Provides
     fun moshi(): Moshi {
         return Moshi.Builder()
@@ -36,6 +40,7 @@ class GitApiModule {
             .build()
     }
 
+    @Singleton
     @Provides
     fun moshiConverterFactory(moshi: Moshi): MoshiConverterFactory {
         return MoshiConverterFactory.create(moshi)

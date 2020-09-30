@@ -2,7 +2,6 @@ package com.example.gitstarscounter.ui.screens.repository
 
 import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.data.providers.git_repository.GitRepositoryRepository
-import com.example.gitstarscounter.data.repository.local.providers.LocalRepositoryProvider
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity

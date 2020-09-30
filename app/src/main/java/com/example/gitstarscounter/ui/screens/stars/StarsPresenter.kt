@@ -8,12 +8,9 @@ import com.example.gitstarscounter.ui.screens.base.BasePresenter
 import com.example.gitstarscounter.ui.screens.user_starred.UserStarredActivity
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.InjectViewState
-import kotlinx.coroutines.launch
 import java.util.*
-import java.util.Collections.min
 import javax.inject.Inject
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 @InjectViewState
 class StarsPresenter(val userName: String, val repository: Repository) :
     BasePresenter<StarsView>() {
@@ -62,7 +59,7 @@ class StarsPresenter(val userName: String, val repository: Repository) :
     private fun reloadStars() {
         viewState.showSelectedYear(currYear, currYear < Calendar.getInstance().get(Calendar.YEAR))
         val starsConvector = StarsConvector(starsList, currYear)
-        val pointsList: ArrayList<DataPoint> = starsConvector.toDataPoint()
+        val pointsList = starsConvector.toDataPoint()
         val maxValueOfY = starsConvector.getMaxCountValue()
         viewState.setupStarsGraph(pointsList, maxValueOfY + 1)
     }

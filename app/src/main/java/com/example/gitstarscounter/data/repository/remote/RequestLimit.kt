@@ -11,10 +11,12 @@ object RequestLimit {
     }
 
     fun hasRequest(): Boolean {
-        if (limitResourceCount > 0) {
+        return if (limitResourceCount > 0) {
             limitResourceCount--
+            true
+        } else {
+            false
         }
-        return limitResourceCount > 0
     }
 
     fun writeLog() {

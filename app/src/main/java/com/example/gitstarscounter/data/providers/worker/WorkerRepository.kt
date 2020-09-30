@@ -23,7 +23,7 @@ class WorkerRepository {
     }
 
     suspend fun loadStars(name: String, repositoryRemote: Repository): List<Star> {
-        var starsList = emptyList<Star>()
+        val starsList = mutableListOf<Star>()
         var pageNumber = 1
         try {
             do {

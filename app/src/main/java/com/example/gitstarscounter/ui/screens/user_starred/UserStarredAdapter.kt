@@ -24,7 +24,7 @@ class UserStarredAdapter :
         return UsersViewHolder(itemView)
     }
 
-    fun setupUsers(remoteStarList: MutableList<Star>) {
+    fun setupUsers(remoteStarList: List<Star>) {
         val addedUserList: ArrayList<User> = ArrayList()
         remoteStarList.map {
             addedUserList.add(it.user)

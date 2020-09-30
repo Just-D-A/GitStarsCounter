@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
@@ -17,6 +16,7 @@ import com.omegar.libs.omegalaunchers.createActivityLauncher
 import com.omegar.libs.omegalaunchers.tools.put
 import com.omegar.mvp.presenter.InjectPresenter
 import com.omegar.mvp.presenter.ProvidePresenter
+import kotlin.math.abs
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StarsActivity : BaseActivity(), StarsView {
@@ -46,12 +46,9 @@ class StarsActivity : BaseActivity(), StarsView {
             )
     }
 
-    private val graphGraphView: GraphView by bind(R.id.graph_view_stars)// need "by" under "by" formatting??
-    private val databaseMessageTextView: TextView by bind(R.id.text_view_database_data_message_star)
+    private val graphGraphView: GraphView by bind(R.id.graph_view_stars)
     private val yearTextView: TextView by bind(R.id.text_view_selected_year)
     private val moreYearButton: Button by bind(R.id.button_more_year)
-
-    private var hasInternet = true
 
     @InjectPresenter
     override lateinit var presenter: StarsPresenter
@@ -98,7 +95,7 @@ class StarsActivity : BaseActivity(), StarsView {
         series.setValueDependentColor { data ->
             Color.rgb(
                 data.x.toInt() * MAX_COLOR_VALUE / FIRST_DIVIDER,
-                Math.abs(data.y * MAX_COLOR_VALUE / SECOND_DIVIDER).toInt(), BLUE_VALUE
+                abs(data.y * MAX_COLOR_VALUE / SECOND_DIVIDER).toInt(), BLUE_VALUE
             )
         }
 
@@ -110,11 +107,6 @@ class StarsActivity : BaseActivity(), StarsView {
             presenter.requestToOpenUserStarred(dataPoint.x)
         }
         series.isDrawValuesOnTop = true
-    }
-
-    override fun changeVisibilityOfDataMessage(visible: Boolean) {
-        hasInternet = visible
-        databaseMessageTextView.isVisible = visible
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -1,9 +1,6 @@
 package com.example.gitstarscounter.ui.screens.user_starred
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -16,7 +13,7 @@ import com.omegar.libs.omegalaunchers.tools.put
 import com.omegar.mvp.presenter.InjectPresenter
 import com.omegar.mvp.presenter.ProvidePresenter
 
-@Suppress("DEPRECATED_IDENTITY_EQUALS")
+@Suppress("DEPRECATED_IDENTITY_EQUALS", "UNCHECKED_CAST")
 class UserStarredActivity : BaseActivity(), UserStarredView {
     companion object {
         private const val EXTRA_STAR_LIST = "starsList"
@@ -44,7 +41,6 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
         )
     }
 
-    @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_starred)
@@ -66,7 +62,7 @@ class UserStarredActivity : BaseActivity(), UserStarredView {
         return true
     }
 
-    override fun setUsersList(remoteStarList: MutableList<Star>) {
+    override fun setUsersList(remoteStarList: List<Star>) {
         userStarredAdapter.setupUsers(remoteStarList)
         usersRecycleView.isVisible = true
     }

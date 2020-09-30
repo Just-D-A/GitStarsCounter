@@ -19,6 +19,7 @@ import com.example.gitstarscounter.data.repository.remote.RequestLimit
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
+import com.omega_r.base.errors.AppException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,28 +48,17 @@ class StarWorker(private val context: Context, workerParams: WorkerParameters) :
     override fun doWork(): Result {
         Log.d(TAG, "start")
 
-        GlobalScope.launch {
-            updateRateLimit()
-
-            if (!error) {
+        try {
+            GlobalScope.launch {
                 getNewStars()
             }
+        } catch (e: Exception) {
+            return Result.success()
+        } catch (e: AppException.NoData) {
+            return Result.success()
         }
 
         return Result.success()
-    }
-
-    private suspend fun updateRateLimit() {
-
-        try {
-            val limit = workerRepository.getLimitRemaining().resources.core.remaining
-            RequestLimit.setLimitResourceCount(limit)
-            RequestLimit.writeLog()
-        } catch (e: Exception) {
-            error = true
-            Log.d(TAG, "NO_INTERNET")
-        }
-
     }
 
     private suspend fun getNewStars() {
@@ -77,11 +67,8 @@ class StarWorker(private val context: Context, workerParams: WorkerParameters) :
         repositoryModelList.forEach {
             Log.d(TAG, it.name)
             RequestLimit.writeLog()
-            try {
-                startLoadStars(it)
-            } catch (e: Exception) {
-                error = true
-            }
+            startLoadStars(it)
+
         }
 
     }
