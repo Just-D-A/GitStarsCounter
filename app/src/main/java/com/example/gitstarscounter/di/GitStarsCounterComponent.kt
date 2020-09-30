@@ -5,6 +5,7 @@ import com.example.gitstarscounter.data.repository.local.AppRoomDatabase
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.SearchProvider
 import com.example.gitstarscounter.di.module.*
+import com.example.gitstarscounter.service.LimitWorker
 import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.login.LoginActivity
 import com.example.gitstarscounter.ui.screens.login.LoginPresenter
@@ -24,6 +25,7 @@ interface GitStarsCounterComponent {
     fun inject(searchProvider: SearchProvider) // inject retrofit
     fun inject(loginPresenter: LoginPresenter) // inject LoginRepository
     fun inject(starsPresenter: StarsPresenter) // inject StarsRepository
-    fun inject(starWorker: StarWorker) // inject StarWorkerRepository
+    fun inject(starWorker: StarWorker) // inject WorkerRepository
+    fun inject(limitWorker: LimitWorker) // inject WorkerRepository
     fun inject(repositoryPresenter: RepositoryPresenter) // inject GitRepositoryRepository
 }

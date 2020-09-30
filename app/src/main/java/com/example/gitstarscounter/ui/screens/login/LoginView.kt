@@ -10,12 +10,6 @@ interface LoginView : BaseView {
     fun setupRepositoriesList(repositoriesList: List<Repository>)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun changeVisibilityOfNoInternetView(visible: Boolean)
-
-    @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun changeVisibilityOfLimitedView(visible: Boolean)
-
-    @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun addRepositoriesToList(repositoriesList: List<Repository>)
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)

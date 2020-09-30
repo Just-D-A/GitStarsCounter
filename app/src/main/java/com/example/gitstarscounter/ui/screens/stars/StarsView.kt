@@ -1,6 +1,5 @@
 package com.example.gitstarscounter.ui.screens.stars
 
-import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.base.BaseView
 import com.jjoe64.graphview.series.DataPoint
 import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -12,7 +11,4 @@ interface StarsView : BaseView {
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
     fun showSelectedYear(selectedYear: Int, showMoreButton: Boolean)
-
-    @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun changeVisibilityOfDataMessage(visible: Boolean)
 }

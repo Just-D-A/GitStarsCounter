@@ -2,9 +2,7 @@ package com.example.gitstarscounter.data.repository.local.providers
 
 import android.util.Log
 import com.example.gitstarscounter.GitStarsApplication
-import com.example.gitstarscounter.data.repository.local.entity.LocalRepository
 import com.example.gitstarscounter.data.repository.local.entity.LocalStar
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteStar
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 
@@ -14,7 +12,6 @@ class LocalStarWorkerProvider {
     }
 
     private val database = GitStarsApplication.instance.gitStarsCounterComponent.getRoomDatabase()
-    private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
     private val starTable = database.starDao()
     private val repositoryModelList = mutableListOf<Repository>()
@@ -42,9 +39,7 @@ class LocalStarWorkerProvider {
             if (starFromDB == null) {
                 Log.d(TAG, "add NEW star")
                 newStars.add(starFromApi)
-                starTable.insertAll(
-                    LocalStar(starFromApi, repository as LocalRepository)
-                )
+                starTable.insertAll(LocalStar(starFromApi, repository))
             }
         }
         return newStars

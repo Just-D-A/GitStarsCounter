@@ -1,25 +1,19 @@
 package com.example.gitstarscounter.ui.screens.login
 
 import android.annotation.SuppressLint
-import android.net.wifi.p2p.WifiP2pDevice.CONNECTED
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
-import androidx.work.Constraints
-import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
-import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.omega_r.base.adapters.OmegaAutoAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
@@ -37,8 +31,6 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     private val repositoryOmegaRecycleView: OmegaRecyclerView by bind(R.id.recycler_repositories)
-    private val noInternetTextView: TextView by bind(R.id.text_view_no_internet_login)
-    private val limitedTextView: TextView by bind(R.id.text_view_limited_resource_login)
     private val accountNameEditText: EditText by bind(R.id.edit_text_view_login_repository_name)
 
     private val loginAdapter = OmegaAutoAdapter.create<Repository>(
@@ -54,7 +46,12 @@ class LoginActivity : BaseActivity(), LoginView {
     override lateinit var presenter: LoginPresenter
 
     @Inject
+    @field:Named("StarWorker")
     lateinit var starWorker: PeriodicWorkRequest
+
+    @Inject
+    @field:Named("LimitWorker")
+    lateinit var limitWorker: PeriodicWorkRequest
 
     init {
         GitStarsApplication.instance.gitStarsCounterComponent.inject(this)
@@ -66,16 +63,22 @@ class LoginActivity : BaseActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        setOnClickListener(R.id.button_find_rep) { loadRepositories() }
-
-        setOnClickListener(R.id.button_start_repository_screen) { presenter.requestToStartRepositoryActivity() }
+        //setOnClickListener(R.id.button_find_rep to loadRepositories())
+        setOnClickListeners(
+            R.id.button_find_rep to this::loadRepositories,
+            R.id.button_start_repository_screen to presenter::requestToStartRepositoryActivity
+        )
 
         accountNameEditText.setOnEditorActionListener { _, actionId, event -> // Identifier of the action. This will be either the identifier you supplied,
             // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
-            if (actionId == EditorInfo.IME_ACTION_SEARCH || event.action == KeyEvent.ACTION_DOWN) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH
+                || actionId == EditorInfo.IME_ACTION_DONE
+                || event.action == KeyEvent.ACTION_DOWN
+                && event.keyCode == KeyEvent.KEYCODE_ENTER
+            ) {
                 loadRepositories()
             }
-            true
+            false
         }
 
         //OMEGA_R PAGGINATION
@@ -109,14 +112,6 @@ class LoginActivity : BaseActivity(), LoginView {
         repositoryOmegaRecycleView.isVisible = true
     }
 
-    override fun changeVisibilityOfNoInternetView(visible: Boolean) {
-        noInternetTextView.isVisible = visible
-    }
-
-    override fun changeVisibilityOfLimitedView(visible: Boolean) {
-        limitedTextView.isVisible = visible
-    }
-
     override fun addRepositoriesToList(repositoriesList: List<Repository>) {
         loginAdapter.list += repositoriesList
     }
@@ -126,7 +121,7 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     private fun setNewStarsFinder() {
-        Log.d(TAG, "START")
+        WorkManager.getInstance(this).enqueue(limitWorker)
         WorkManager.getInstance(this).enqueue(starWorker)
     }
 }

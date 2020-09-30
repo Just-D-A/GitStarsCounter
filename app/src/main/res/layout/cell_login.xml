@@ -13,8 +13,8 @@
             android:layout_width="@dimen/image_size"
             android:layout_height="@dimen/image_size"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/repository_img"
-            android:layout_margin="16dp" />
+            android:layout_margin="16dp"
+            android:src="@drawable/repository_img" />
 
         <TextView
             android:id="@+id/text_view_cell_login_repository_name"
