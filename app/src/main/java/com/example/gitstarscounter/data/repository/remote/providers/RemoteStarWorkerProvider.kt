@@ -6,15 +6,15 @@ import com.example.gitstarscounter.data.repository.remote.entity.resource_remote
 import com.example.gitstarscounter.entity.Repository
 
 class RemoteStarWorkerProvider {
-    private val searchStarsRepository = SearchProvider().provideSearchStars()
-    private val searchRepository = SearchProvider().provideSearchRepository()
+    private val searchRepository = SearchProvider()
 
     suspend fun loadStars(userName: String, repositoryRemote: Repository, pageNumber: Int)
             : List<RemoteStar> {
-        return searchStarsRepository.getStars(userName, repositoryRemote.name, pageNumber)
+        return searchRepository.provideSearchStars()
+            .getStars(userName, repositoryRemote.name, pageNumber)
     }
 
     suspend fun getLimitRemaining(): ResourceRemote {
-        return searchRepository.getLimitRemaining()
+        return searchRepository.provideSearchRepository().getLimitRemaining()
     }
 }

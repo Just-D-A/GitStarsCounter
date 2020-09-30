@@ -18,7 +18,6 @@ class WorkerRepository {
     private val localWorkerProvider = LocalStarWorkerProvider()
     private val remoteWorkerProvider = RemoteStarWorkerProvider()
 
-
     suspend fun getAllDatabaseRepositories(): List<Repository> {
         return localWorkerProvider.getAllDatabaseRepositories()
     }

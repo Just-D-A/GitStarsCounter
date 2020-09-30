@@ -17,9 +17,7 @@ class LocalStarWorkerProvider {
     private val userTable = database.userDao()
     private val repositoryTable = database.repositoryDao()
     private val starTable = database.starDao()
-
-    private val repositoryModelList =
-        mutableListOf<Repository>()
+    private val repositoryModelList = mutableListOf<Repository>()
 
     suspend fun getAllDatabaseRepositories(): List<Repository> {
         val repositoryEntityList = repositoryTable.getAll()

@@ -77,14 +77,6 @@ class LocalStarProvider : StarProvider {
         repositoryRemote: Repository,
         pageNumber: Int
     ): List<Star> {
-        val starsTypeList: MutableList<Star> = mutableListOf()
-
-        val starsList = starTable.findByRepositoryId(repositoryRemote.id)
-        starsList.forEach {
-            starsTypeList.add(
-                LocalStar(it, LocalRepository(repositoryRemote), it.user)
-            )
-        }
-        return starsTypeList
+        return starTable.findByRepositoryId(repositoryRemote.id)
     }
 }

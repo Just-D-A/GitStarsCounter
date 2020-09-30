@@ -1,6 +1,7 @@
 package com.example.gitstarscounter.ui.screens.login
 
 import android.annotation.SuppressLint
+import android.net.wifi.p2p.WifiP2pDevice.CONNECTED
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,11 +12,14 @@ import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.entity.Repository
+import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.base.BaseActivity
 import com.omega_r.base.adapters.OmegaAutoAdapter
 import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
@@ -50,11 +54,6 @@ class LoginActivity : BaseActivity(), LoginView {
     override lateinit var presenter: LoginPresenter
 
     @Inject
-    @field:Named("LimitWorker")
-    lateinit var limitWorker: PeriodicWorkRequest
-
-    @Inject
-    @field:Named("StarWorker")
     lateinit var starWorker: PeriodicWorkRequest
 
     init {
@@ -127,7 +126,7 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     private fun setNewStarsFinder() {
-        WorkManager.getInstance(this).enqueue(limitWorker)
+        Log.d(TAG, "START")
         WorkManager.getInstance(this).enqueue(starWorker)
     }
 }

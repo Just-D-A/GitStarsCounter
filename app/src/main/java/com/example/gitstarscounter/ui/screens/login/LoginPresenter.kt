@@ -33,7 +33,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
     }
 
     fun requestToLoadRepositories(userName: String, pageNumber: Int) {
-        viewState.endPagination()
         this.userName = userName
         RequestLimit.writeLog()
         launchWithWaiting {
@@ -42,7 +41,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 try {
                     Log.d(TAG, "todo")
                     val repositoryList =
-                        repositoryLoginProvider.getRemoteUsersRepositories(userName, pageNumber)
+                        repositoryLoginProvider.getUsersRepositories(userName, pageNumber)
                     viewState.setupRepositoriesList(repositoryList)
                     if (repositoryList.size < MAX_PACKAGE_ELEMENTS_COUNT) {
                         viewState.endPagination()
@@ -60,7 +59,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
             launch {
                 try {
                     val moreRepositories =
-                        repositoryLoginProvider.getRemoteUsersRepositories(userName, pageNumber)
+                        repositoryLoginProvider.getMoreUsersRepositories(userName, pageNumber)
                     viewState.addRepositoriesToList(moreRepositories)
                     if (moreRepositories.size < MAX_PACKAGE_ELEMENTS_COUNT) {
                         viewState.endPagination()

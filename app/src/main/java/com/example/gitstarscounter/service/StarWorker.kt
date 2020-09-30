@@ -16,8 +16,6 @@ import com.example.gitstarscounter.GitStarsApplication
 import com.example.gitstarscounter.R
 import com.example.gitstarscounter.data.providers.worker.WorkerRepository
 import com.example.gitstarscounter.data.repository.remote.RequestLimit
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteRepository
-import com.example.gitstarscounter.data.repository.remote.entity.remote.RemoteUser
 import com.example.gitstarscounter.entity.Repository
 import com.example.gitstarscounter.entity.Star
 import com.example.gitstarscounter.ui.screens.stars.StarsActivity
@@ -32,6 +30,7 @@ class StarWorker(private val context: Context, workerParams: WorkerParameters) :
         private const val TAG = "StarWorker"
         private const val CHANNEL_ID = "com.example.gitstarscounter.service"
         private const val CHANNEL_NAME = "Channel"
+        private const val NOTIFICATION_TITLE = "Новые звезды"
         private const val FIRST_PART_OF_NOTIFICATION_MESSAGE = "Find "
         private const val SECOND_PART_OF_NOTIFICATION_MESSAGE = " NEW stars in repository: "
     }
@@ -47,57 +46,61 @@ class StarWorker(private val context: Context, workerParams: WorkerParameters) :
 
     override fun doWork(): Result {
         Log.d(TAG, "start")
-        getNewStars()
+
+        GlobalScope.launch {
+            updateRateLimit()
+
+            if (!error) {
+                getNewStars()
+            }
+        }
 
         return Result.success()
     }
 
-    private fun getNewStars() {
+    private suspend fun updateRateLimit() {
+
+        try {
+            val limit = workerRepository.getLimitRemaining().resources.core.remaining
+            RequestLimit.setLimitResourceCount(limit)
+            RequestLimit.writeLog()
+        } catch (e: Exception) {
+            error = true
+            Log.d(TAG, "NO_INTERNET")
+        }
+
+    }
+
+    private suspend fun getNewStars() {
         Log.d(TAG, "TRY GET NEW STARS")
-        GlobalScope.launch {
-            val repositoryModelList = workerRepository.getAllDatabaseRepositories()
-            repositoryModelList.forEach {
-                Log.d(TAG, it.name)
-                RequestLimit.writeLog()
-                try {
-                    startLoadStars(it)
-                } catch (e: Exception) {
-                    error = true
-                }
+        val repositoryModelList = workerRepository.getAllDatabaseRepositories()
+        repositoryModelList.forEach {
+            Log.d(TAG, it.name)
+            RequestLimit.writeLog()
+            try {
+                startLoadStars(it)
+            } catch (e: Exception) {
+                error = true
             }
         }
+
     }
 
     private fun makeNotification(
         newStars: List<Star>,
         repository: Repository
     ) {
-        Log.d(
-            TAG,
-            FIRST_PART_OF_NOTIFICATION_MESSAGE +
-                    newStars.size.toString() +
-                    SECOND_PART_OF_NOTIFICATION_MESSAGE +
-                    repository.name
-        )
         if (newStars.isNotEmpty()) {
             val channelId = createNotificationChannel()
-            val launcher = StarsActivity.createLauncher(
-                repository.user.name, RemoteRepository(
-                    repository.id, repository.name, repository.allStarsCount, RemoteUser(
-                        repository.user.id,
-                        repository.user.name,
-                        repository.user.avatar
-                    )
-                )
-            )
+            val launcher = StarsActivity.createLauncher(repository.user.name, repository)
 
             val pendingIntent = launcher.getPendingIntent(context, 0, 0)
+            val str: Int = R.string.title_notification_new_stars
 
             val builder = NotificationCompat.Builder(
                 applicationContext, channelId
             )
-                .setContentTitle(R.string.title_notification_new_stars.toString())//Star
-                //can create fun getNotificationString(size, repositoryName)
+                .setContentTitle(NOTIFICATION_TITLE)//Star
                 .setContentText(FIRST_PART_OF_NOTIFICATION_MESSAGE + newStars.size.toString() + SECOND_PART_OF_NOTIFICATION_MESSAGE + repository.name)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)

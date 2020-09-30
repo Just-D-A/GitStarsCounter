@@ -19,13 +19,6 @@ data class LocalRepository(
     @Embedded(prefix = "user_")
     override val user: LocalUser
 ) : Repository {
-    constructor(repository: LocalRepository, user: LocalUser) : this(
-        id = repository.id,
-        name = repository.name,
-        allStarsCount = repository.allStarsCount,
-        user = user
-    )
-
     constructor(repository: Repository) : this(
         id = repository.id,
         name = repository.name,

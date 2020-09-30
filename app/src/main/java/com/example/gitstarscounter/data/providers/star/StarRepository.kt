@@ -15,6 +15,7 @@ open class StarRepository {
 
     private val remoteStarProvider = RemoteStarProvider()
     private val localStarProvider = LocalStarProvider()
+
     suspend fun getRepositoryStars(userName: String, repositoryRemote: Repository): List<Star> {
         val starsList = mutableListOf<Star>()
         var pageNumber = 1

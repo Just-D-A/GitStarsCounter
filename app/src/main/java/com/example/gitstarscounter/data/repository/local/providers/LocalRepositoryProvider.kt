@@ -12,10 +12,8 @@ class LocalRepositoryProvider {
     suspend fun getAllRepositories(): List<Repository> {
         val tableRepositoryList = repositoryTable.getAll()
         val repositoryList: MutableList<Repository> = mutableListOf()
-        tableRepositoryList.forEach { tableRepository ->
-            val user = userTable.getUserById(tableRepository.user.id)
-            val repository: Repository = LocalRepository(tableRepository, user)
-            repositoryList.add(repository)
+        tableRepositoryList.forEach { localRepository ->
+            repositoryList.add(localRepository)
         }
         return repositoryList
     }

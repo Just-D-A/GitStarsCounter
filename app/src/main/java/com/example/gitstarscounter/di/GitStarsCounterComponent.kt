@@ -1,13 +1,10 @@
 package com.example.gitstarscounter.di
 
 import android.app.Application
-import androidx.work.PeriodicWorkRequest
-import com.example.gitstarscounter.data.providers.git_repository.GitRepositoryRepository
 import com.example.gitstarscounter.data.repository.local.AppRoomDatabase
 import com.example.gitstarscounter.data.repository.remote.GithubApiService
 import com.example.gitstarscounter.data.repository.remote.SearchProvider
 import com.example.gitstarscounter.di.module.*
-import com.example.gitstarscounter.service.RateLimitWorker
 import com.example.gitstarscounter.service.StarWorker
 import com.example.gitstarscounter.ui.screens.login.LoginActivity
 import com.example.gitstarscounter.ui.screens.login.LoginPresenter
@@ -23,11 +20,10 @@ interface GitStarsCounterComponent {
     fun getGitApi(): GithubApiService
     fun getApplication(): Application
     fun getRoomDatabase(): AppRoomDatabase
-    fun inject(loginActivity: LoginActivity) // inject workers
+    fun inject(loginActivity: LoginActivity) // inject worker
     fun inject(searchProvider: SearchProvider) // inject retrofit
     fun inject(loginPresenter: LoginPresenter) // inject LoginRepository
     fun inject(starsPresenter: StarsPresenter) // inject StarsRepository
     fun inject(starWorker: StarWorker) // inject StarWorkerRepository
-    fun inject(rateLimitWorker: RateLimitWorker) // inject StarWorkerRepository
     fun inject(repositoryPresenter: RepositoryPresenter) // inject GitRepositoryRepository
 }
